@@ -1,7 +1,7 @@
 import { ChatState } from './slices/chat-slice';
 import { AuthenticationState } from './slices/authentication-slice';
 import { Message } from './model/message-model';
-import { CHAT_STATUS } from './constants';
+import { CHAT_STATUS, CHAT_WINDOW_WIDTH, CHAT_WINDOW_HEIGHT } from './constants';
 
 export const initialChatState: ChatState = {
   endUserContacts: {
@@ -12,6 +12,10 @@ export const initialChatState: ChatState = {
   },
   errorMessage: '',
   chatId: null,
+  chatDimensions: {
+    width: CHAT_WINDOW_WIDTH,
+    height: CHAT_WINDOW_HEIGHT
+  },
   customerSupportId: '1',
   isChatOpen: false,
   showContactForm: false,
