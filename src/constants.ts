@@ -17,6 +17,8 @@ export const FEEDBACK_MESSAGE_LIMIT_VISIBILE_AT = 100;
 export const MESSAGE_QUE_MAX_LENGTH = 5;
 export const TERMS_AND_CONDITIONS_LINK = 'https://www.kratid.ee/kasutustingimused';
 export const ERROR_MESSAGE = 'An error has occured';
+export const CHAT_WINDOW_WIDTH = 400;
+export const CHAT_WINDOW_HEIGHT = 460;
 
 export enum CHAT_STATUS {
   ENDED = 'ENDED',

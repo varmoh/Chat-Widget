@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Message } from '../model/message-model';
 import ChatService from '../services/chat-service';
-import { AUTHOR_ROLES, CHAT_EVENTS, CHAT_STATUS, ERROR_MESSAGE, SESSION_STORAGE_CHAT_ID_KEY } from '../constants';
+import { AUTHOR_ROLES, CHAT_EVENTS, CHAT_STATUS, ERROR_MESSAGE, SESSION_STORAGE_CHAT_ID_KEY, CHAT_WINDOW_HEIGHT, CHAT_WINDOW_WIDTH } from '../constants';
 import { getFromSessionStorage, setToSessionStorage } from '../utils/session-storage-utils';
 import { Chat } from '../model/chat-model';
 import { clearStateVariablesFromSessionStorage, findMatchingMessageFromMessageList } from '../utils/state-management-utils';
@@ -15,6 +15,10 @@ export interface ChatState {
   chatId: string | null;
   isChatOpen: boolean;
   chatStatus: CHAT_STATUS | null;
+  chatDimensions: {
+    width: number;
+    height: number;
+  }
   customerSupportId: string;
   lastReadMessageTimestamp: string | null;
   messages: Message[];
@@ -45,6 +49,10 @@ const initialState: ChatState = {
   chatId: null,
   isChatOpen: false,
   chatStatus: null,
+  chatDimensions: {
+    width: CHAT_WINDOW_WIDTH,
+    height: CHAT_WINDOW_HEIGHT
+  },
   customerSupportId: '',
   lastReadMessageTimestamp: null,
   messages: [],
@@ -161,6 +169,9 @@ export const chatSlice = createSlice({
       state.chatId = getFromSessionStorage(SESSION_STORAGE_CHAT_ID_KEY);
       state.isChatOpen = action.payload;
       state.newMessagesAmount = 0;
+    },
+    setChatDimensions: (state, action: PayloadAction<{ width: number; height: number }>) => {
+      state.chatDimensions = action.payload;
     },
     clearMessageQueue: (state) => {
       state.messageQueue = [];
@@ -301,6 +312,7 @@ export const {
   addMessage,
   setChatId,
   setIsChatOpen,
+  setChatDimensions,
   resetState,
   clearMessageQueue,
   queueMessage,
