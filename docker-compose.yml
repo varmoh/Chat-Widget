@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  widget:
+    container_name: widget
+    build:
+      context: .
+    ports:
+      - 3000:443
+    networks:
+      - widget
+
+networks:
+  widget:
+    name: widget
+    driver: bridge
