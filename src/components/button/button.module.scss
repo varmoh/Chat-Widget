@@ -1,0 +1,26 @@
+@use '/src/scss';
+
+.button {
+  padding: 12px 18px;
+  gap: scss.rem(8px);
+  height: scss.rem(40px);
+  border-radius: 100px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: scss.rem(12px);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 16px;
+}
+
+.blue {
+  color: scss.$color-white;
+  background: scss.$color-primary;
+}
+
+.gray {
+  color: scss.$color-mustakivi;
+  background: scss.$color-hellamaa;
+}
