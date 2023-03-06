@@ -6,6 +6,7 @@ import initChat from './responses/init-chat.json';
 import chatById from './responses/chat-by-Id.json';
 import endChat from './responses/end-chat.json';
 import postMessage from './responses/post-message.json';
+import downloadChat from './responses/download-chat.json';
 import { RUUTER_ENDPOINTS } from '../constants';
 
 const ruuterUrl = 'http://localhost:8080';
@@ -17,6 +18,7 @@ const handlers = [
   rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.END_CHAT}`, (_req, res, ctx) => res(ctx.json(endChat))),
   rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.GET_CHAT_BY_ID}`, (_req, res, ctx) => res(ctx.json(chatById))),
   rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.GET_NEW_MESSAGES}`, (_req, res, ctx) => res(ctx.json(messagesForChatInTimerange))),
+  rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.DOWNLOAD_CHAT}`, (_req, res, ctx) => res(ctx.json(downloadChat))),
 ];
 
 export default handlers;

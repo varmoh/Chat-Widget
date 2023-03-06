@@ -65,6 +65,7 @@ export enum RUUTER_ENDPOINTS {
   SEND_MESSAGE_WITH_NEW_EVENT = '/post-message-with-new-event',
   REMOVE_CHAT_FORWARDING_VALUE = '/remove-chat-forwarding-value',
   GENERATE_FORWARDING_REQUEST = '/origin-forward',
+  DOWNLOAD_CHAT = '/download-chat',
 }
 
 export enum StyledButtonType {
