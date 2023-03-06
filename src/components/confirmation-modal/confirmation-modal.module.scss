@@ -1,0 +1,138 @@
+@use '/src/scss';
+
+.container {
+  background: rgba(0, 60, 255, 0.8);
+  border-radius: 8px;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+}
+
+.content {
+  background-color: #fff;
+  box-shadow: 0 2px 2px rgba(167, 169, 171, 0.2);
+  display: flex;
+  flex-flow: column nowrap;
+  left: 50%;
+  min-width: 70%;
+  padding: 1.5rem;
+  position: absolute;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  width: 80%;
+  height: 80%;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.title {
+  font-family: scss.$font-chat;
+  font-style: normal;
+  font-weight: 400;
+  font-size: scss.rem(20px);
+  line-height: 30px;
+  text-align: center;
+  color: scss.$color-mustakivi;
+  margin: 0;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  gap: 10px;
+
+  button {
+    width: 100%;
+  }
+}
+
+.npsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: auto;
+}
+
+.npsActions {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+}
+
+.downloadContainer {
+  width: 100%;
+  min-height: 93px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.downloadLink{
+  font-family: scss.$font-chat;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: center;
+  text-decoration-line: underline;
+  color: scss.$color-black;
+  cursor: pointer;
+}
+
+.downloadActions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 5px;
+  width: 100%;
+}
+
+.divider {
+  height: 2px;
+  background: scss.$color-majakivi;
+  width: 100%;
+}
+
+.forwardForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  max-width: 320px;
+  margin: 0 auto;
+  width: 100%;
+
+  .forwardInput {
+    width: 100%;
+    max-width: 288px;
+    margin-right: auto;
+
+    input {
+      @include scss.text-m;
+      border: 0;
+      outline: none;
+      width: 100%;
+
+      &::placeholder {
+        @include scss.text-m;
+      }
+    }
+  }
+}
