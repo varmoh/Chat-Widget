@@ -120,10 +120,7 @@ export const sendFeedbackMessage = createAsyncThunk('chat/sendFeedbackMessage', 
   ChatService.sendFeedbackMessage({ chatId, userFeedback: args.userInput });
 });
 
-export const endChat = createAsyncThunk('chat/endChat', async (args: {
-  event: CHAT_EVENTS;
-  rating: number | null;
-}, thunkApi) => {
+export const endChat = createAsyncThunk('chat/endChat', async (_args, thunkApi) => {
   const {
     chat: { chatStatus, chatId },
   } = thunkApi.getState() as { chat: ChatState };
@@ -133,8 +130,6 @@ export const endChat = createAsyncThunk('chat/endChat', async (args: {
     ? null
     : ChatService.endChat({
         chatId,
-        event: args.event,
-        rating: args.rating?.toString(),
         authorTimestamp: new Date().toISOString(),
         authorRole: AUTHOR_ROLES.END_USER,
       });
