@@ -8,6 +8,7 @@ import styles from './confirmation-modal.module.scss';
 import ConfirmationModalNps from "./confirmation-modal-nps";
 import ConfirmationModalDownload from "./confirmation-modal-download";
 import {ChatFeedback} from "../../model/chat-feedback";
+import { CHAT_EVENTS } from '../../constants';
 
 export default function ConfirmationModal(): JSX.Element {
     const {t} = useTranslation();
@@ -20,14 +21,14 @@ export default function ConfirmationModal(): JSX.Element {
 
     if (!isConfirmationModelOpen) return <></>;
 
-    function handleClick(option: ChatFeedback) {
-        if (option === ChatFeedback.SAIN_VASTUSE) {
+    function handleClick(option: CHAT_EVENTS) {
+        if (option === CHAT_EVENTS.CLIENT_LEFT_WITH_ACCEPTED) {
             setNps({
                 ...nps,
                 showNps: true,
                 feedback: option,
             });
-        } else if (option === ChatFeedback.VASTUSETA) {
+        } else if (option === CHAT_EVENTS.CLIENT_LEFT_WITH_NO_RESOLUTION) {
             setNps({
                 ...nps,
                 showNps: true,
@@ -38,19 +39,19 @@ export default function ConfirmationModal(): JSX.Element {
 
     return (
         <div className={styles.container}>
-            <div className={styles.content} role="dialog" aria-modal="true" aria-labelledby="confirmation_modal_title">
+            <div className={styles.content} role="dialog" aria-modal="true" aria-labelledby={t('widget.action.close-confirmation')}>
                 {nps.showNps === false ?
                     <>
-                        <h2 id="confirmation_modal_title" className={styles.title}>
+                        <h2 className={styles.title}>
                             {t('widget.action.close-confirmation')}
                         </h2>
                         <div className={styles.actions}>
                             <Button title={t('header.button.confirmation.yes')}
-                                    onClick={() => handleClick(ChatFeedback.SAIN_VASTUSE)}>
+                                    onClick={() => handleClick(CHAT_EVENTS.CLIENT_LEFT_WITH_ACCEPTED)}>
                                 {t('widget.action.yes-got-answer')}
                             </Button>
                             <Button title={t('header.button.confirmation.yes')}
-                                    onClick={() => handleClick(ChatFeedback.VASTUSETA)}>
+                                    onClick={() => handleClick(CHAT_EVENTS.CLIENT_LEFT_WITH_NO_RESOLUTION)}>
                                 {t('widget.action.yes-no-answer')}
                             </Button>
                             <Button title={t('header.button.confirmation.no')}

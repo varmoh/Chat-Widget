@@ -6,6 +6,7 @@ import {endChat} from "../../slices/chat-slice";
 import styles from "./confirmation-modal.module.scss";
 import useChatSelector from "../../hooks/use-chat-selector";
 import {useTranslation} from "react-i18next";
+import { CHAT_EVENTS } from '../../constants';
 
 interface Props {
     npsFeedback: any;
@@ -20,13 +21,13 @@ const ConfirmationModalNps = ({npsFeedback}: Props) => {
 
     return (
         <div className={styles.npsContainer}>
-            <h2 id="confirmation_modal_title" className={styles.title}>
+            <h2 className={styles.title}>
                 {t('widget.action.nps-confirmation')}
             </h2>
             <Stars onClick={e => setStars(e)}/>
             <div className={styles.npsActions}>
-                <Button onClick={() => dispatch(endChat())} title="123" color={ButtonColor.GRAY}>{t('widget.action.skip')}</Button>
-                <Button onClick={() => dispatch(endChat())} title="123" color={ButtonColor.BLUE}>{t('widget.action.confirm')}</Button>
+                <Button onClick={() => dispatch(endChat({event: npsFeedback, rating: null}))} title={t('widget.action.skip')} color={ButtonColor.GRAY}>{t('widget.action.skip')}</Button>
+                <Button onClick={() => dispatch(endChat({event: npsFeedback, rating: stars}))} title={t('widget.action.confirm')} color={ButtonColor.BLUE}>{t('widget.action.confirm')}</Button>
             </div>
         </div>
     )
