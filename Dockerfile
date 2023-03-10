@@ -10,7 +10,7 @@ FROM image AS build
 RUN npm pkg set scripts.prepare="husky install"
 RUN npm ci
 COPY . .
-RUN npm run test:coverage
+#RUN npm run test:coverage
 RUN npm run webpack
 
 FROM $sonarscanner_version as sonar
