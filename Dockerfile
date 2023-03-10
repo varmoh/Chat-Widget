@@ -7,7 +7,7 @@ WORKDIR /usr/app
 COPY ./package*.json ./
 
 FROM image AS build
-RUN npm set-script prepare ""
+RUN npm pkg set scripts.prepare="husky install"
 RUN npm ci
 COPY . .
 RUN npm run test:coverage
