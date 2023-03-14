@@ -8,7 +8,6 @@ import endChat from './responses/end-chat.json';
 import postMessage from './responses/post-message.json';
 import downloadChat from './responses/download-chat.json';
 import { RUUTER_ENDPOINTS } from '../constants';
-import axios from 'axios';
 
 const ruuterUrl = 'http://localhost:8080';
 
