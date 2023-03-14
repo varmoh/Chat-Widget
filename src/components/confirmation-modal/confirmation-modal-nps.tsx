@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import Button, { ButtonColor } from '../button/button';
-import Stars from '../stars';
 import { useAppDispatch } from '../../store';
 import { endChat, sendChatNpmRating } from '../../slices/chat-slice';
 import styles from './confirmation-modal.module.scss';
 import { useTranslation } from 'react-i18next';
+import Stars from '../stars/stars';
 
 interface Props {
   npsFeedback: any;
