@@ -61,6 +61,10 @@ class ChatService {
   generateForwardingRequest(): Promise<Chat[]> {
     return http.post(RUUTER_ENDPOINTS.GENERATE_FORWARDING_REQUEST);
   }
+
+  generateDownloadChatRequest(): Promise<void> {
+    return http.get(RUUTER_ENDPOINTS.DOWNLOAD_CHAT)
+  }
 }
 
 export default new ChatService();

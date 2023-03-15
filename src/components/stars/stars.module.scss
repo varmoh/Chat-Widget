@@ -1,0 +1,30 @@
+@use '/src/scss';
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+
+  & svg {
+    cursor: pointer;
+
+    path {
+      stroke: scss.$color-hellamaa;
+    }
+
+    &:hover {
+      &:hover {
+        path {
+          stroke: lightblue; // TODO incorrect missing color
+        }
+      }
+    }
+  }
+}
+
+.selected {
+  path {
+    stroke: scss.$color-primary !important;
+  }
+}

@@ -52,13 +52,11 @@ const ChatHeader = (props: ChatHeaderType): JSX.Element => {
           </button>
           <button
             title={t('header.button.close.label')}
-            onClick={() => {
-              dispatch(showConfirmationModal());
-            }}
+            onClick={() => {!!chatId ? dispatch(showConfirmationModal()) : dispatch(setIsChatOpen(false))}}
             aria-label={t('header.button.close.label')}
             type="button"
           >
-            <img src={Close} alt="Close icon" />
+            <img src={Close} alt={t('header.button.close.label')} />
           </button>
         </div>
       </div>

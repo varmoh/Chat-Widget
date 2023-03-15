@@ -43,6 +43,11 @@ export interface ChatState {
     phoneNr: string;
     comment: string;
   };
+  downloadChat: {
+    isLoading: boolean;
+    error: any;
+    data:any;
+  };
 }
 
 const initialState: ChatState = {
@@ -79,6 +84,11 @@ const initialState: ChatState = {
     isFeedbackMessageGiven: false,
     isFeedbackRatingGiven: false,
     showFeedbackWarning: false,
+  },
+  downloadChat: {
+    isLoading: false,
+    error: false,
+    data: null,
   },
 };
 
@@ -130,7 +140,6 @@ export const endChat = createAsyncThunk('chat/endChat', async (_args, thunkApi) 
     ? null
     : ChatService.endChat({
         chatId,
-        event: CHAT_EVENTS.CLIENT_LEFT,
         authorTimestamp: new Date().toISOString(),
         authorRole: AUTHOR_ROLES.END_USER,
       });
@@ -153,6 +162,7 @@ export const getEstimatedWaitingTime = createAsyncThunk('chat/getEstimatedWaitin
 export const removeChatForwardingValue = createAsyncThunk('chat/removeChatForwardingValue', async () => ChatService.removeChatForwardingValue());
 
 export const generateForwardingRequest = createAsyncThunk('chat/generateForwardingRequest', async () => ChatService.generateForwardingRequest());
+export const downloadChat = createAsyncThunk('chat/downloadChat', async () => ChatService.generateDownloadChatRequest());
 
 export const chatSlice = createSlice({
   name: 'chat',
@@ -304,6 +314,18 @@ export const chatSlice = createSlice({
         state.chatId = action.payload[0].externalId;
         state.isChatRedirected = true;
       }
+    });
+    builder.addCase(downloadChat.pending, (state) => {
+      state.downloadChat.isLoading = true;
+    });
+    builder.addCase(downloadChat.fulfilled, (state, action) => {
+      state.downloadChat.isLoading = false;
+      state.downloadChat.error = false;
+      state.downloadChat.data = action.payload;
+    });
+    builder.addCase(downloadChat.rejected, (state,action) => {
+      state.downloadChat.isLoading = false;
+      state.downloadChat.error = action.error;
     });
   },
 });

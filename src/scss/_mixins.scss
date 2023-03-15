@@ -1,0 +1,34 @@
+@use 'colors';
+@use 'typography';
+
+@mixin text-m {
+  font-family: typography.$font-chat;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: colors.$color-mustakivi;
+}
+
+@mixin text-xs {
+  font-family: typography.$font-chat;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  color: colors.$color-white;
+}
+
+@mixin text-xs-bold {
+  font-family: typography.$font-chat;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  color: colors.$color-white;
+}
+
+@mixin button-s {
+  @include text-xs;
+  text-transform: uppercase;
+}

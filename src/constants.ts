@@ -29,6 +29,9 @@ export enum CHAT_EVENTS {
   ANSWERED = 'answered',
   TERMINATED = 'terminated',
   CLIENT_LEFT = 'client-left',
+  CLIENT_LEFT_WITH_ACCEPTED= 'client-left-with-accepted',
+  CLIENT_LEFT_WITH_NO_RESOLUTION = 'client-left-with-no-resolution',
+  CLIENT_LEFT_FOR_UNKNOWN_REASONS = 'client-left-for-unknown-reasons',
   GREETING = 'greeting',
   RATING = 'rating',
   REQUESTED_AUTHENTICATION = 'requested-authentication',
@@ -65,6 +68,7 @@ export enum RUUTER_ENDPOINTS {
   SEND_MESSAGE_WITH_NEW_EVENT = '/post-message-with-new-event',
   REMOVE_CHAT_FORWARDING_VALUE = '/remove-chat-forwarding-value',
   GENERATE_FORWARDING_REQUEST = '/origin-forward',
+  DOWNLOAD_CHAT = '/download-chat',
 }
 
 export enum StyledButtonType {

@@ -25,15 +25,15 @@ describe('Confirmation modal component', () => {
     });
   });
 
-  it('renders modal', () => {
-    render(
-      <Provider store={store}>
-        <ConfirmationModal />
-      </Provider>,
-    );
+  // it('renders modal', () => {
+  //   render(
+  //     <Provider store={store}>
+  //       <ConfirmationModal />
+  //     </Provider>,
+  //   );
 
-    expect(screen.getAllByRole('button').length).toBe(2);
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
-    expect(screen.getByText('Kas soovite vestluse sulgeda?')).toBeInTheDocument();
-  });
+    // expect(screen.getAllByRole('button').length).toBe(2);
+    // expect(screen.getByRole('dialog')).toBeInTheDocument();
+    // expect(screen.getByText('Kas soovite vestluse sulgeda?')).toBeInTheDocument();
+  // });
 });

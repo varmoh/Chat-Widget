@@ -38,6 +38,11 @@ export const initialChatState: ChatState = {
     isFeedbackRatingGiven: false,
     showFeedbackWarning: false,
   },
+  downloadChat: {
+    isLoading: false,
+    error: false,
+    data: null,
+  },
 };
 
 export const initialAuthState: AuthenticationState = {
