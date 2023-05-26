@@ -19,6 +19,11 @@ export const TERMS_AND_CONDITIONS_LINK = 'https://www.kratid.ee/kasutustingimuse
 export const ERROR_MESSAGE = 'An error has occured';
 export const CHAT_WINDOW_WIDTH = 400;
 export const CHAT_WINDOW_HEIGHT = 460;
+export const CHAT_BUBBLE_PROACTIVE_SECONDS = 3;
+export const CHAT_SHOW_BUBBLE_MESSAGE = false;
+export const CHAT_BUBBLE_MESSAGE_DELAY_SECONDS = 5;
+export const CHAT_BUBBLE_COLOR = '#003CFF';
+export const CHAT_BUBBLE_ANIMATION = 'shockwave';
 
 export enum CHAT_STATUS {
   ENDED = 'ENDED',
@@ -56,6 +61,7 @@ export enum AUTHOR_ROLES {
 export enum RUUTER_ENDPOINTS {
   INIT_CHAT = '/init-chat',
   GET_CHAT_BY_ID = '/get-chat-by-id',
+  GET_CHAT_CONFIG = '/get-widget-config',
   GET_NEW_MESSAGES = '/get-new-messages',
   POST_MESSAGE = '/post-message',
   POST_NEW_RATING = '/post-message-with-rating',

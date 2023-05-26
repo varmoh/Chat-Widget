@@ -12,11 +12,15 @@ import useNewMessageNotification from './hooks/use-new-message-notification';
 import useAuthentication from './hooks/use-authentication';
 import useGetNewMessages from './hooks/use-get-new-messages';
 import useGetChat from './hooks/use-get-chat';
+import useWidgetSelector from './hooks/use-widget-selector';
+import { getWidgetConfig } from './slices/widget-slice';
+import useGetWidgetConfig from './hooks/use-get-widget-config';
 
 declare global {
   interface Window {
     _env_: {
       RUUTER_API_URL: string;
+      RUUTER_2_API_URL: string;
       TIM_AUTHENTICATION_URL: string;
       ORGANIZATION_NAME: string;
       TERMS_AND_CONDITIONS_LINK: string;
@@ -34,9 +38,11 @@ declare global {
 const App: FC = () => {
   const dispatch = useAppDispatch();
   const { isChatOpen, messages, chatId } = useChatSelector();
+  const { widgetConfig } = useWidgetSelector();
   const [displayWidget, setDisplayWidget] = useState(!!getFromSessionStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours());
 
   useInterval(() => setDisplayWidget(!!getFromSessionStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()), OFFICE_HOURS_INTERVAL_TIMEOUT);
+  useGetWidgetConfig();
   useAuthentication();
   useGetChat();
   useGetNewMessages();
@@ -52,9 +58,10 @@ const App: FC = () => {
       dispatch(getChat());
       dispatch(getChatMessages());
     }
-  }, [chatId, dispatch, messages]);
+    if (!widgetConfig.isLoaded) dispatch(getWidgetConfig());
+  }, [chatId, dispatch, messages, widgetConfig]);
 
-  if (displayWidget) return isChatOpen ? <Chat /> : <Profile />;
+  if (displayWidget && widgetConfig.isLoaded) return isChatOpen ? <Chat /> : <Profile />;
   return <></>;
 };
 
