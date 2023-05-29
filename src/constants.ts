@@ -65,6 +65,7 @@ export enum RUUTER_ENDPOINTS {
   GET_CHAT_BY_ID = '/get-chat-by-id',
   GET_CHAT_CONFIG = '/get-widget-config',
   SEND_CONTACT_INFO = '/end-user-email-phone',
+  AUTHENTICATE_USER = '/end-user-id-name',
   GET_NEW_MESSAGES = '/get-new-messages',
   POST_MESSAGE = '/post-message',
   POST_NEW_RATING = '/post-message-with-rating',

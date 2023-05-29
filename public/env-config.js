@@ -1,6 +1,7 @@
 window._env_ = {
   RUUTER_API_URL: 'http://localhost:8080',
   RUUTER_2_API_URL: 'http://localhost:8086',
+  ENVIRONMENT: 'development', // 'developement | production'
   TIM_AUTHENTICATION_URL: 'http://localhost:8085/oauth2/authorization/tara?callback_url=http://localhost:3000/auth/callback',
   ORGANIZATION_NAME: 'TTJA',
   OFFICE_HOURS: {
