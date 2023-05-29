@@ -13,6 +13,10 @@
   font-weight: 700;
   letter-spacing: 0.5px;
   line-height: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .blue {
@@ -21,6 +25,6 @@
 }
 
 .gray {
-  color: scss.$color-mustakivi;
+  color: scss.$color-white;
   background: scss.$color-hellamaa;
 }

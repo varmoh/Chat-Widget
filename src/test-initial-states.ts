@@ -27,8 +27,8 @@ export const initialChatState: ChatState = {
   lastReadMessageTimestamp: null,
   contactMsgId: '',
   estimatedWaiting: {
-    isActive: false,
-    time: 20,
+    positionInUnassignedChats: '',
+    durationInSeconds: '',
   },
   loading: false,
   newMessagesAmount: 0,

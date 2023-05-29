@@ -7,8 +7,8 @@ import { Chat } from '../model/chat-model';
 import { clearStateVariablesFromSessionStorage, findMatchingMessageFromMessageList } from '../utils/state-management-utils';
 
 export interface EstimatedWaiting {
-  isActive: boolean;
-  time: number;
+  positionInUnassignedChats: string;
+  durationInSeconds: string;
 }
 
 export interface ChatState {
@@ -68,8 +68,8 @@ const initialState: ChatState = {
   showContactForm: false,
   isChatRedirected: false,
   estimatedWaiting: {
-    isActive: false,
-    time: 0,
+    positionInUnassignedChats: '',
+    durationInSeconds: '',
   },
   loading: false,
   endUserContacts: {
@@ -212,7 +212,7 @@ export const chatSlice = createSlice({
       state.feedback.isFeedbackConfirmationShown = action.payload;
     },
     setEstimatedWaitingTimeToZero: (state) => {
-      state.estimatedWaiting.time = 0;
+      state.estimatedWaiting.durationInSeconds = '';
     },
     setEmailAdress: (state, action) => {
       state.endUserContacts.mailAddress = action.payload;

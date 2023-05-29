@@ -10,22 +10,36 @@
   color: colors.$color-mustakivi;
 }
 
+@mixin text-m-bold {
+  @include text-m;
+  font-weight: 700;
+}
+
+@mixin text-s {
+  font-family: typography.$font-chat;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: colors.$color-mustakivi;
+}
+
+@mixin text-s-bold {
+  @include text-s;
+  font-weight: 700;
+}
+
 @mixin text-xs {
   font-family: typography.$font-chat;
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.5px;
-  color: colors.$color-white;
+  color: colors.$color-mustakivi;
 }
 
 @mixin text-xs-bold {
-  font-family: typography.$font-chat;
+  @include text-xs;
   font-weight: 700;
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.5px;
-  color: colors.$color-white;
 }
 
 @mixin button-s {

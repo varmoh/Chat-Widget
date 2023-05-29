@@ -1,15 +1,19 @@
 import { AnimatePresence } from 'framer-motion';
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import ChatMessage from '../chat-message/chat-message';
 import useChatSelector from '../../hooks/use-chat-selector';
 import 'overlayscrollbars/css/OverlayScrollbars.css';
 import './os-custom-theme.scss';
 import styles from './chat-content.module.scss';
+import WaitingTimeNotification from '../waiting-time-notification/waiting-time-notification';
+import { useAppDispatch } from '../../store';
+import { getEstimatedWaitingTime, setEstimatedWaitingTimeToZero } from '../../slices/chat-slice';
 
 const ChatContent = (): JSX.Element => {
   const OSref = useRef<OverlayScrollbarsComponent>(null);
-  const { messages } = useChatSelector();
+  const { messages,estimatedWaiting,customerSupportId } = useChatSelector();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (OSref.current) {
@@ -17,6 +21,12 @@ const ChatContent = (): JSX.Element => {
       instance?.scroll({ y: '100%' }, 200);
     }
   }, [messages]);
+
+  useEffect(() => {
+    if (customerSupportId !== '') dispatch(setEstimatedWaitingTimeToZero());
+    else if (estimatedWaiting.durationInSeconds === '') dispatch(getEstimatedWaitingTime());
+  }, [estimatedWaiting.durationInSeconds, dispatch, customerSupportId]);
+
 
   return (
     <AnimatePresence initial={false}>
@@ -31,8 +41,14 @@ const ChatContent = (): JSX.Element => {
             scrollbars: { visibility: 'auto', autoHide: 'leave' },
           }}
         >
+            {~~estimatedWaiting.durationInSeconds > 0 &&
+            ~~estimatedWaiting.positionInUnassignedChats > 0 &&
+             <WaitingTimeNotification />}
           {messages.map((message) => (
-            <ChatMessage message={message} key={`${message.authorTimestamp}-${message.created}`} />
+            <ChatMessage
+              message={message}
+              key={`${message.authorTimestamp}-${message.created}`}
+            />
           ))}
         </OverlayScrollbarsComponent>
       </div>

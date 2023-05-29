@@ -4,7 +4,8 @@ export const SESSION_STORAGE_TARA_LOGIN_REDIRECT = 'byk-va-tara-login-redirect';
 export const OFFICE_HOURS_INTERVAL_TIMEOUT = 60000;
 // BYK-648 enable to show customer service agent name in chat window
 export const CLIENT_NAME_ENABLED = false;
-export const EMAIL_REGEX = '^$|^[\\wöäüÖÄÜ!#$%&’*+\\/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+\\/=?`{|}~^-]+)*@(?:[a-zA-ZöäüÖÄÜ0-9-]+\\.)+[a-zA-ZöäüÖÄÜ]{2,6}$';
+export const EMAIL_REGEX =
+  '^$|^[\\wöäüÖÄÜ!#$%&’*+\\/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+\\/=?`{|}~^-]+)*@(?:[a-zA-ZöäüÖÄÜ0-9-]+\\.)+[a-zA-ZöäüÖÄÜ]{2,6}$';
 export const PHONE_NR_REGEX = '^$|^[+]*[0-9]{1,4}[-\\s.0-9]{6,15}$';
 export const MESSAGE_MAX_CHAR_LIMIT = 3000;
 export const MESSAGE_WARNING_LIMIT = 2900;
@@ -15,7 +16,8 @@ export const FEEDBACK_MESSAGE_MAX_CHAR_LIMIT = 500;
 export const FEEDBACK_MESSAGE_LIMIT_WARNING_AT = 400;
 export const FEEDBACK_MESSAGE_LIMIT_VISIBILE_AT = 100;
 export const MESSAGE_QUE_MAX_LENGTH = 5;
-export const TERMS_AND_CONDITIONS_LINK = 'https://www.kratid.ee/kasutustingimused';
+export const TERMS_AND_CONDITIONS_LINK =
+  'https://www.kratid.ee/kasutustingimused';
 export const ERROR_MESSAGE = 'An error has occured';
 export const CHAT_WINDOW_WIDTH = 400;
 export const CHAT_WINDOW_HEIGHT = 460;
@@ -70,7 +72,7 @@ export enum RUUTER_ENDPOINTS {
   GET_GREETING = '/get-greeting-message',
   SEND_NPM_RATING = '/post-chat-feedback-rating',
   SEND_FEEDBACK_MESSAGE = '/post-chat-feedback-text',
-  GET_WAITING_TIME = '/get-estimated-waiting-time',
+  GET_WAITING_TIME = '/estimated-waiting-time',
   SEND_MESSAGE_WITH_NEW_EVENT = '/post-message-with-new-event',
   REMOVE_CHAT_FORWARDING_VALUE = '/remove-chat-forwarding-value',
   GENERATE_FORWARDING_REQUEST = '/origin-forward',
