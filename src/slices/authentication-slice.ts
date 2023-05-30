@@ -34,6 +34,8 @@ export const loginWithTaraJwt = createAsyncThunk('auth/loginWithTaraJwt', async 
 
 export const getUserinfo = createAsyncThunk('auth/getUserinfo', () => AuthenticationService.customJwtUserinfo());
 
+export const customJwtExtend = createAsyncThunk('chat/customJwtExtend', async () => AuthenticationService.customJwtExtend());
+
 export const authenticationSlice = createSlice({
   name: 'authentication',
   initialState,
@@ -76,6 +78,13 @@ export const authenticationSlice = createSlice({
     builder.addCase(endChat.fulfilled, (state) => {
       state.isAuthenticated = false;
     });
+    builder.addCase(customJwtExtend.fulfilled, (state, action) => {
+      state.userInfo.jwtExpirationTimestamp = action.payload.data.custom_jwt_extend;
+    });
+    // builder.addCase(customJwtExtend.rejected, (state) => {
+    //   state.userInfo.jwtExpirationTimestamp = '';
+    //   state.isAuthenticated = false;
+    // });
   },
 });
 

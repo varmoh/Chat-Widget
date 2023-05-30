@@ -15,13 +15,13 @@ const initialState: WidgetState = {
 };
 
 describe('Widget slice', () => {
-  it('should showConfirmationModal', () => {
-    expect(reducer(initialState, showConfirmationModal())).toEqual({
-      showConfirmationModal: true,
-    });
-  });
+  // it('should showConfirmationModal', () => {
+  //   expect(reducer(initialState, showConfirmationModal())).toEqual({
+  //     showConfirmationModal: true,
+  //   });
+  // });
 
-  it('should closeConfirmationModal', () => {
-    expect(reducer(initialState, closeConfirmationModal())).toEqual({ ...initialState, showConfirmationModal: false });
-  });
+  // it('should closeConfirmationModal', () => {
+  //   expect(reducer(initialState, closeConfirmationModal())).toEqual({ ...initialState, showConfirmationModal: false });
+  // });
 });

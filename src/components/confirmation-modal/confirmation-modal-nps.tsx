@@ -5,6 +5,7 @@ import { endChat, sendChatNpmRating } from '../../slices/chat-slice';
 import styles from './confirmation-modal.module.scss';
 import { useTranslation } from 'react-i18next';
 import Stars from '../stars/stars';
+import { CHAT_EVENTS } from '../../constants';
 
 interface Props {
   npsFeedback: any;
@@ -21,7 +22,10 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
       <Stars onClick={(e) => setStars(e)} />
       <div className={styles.npsActions}>
         <Button
-          onClick={() => dispatch(endChat())}
+          onClick={() => {
+            dispatch(sendChatNpmRating({ NpmRating: stars }));
+            dispatch(endChat({event: npsFeedback}));
+          }}
           title={t('widget.action.skip')}
           color={ButtonColor.GRAY}
         >
@@ -30,7 +34,8 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
         <Button
           onClick={() => {
             dispatch(sendChatNpmRating({ NpmRating: stars }));
-            dispatch(endChat())}}
+            dispatch(endChat({event: npsFeedback}));
+          }}
           title={t('widget.action.confirm')}
           color={ButtonColor.BLUE}
         >

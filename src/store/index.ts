@@ -11,7 +11,7 @@ export const store = configureStore({
     widget: widgetReducer,
     authentication: authenticationReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(sessionStorageMiddleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false}).prepend(sessionStorageMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

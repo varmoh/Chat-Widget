@@ -7,14 +7,17 @@ import Button from "../button";
 import styles from './confirmation-modal.module.scss';
 import ConfirmationModalNps from "./confirmation-modal-nps";
 import ConfirmationModalDownload from "./confirmation-modal-download";
-import {ChatFeedback} from "../../model/chat-feedback";
 import { CHAT_EVENTS } from '../../constants';
+
 
 export default function ConfirmationModal(): JSX.Element {
     const {t} = useTranslation();
     const dispatch = useAppDispatch();
     const isConfirmationModelOpen = useSelector((state: RootState) => state.widget.showConfirmationModal);
-    const [nps, setNps] = useState<any>({
+    const [nps, setNps] = useState<{
+        showNps: boolean;
+        feedback: CHAT_EVENTS | null;
+    }>({
         showNps: false,
         feedback: null,
     });

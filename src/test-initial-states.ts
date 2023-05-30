@@ -30,6 +30,10 @@ export const initialChatState: ChatState = {
     positionInUnassignedChats: '',
     durationInSeconds: '',
   },
+  idleChat: {
+    isIdle: false,
+    lastActive: '',
+  },
   loading: false,
   newMessagesAmount: 0,
   feedback: {

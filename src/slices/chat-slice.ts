@@ -27,6 +27,10 @@ export interface ChatState {
   eventMessagesToHandle: Message[];
   errorMessage: string;
   estimatedWaiting: EstimatedWaiting;
+  idleChat: {
+    isIdle: boolean,
+    lastActive: string,
+  };
   loading: boolean;
   showContactForm: boolean;
   contactMsgId: string;
@@ -76,6 +80,10 @@ const initialState: ChatState = {
   estimatedWaiting: {
     positionInUnassignedChats: '',
     durationInSeconds: '',
+  },
+  idleChat: {
+    isIdle: false,
+    lastActive: '',
   },
   loading: false,
   endUserContacts: {
@@ -137,19 +145,20 @@ export const sendFeedbackMessage = createAsyncThunk('chat/sendFeedbackMessage', 
   ChatService.sendFeedbackMessage({ chatId, userFeedback: args.userInput });
 });
 
-export const endChat = createAsyncThunk('chat/endChat', async (_args, thunkApi) => {
+export const endChat = createAsyncThunk('chat/endChat', async (args: {event: CHAT_EVENTS}, thunkApi) => {
   const {
     chat: { chatStatus, chatId },
   } = thunkApi.getState() as { chat: ChatState };
   thunkApi.dispatch(resetState());
 
   return chatStatus === CHAT_STATUS.ENDED
-    ? null
-    : ChatService.endChat({
-        chatId,
-        authorTimestamp: new Date().toISOString(),
-        authorRole: AUTHOR_ROLES.END_USER,
-      });
+  ? null
+  : ChatService.endChat({
+      chatId,
+      event: args.event,
+      authorTimestamp: new Date().toISOString(),
+      authorRole: AUTHOR_ROLES.END_USER,
+    });
 });
 
 export const sendMessageWithRating = createAsyncThunk('chat/sendMessageWithRating', async (message: Message) =>
@@ -222,6 +231,12 @@ export const chatSlice = createSlice({
     },
     setEstimatedWaitingTimeToZero: (state) => {
       state.estimatedWaiting.durationInSeconds = '';
+    },
+    setIdleChat: (state, action) => {
+      state.idleChat = {
+        ...state.idleChat,
+        ...action.payload,
+      };
     },
     setEmailAdress: (state, action) => {
       state.endUserContacts.mailAddress = action.payload;
@@ -365,6 +380,7 @@ export const {
   setEmailAdress,
   setShowContactForm,
   setEstimatedWaitingTimeToZero,
+  setIdleChat,
   setChat,
   addMessagesToDisplay,
   handleStateChangingEventMessages,
