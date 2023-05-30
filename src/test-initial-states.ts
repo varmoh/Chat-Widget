@@ -42,7 +42,8 @@ export const initialChatState: ChatState = {
     isLoading: false,
     error: false,
     data: null,
-  }
+  },
+  emergencyNotice: null
 };
 
 export const initialAuthState: AuthenticationState = {

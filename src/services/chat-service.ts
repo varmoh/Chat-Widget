@@ -1,9 +1,11 @@
 import http from './http-service';
+import http2 from "./http2-service";
 import { Message } from '../model/message-model';
 import { Chat } from '../model/chat-model';
 import { RUUTER_ENDPOINTS } from '../constants';
 import { EndUserTechnicalData } from '../model/chat-ini-model';
 import { EstimatedWaiting } from '../slices/chat-slice';
+import { EmergencyNoticeResponse } from '../model/emergency-notice-response-model';
 
 interface Document {
   _id: string;
@@ -36,6 +38,10 @@ class ChatService {
 
   getGreeting(): Promise<{ eng: string; est: string; isActive: boolean }> {
     return http.post(RUUTER_ENDPOINTS.GET_GREETING);
+  }
+
+  getEmergencyNotice(): Promise<EmergencyNoticeResponse> {
+    return http2.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
   }
 
   sendNpmRating({ chatId, npmRating }: { chatId: string; npmRating: number }): Promise<void> {

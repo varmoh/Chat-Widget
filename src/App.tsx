@@ -5,11 +5,8 @@ import Chat from "./components/chat/chat";
 import Profile from "./components/profile/profile";
 import useChatSelector from "./hooks/use-chat-selector";
 import useInterval from "./hooks/use-interval";
-import {
-  OFFICE_HOURS_INTERVAL_TIMEOUT,
-  SESSION_STORAGE_CHAT_ID_KEY,
-} from "./constants";
-import { getChat, getChatMessages, setChatId } from "./slices/chat-slice";
+import { OFFICE_HOURS_INTERVAL_TIMEOUT, SESSION_STORAGE_CHAT_ID_KEY } from "./constants";
+import { getChat, getChatMessages, getEmergencyNotice, setChatId } from "./slices/chat-slice";
 import { useAppDispatch } from "./store";
 import useNewMessageNotification from "./hooks/use-new-message-notification";
 import useAuthentication from "./hooks/use-authentication";
@@ -18,6 +15,7 @@ import useGetChat from "./hooks/use-get-chat";
 import useWidgetSelector from "./hooks/use-widget-selector";
 import { getWidgetConfig } from "./slices/widget-slice";
 import useGetWidgetConfig from "./hooks/use-get-widget-config";
+import useGetEmergencyNotice from "./hooks/use-get-emergency-notice";
 
 declare global {
   interface Window {
@@ -41,7 +39,7 @@ declare global {
 
 const App: FC = () => {
   const dispatch = useAppDispatch();
-  const { isChatOpen, messages, chatId } = useChatSelector();
+  const { isChatOpen, messages, chatId, emergencyNotice } = useChatSelector();
   const { widgetConfig } = useWidgetSelector();
   const [displayWidget, setDisplayWidget] = useState(
     !!getFromSessionStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()
@@ -55,6 +53,7 @@ const App: FC = () => {
     OFFICE_HOURS_INTERVAL_TIMEOUT
   );
   useGetWidgetConfig();
+  useGetEmergencyNotice();
   useAuthentication();
   useGetChat();
   useGetNewMessages();
@@ -73,6 +72,7 @@ const App: FC = () => {
       dispatch(getChat());
       dispatch(getChatMessages());
     }
+    if (emergencyNotice === null) dispatch(getEmergencyNotice());
     if (!widgetConfig.isLoaded) dispatch(getWidgetConfig());
   }, [chatId, dispatch, messages, widgetConfig]);
 

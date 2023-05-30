@@ -35,9 +35,9 @@ const AdminMessage = (props: { message: Message }): JSX.Element => {
         {CLIENT_NAME_ENABLED && <div className={styles.name}>{message.authorRole}</div>}
         <div className={styles.main}>
           <div className={styles.icon}>
-            <img src={RobotIcon} alt="Robot icon" />
+            {message.event === CHAT_EVENTS.EMERGENCY_NOTICE ? <div className={styles.emergency}>!</div> : <img src={RobotIcon} alt="Robot icon" />}
           </div>
-          <div className={styles.content}>
+          <div className={`${styles.content} ${message.event === CHAT_EVENTS.EMERGENCY_NOTICE && styles.emergency_content}`}>
             <Linkifier message={message.content} />
           </div>
           <div
@@ -46,7 +46,7 @@ const AdminMessage = (props: { message: Message }): JSX.Element => {
               message.content?.length !== undefined && message.content?.length > MAXIMUM_MESSAGE_TEXT_LENGTH_FOR_ONE_ROW ? styles.column : styles.row,
             )}
           >
-            {message.event !== CHAT_EVENTS.GREETING && (
+            {![CHAT_EVENTS.GREETING, CHAT_EVENTS.EMERGENCY_NOTICE].includes(message.event as CHAT_EVENTS) && (
               <div>
                 <button
                   type="button"

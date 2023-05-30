@@ -48,6 +48,12 @@ export interface ChatState {
     error: any;
     data:any;
   };
+  emergencyNotice: {
+    start: string;
+    end: string;
+    text: string;
+    isVisible: boolean;
+  } | null
 }
 
 const initialState: ChatState = {
@@ -89,7 +95,8 @@ const initialState: ChatState = {
     isLoading: false,
     error: false,
     data: null,
-  }
+  },
+  emergencyNotice: null
 };
 
 export const initChat = createAsyncThunk('chat/init', async (message: Message) =>
@@ -154,6 +161,8 @@ export const sendMessageWithNewEvent = createAsyncThunk('chat/sendMessageWithNew
 );
 
 export const getGreeting = createAsyncThunk('chat/getGreeting', async () => ChatService.getGreeting());
+
+export const getEmergencyNotice = createAsyncThunk('chat/getEmergencyNotice', async () => ChatService.getEmergencyNotice());
 
 export const sendNewMessage = createAsyncThunk('chat/sendNewMessage', (message: Message) => ChatService.sendNewMessage(message));
 
@@ -293,6 +302,14 @@ export const chatSlice = createSlice({
         event: 'greeting',
         authorTimestamp: new Date().toISOString(),
       });
+    });
+    builder.addCase(getEmergencyNotice.fulfilled, (state, action) => {
+      state.emergencyNotice = {
+        start: action.payload.emergencyNoticeStartISO,
+        end: action.payload.emergencyNoticeEndISO,
+        text: action.payload.emergencyNoticeText,
+        isVisible: action.payload.isEmergencyNoticeVisible,
+      };
     });
     builder.addCase(endChat.fulfilled, (state) => {
       state.chatStatus = CHAT_STATUS.ENDED;

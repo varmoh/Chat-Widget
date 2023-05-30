@@ -4,7 +4,7 @@ import { WidgetConfigResponse } from "../model/widget-config-response-model";
 
 class WidgetService {
   getWidgetConfig(): Promise<WidgetConfigResponse> {
-    return http2.get(RUUTER_ENDPOINTS.GET_CHAT_CONFIG);
+    return http2.get(RUUTER_ENDPOINTS.GET_WIDGET_CONFIG);
   }
 
   sendContactInfo(chatId:string, email: string, phone: string): Promise<WidgetConfigResponse> {
