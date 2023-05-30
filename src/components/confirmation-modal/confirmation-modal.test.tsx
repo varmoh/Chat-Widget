@@ -21,6 +21,7 @@ describe('Confirmation modal component', () => {
       preloadedState: {
         widget: {
           showConfirmationModal: true,
+          burokrattOnlineStatus: null,
           widgetConfig: {
             proactiveSeconds: CHAT_BUBBLE_PROACTIVE_SECONDS,
             showMessage: CHAT_SHOW_BUBBLE_MESSAGE,

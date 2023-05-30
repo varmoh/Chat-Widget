@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   CHAT_BUBBLE_PROACTIVE_SECONDS,
   CHAT_SHOW_BUBBLE_MESSAGE,
@@ -7,10 +7,12 @@ import {
   CHAT_BUBBLE_ANIMATION,
 } from "../constants";
 import WidgetService from "../services/widget-service";
+import chatService from '../services/chat-service';
 import { endChat } from "./chat-slice";
 
 export interface WidgetState {
   showConfirmationModal: boolean;
+  burokrattOnlineStatus: boolean | null;
   widgetConfig: {
     proactiveSeconds: number;
     showMessage: boolean;
@@ -24,6 +26,7 @@ export interface WidgetState {
 
 const initialState: WidgetState = {
   showConfirmationModal: false,
+  burokrattOnlineStatus: null,
   widgetConfig: {
     proactiveSeconds: CHAT_BUBBLE_PROACTIVE_SECONDS,
     showMessage: CHAT_SHOW_BUBBLE_MESSAGE,
@@ -36,6 +39,8 @@ const initialState: WidgetState = {
 };
 
 export const getWidgetConfig = createAsyncThunk("chat/getWidgetConfig", async () => WidgetService.getWidgetConfig());
+
+export const burokrattOnlineStatusRequest = createAsyncThunk('widget/burokrattOnlineStatus', async () => chatService.burokrattOnlineStatus());
 
 export const widgetSlice = createSlice({
   name: "widget",
@@ -51,6 +56,12 @@ export const widgetSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(endChat.pending, (state) => {
       state.showConfirmationModal = false;
+    });
+    builder.addCase(burokrattOnlineStatusRequest.fulfilled, (state) => {
+      state.burokrattOnlineStatus = true;
+    });
+    builder.addCase(burokrattOnlineStatusRequest.rejected, (state) => {
+      state.burokrattOnlineStatus = false;
     });
     builder.addCase(getWidgetConfig.rejected, (state) => {
       state.widgetConfig.isLoaded = true;

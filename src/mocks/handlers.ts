@@ -9,7 +9,7 @@ import getWaitingTime from './responses/get-waiting-time.json';
 import postMessage from './responses/post-message.json';
 import { RUUTER_ENDPOINTS } from '../constants';
 
-const ruuterUrl = 'http://localhost:8080';
+const ruuterUrl = 'http://localhost:3003';
 
 const handlers = [
   rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.INIT_CHAT}`, (_req, res, ctx) => res(ctx.json(initChat))),

@@ -3,6 +3,7 @@ import reducer, { closeConfirmationModal, showConfirmationModal, WidgetState } f
 
 const initialState: WidgetState = {
   showConfirmationModal: false,
+  burokrattOnlineStatus: null,
   widgetConfig: {
     proactiveSeconds: CHAT_BUBBLE_PROACTIVE_SECONDS,
     showMessage: CHAT_SHOW_BUBBLE_MESSAGE,
@@ -15,11 +16,11 @@ const initialState: WidgetState = {
 };
 
 describe('Widget slice', () => {
-  // it('should showConfirmationModal', () => {
-  //   expect(reducer(initialState, showConfirmationModal())).toEqual({
-  //     showConfirmationModal: true,
-  //   });
-  // });
+  it('should showConfirmationModal', () => {
+    expect(reducer(initialState, showConfirmationModal())).toEqual({
+      showConfirmationModal: true,
+      burokrattOnlineStatus: null,
+  });
 
   // it('should closeConfirmationModal', () => {
   //   expect(reducer(initialState, closeConfirmationModal())).toEqual({ ...initialState, showConfirmationModal: false });

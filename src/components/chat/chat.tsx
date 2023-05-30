@@ -9,7 +9,7 @@ import ChatHeader from '../chat-header/chat-header';
 import ChatKeyPad from '../chat-keypad/chat-keypad';
 import ConfirmationModal from '../confirmation-modal/confirmation-modal';
 import styles from './chat.module.scss';
-import { useAppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import {
   endChat,
   getEstimatedWaitingTime,
@@ -25,6 +25,7 @@ import ChatFeedbackConfirmation from '../chat-feedback/chat-feedback-confirmatio
 import EndUserContacts from '../end-user-contacts/end-user-contacts';
 import WidgetDetails from '../chat-header/widget-details';
 import useAuthenticationSelector from '../../hooks/use-authentication-selector';
+import OnlineStatusNotification from '../online-status-notification/online-status-notification';
 import IdleChatNotification from '../idle-chat-notification/idle-chat-notification';
 import getIdleTime from '../../utils/getIdleTime';
 
@@ -45,7 +46,8 @@ const Chat = (): JSX.Element => {
   const [showFeedbackResult, setShowFeedbackResult] = useState(false);
   const { t } = useTranslation();
   const { isAuthenticated } = useAuthenticationSelector();
-  const { isChatEnded, chatId, messageQueue, estimatedWaiting, idleChat, showContactForm, customerSupportId, feedback, messages, chatDimensions } = useChatSelector();
+  const { isChatEnded, chatId, messageQueue, estimatedWaiting, showContactForm, customerSupportId, feedback, messages, chatDimensions } = useChatSelector();
+  const { burokrattOnlineStatus } = useAppSelector((state) => state.widget);
 
   useEffect(() => {
     if (
@@ -127,19 +129,19 @@ useLayoutEffect(() => {
           className={`${styles.chat} ${
             isAuthenticated ? styles.authenticated : ''
           }`}
-          style={{ y: 400 }}
           animate={{ y: 0 }}
+          style={{ y: 400 }}
         >
           <ChatHeader
             isDetailSelected={showWidgetDetails}
             detailHandler={() => setShowWidgetDetails(!showWidgetDetails)}
           />
           {messageQueue.length >= 5 && <WarningNotification warningMessage={t('chat.error-message')}/>}
+          {burokrattOnlineStatus !== true && <OnlineStatusNotification/>}
           {estimatedWaiting.time > 0 && estimatedWaiting.isActive && !showWidgetDetails && <WaitingTimeNotification/>}
           {showWidgetDetails && <WidgetDetails/>}
           {!showWidgetDetails && showContactForm && <EndUserContacts/>}
           {!showWidgetDetails && !showContactForm && <ChatContent/>}
-          {idleChat.isIdle && <IdleChatNotification/>}
           {showFeedbackResult ? (
             <ChatFeedbackConfirmation />
           ) : (
