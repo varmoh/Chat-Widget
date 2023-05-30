@@ -19,6 +19,28 @@ const handlers = [
   rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.GET_CHAT_BY_ID}`, (_req, res, ctx) => res(ctx.json(chatById))),
   rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.GET_NEW_MESSAGES}`, (_req, res, ctx) => res(ctx.json(messagesForChatInTimerange))),
   rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.GET_WAITING_TIME}`, (_req, res, ctx) => res(ctx.json(getWaitingTime))),
+  rest.get(`${ruuterUrl}${RUUTER_ENDPOINTS.DOWNLOAD_CHAT}`, async (_req, res, ctx) => {
+    // TODO fix with correct mocking
+    const url = 'https://cors-anywhere.herokuapp.com/https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+    const requestOptions = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/pdf',
+        },
+    };
+    const pdfFile = await fetch(url, requestOptions)
+    .then((res) =>
+    res.arrayBuffer(),)
+
+  return res(
+    ctx.set('Content-Length', pdfFile.byteLength.toString()),
+    ctx.set('Content-Type', 'application/pdf'),
+    ctx.body(pdfFile),
+  )
+    
+  }),
+
+  rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.SEND_ATTACHMENT}`, (_req, res, ctx) => res(ctx.status(200))),
   rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.SEND_USER_CONTACTS}`, (req, res, ctx) => {
 console.log('req.body',req.body)
     const success = {

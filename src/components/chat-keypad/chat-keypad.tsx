@@ -1,144 +1,255 @@
-import React, { useEffect, useState } from 'react';
+import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import styled from 'styled-components';
-import { useAppDispatch } from '../../store';
+import {useAppDispatch} from '../../store';
 import {
-  addMessage,
-  clearMessageQueue,
-  initChat,
-  queueMessage,
-  sendFeedbackMessage,
-  sendNewMessage,
-  setFeedbackMessageGiven,
-  setFeedbackWarning,
+    addMessage,
+    clearMessageQueue,
+    initChat,
+    queueMessage,
+    sendAttachment,
+    sendFeedbackMessage,
+    sendNewMessage,
+    setFeedbackMessageGiven,
+    setFeedbackWarning,
 } from '../../slices/chat-slice';
 import Send from '../../static/icons/send.svg';
+import File from '../../static/icons/file.svg';
 import styles from './chat-keypad.module.scss';
 import useChatSelector from '../../hooks/use-chat-selector';
 import KeypadErrorMessage from './keypad-error-message';
 import ChatKeypadCharCounter from './chat-keypad-char-counter';
-import { AUTHOR_ROLES, CHAT_STATUS, MESSAGE_MAX_CHAR_LIMIT, MESSAGE_QUE_MAX_LENGTH, StyledButtonType } from '../../constants';
-import { Message } from '../../model/message-model';
+import {
+    AUTHOR_ROLES,
+    CHAT_STATUS, MESSAGE_FILE_SIZE_LIMIT,
+    MESSAGE_MAX_CHAR_LIMIT,
+    MESSAGE_QUE_MAX_LENGTH,
+    StyledButtonType
+} from '../../constants';
+import {Message, Attachment, AttachmentTypes} from '../../model/message-model';
 import StyledButton from '../styled-components/styled-button';
+import Close from "../../static/icons/close.svg";
+import formatBytes from "../../utils/format-bytes";
 
 const ChatKeyPad = (): JSX.Element => {
-  const [userInput, setUserInput] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isKeypadDisabled, setKeypadDisabled] = useState(false);
-  const { feedback, chatId, loading, messageQueue, chatStatus } = useChatSelector();
-  const { t } = useTranslation();
-  const dispatch = useAppDispatch();
+    const [userInput, setUserInput] = useState<string>('');
+    const [userInputFile, setUserInputFile] = useState<Attachment>();
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isKeypadDisabled, setKeypadDisabled] = useState(false);
+    const {feedback, chatId, loading, messageQueue, chatStatus} = useChatSelector();
+    const {t} = useTranslation();
+    const dispatch = useAppDispatch();
+    const hiddenFileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleTextFeedback = () => {
-    if (!feedback.isFeedbackRatingGiven) {
-      dispatch(setFeedbackWarning(true));
-      return;
-    }
-    dispatch(setFeedbackWarning(false));
-    dispatch(sendFeedbackMessage({ userInput }));
-    dispatch(setFeedbackMessageGiven(true));
-    setKeypadDisabled(true);
-  };
-  useEffect(() => {
-    if (messageQueue.length >= MESSAGE_QUE_MAX_LENGTH) {
-      setKeypadDisabled(true);
-    }
-  }, [messageQueue]);
+    const handleUploadClick = () => {
+        hiddenFileInputRef.current?.click();
+    };
+    const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) {
+            return;
+        }
+        const base64 = await handleFileRead(e.target.files[0]);
 
-  useEffect(() => {
-    if (chatId && !loading && messageQueue.length > 0) {
-      messageQueue.forEach((message) => {
-        setTimeout(() => {
-          dispatch(sendNewMessage({ ...message, chatId }));
-        }, 250);
-      });
-      dispatch(clearMessageQueue());
-      setKeypadDisabled(false);
-    }
-  }, [chatId, dispatch, loading, messageQueue]);
+        if (!base64) return;
 
-  const isInputValid = () => {
-    if (!userInput.trim()) return false;
-    if (userInput.length >= MESSAGE_MAX_CHAR_LIMIT) {
-      setErrorMessage(t('keypad.long-message-warning'));
-      return false;
-    }
-    return true;
-  };
-
-  const addNewMessageToState = (): void => {
-    if (!isInputValid()) return;
-    const message: Message = {
-      chatId,
-      content: userInput,
-      authorTimestamp: new Date().toISOString(),
-      authorRole: AUTHOR_ROLES.END_USER,
+        setUserInput(e.target.files[0].name);
+        setUserInputFile({
+            chatId: chatId!,
+            name: e.target.files[0].name,
+            type: e.target.files[0].type as AttachmentTypes,
+            size: e.target.files[0].size,
+            base64: base64
+        });
     };
 
-    dispatch(addMessage(message));
-    setUserInput('');
+    const handleTextFeedback = () => {
+        if (!feedback.isFeedbackRatingGiven) {
+            dispatch(setFeedbackWarning(true));
+            return;
+        }
+        dispatch(setFeedbackWarning(false));
+        dispatch(sendFeedbackMessage({userInput}));
+        dispatch(setFeedbackMessageGiven(true));
+        setKeypadDisabled(true);
+    };
+    useEffect(() => {
+        if (messageQueue.length >= MESSAGE_QUE_MAX_LENGTH) {
+            setKeypadDisabled(true);
+        }
+    }, [messageQueue]);
 
-    if (!chatId && !loading) {
-      dispatch(initChat(message));
+    useEffect(() => {
+        if (chatId && !loading && messageQueue.length > 0) {
+            messageQueue.forEach((message) => {
+                setTimeout(() => {
+                    dispatch(sendNewMessage({...message, chatId}));
+                }, 250);
+            });
+            dispatch(clearMessageQueue());
+            setKeypadDisabled(false);
+        }
+    }, [chatId, dispatch, loading, messageQueue]);
+
+    const isInputValid = () => {
+        if (!userInput.trim()) return false;
+        if (userInput.length >= MESSAGE_MAX_CHAR_LIMIT) {
+            setErrorMessage(t('keypad.long-message-warning'));
+            return false;
+        }
+        return true;
+    };
+
+    const addNewMessageToState = (): void => {
+        if (!isInputValid()) return;
+        const message: Message = {
+            chatId,
+            content: userInput,
+            file: userInputFile,
+            authorTimestamp: new Date().toISOString(),
+            authorRole: AUTHOR_ROLES.END_USER,
+        };
+
+        dispatch(addMessage(message));
+        dispatch(sendAttachment(userInputFile!))
+        handleUploadClear();
+
+        if (!chatId && !loading) {
+            dispatch(initChat(message));
+        }
+        if (loading) {
+            dispatch(queueMessage(message));
+        }
+        if (chatId) {
+            dispatch(sendNewMessage(message));
+        }
+    };
+
+
+    const keypadClasses = classNames(styles.keypad);
+    return (
+        <div>
+            <KeypadErrorMessage>{errorMessage}</KeypadErrorMessage>
+            <div className={`${keypadClasses}`}>
+                <input
+                    disabled={!!userInputFile ? true : isKeypadDisabled}
+                    aria-label={t('keypad.input.label')}
+                    className={`${styles.input}`}
+                    value={!!userInputFile ? userInputFile.name : userInput}
+                    placeholder={t('keypad.input.placeholder')}
+                    onChange={(e) => {
+                        setUserInput(e.target.value);
+                        setErrorMessage('');
+                    }}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                            if (chatStatus === CHAT_STATUS.ENDED && !!chatId) handleTextFeedback();
+                            else {
+                                event.preventDefault();
+                                addNewMessageToState();
+                            }
+                        }
+                    }}
+                />
+                <input
+                    type="file"
+                    ref={hiddenFileInputRef}
+                    onChange={handleFileChange}
+                    style={{display: 'none'}}
+                />
+
+
+                {chatStatus === CHAT_STATUS.ENDED && !!chatId ? (
+                    <FeedbackButtonStyle onClick={() => handleTextFeedback()} styleType={StyledButtonType.GRAY}>
+                        {t('chat.feedback.button.label')}
+                    </FeedbackButtonStyle>
+                ) : (
+                    <>
+                        <div
+                            onKeyPress={addNewMessageToState}
+                            onClick={addNewMessageToState}
+                            className={styles.button}
+                            title={t('keypad.button.label')}
+                            aria-label={t('keypad.button.label')}
+                            role="button"
+                            tabIndex={0}
+                        >
+                            <img src={Send} alt="Send message icon"/>
+                        </div>
+
+                        {!!userInputFile ? (
+                            <div
+                                onKeyPress={() => null}
+                                onClick={handleUploadClear}
+                                className={styles.button_cancelUpload}
+                                title={t('keypad.button.label')}
+                                aria-label={t('keypad.button.label')}
+                                role="button"
+                                tabIndex={0}
+                            >
+                                <img src={Close} alt="Close icon"/>
+                            </div>
+
+                        ) : (
+                            <div
+                                onKeyPress={() => null}
+                                onClick={handleUploadClick}
+                                className={styles.button}
+                                title={t('keypad.button.label')}
+                                aria-label={t('keypad.button.label')}
+                                role="button"
+                                tabIndex={0}
+                            >
+                                <img src={File} alt="Send file icon"/>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
+            <ChatKeypadCharCounter userInput={userInput}/>
+        </div>
+    );
+
+    async function handleFileRead(file: File): Promise<string | null> {
+
+        if (!Object.values(AttachmentTypes).some((v) => v === file.type)) {
+            setErrorMessage(`${file.type} file type is not supported`)
+            return null
+        }
+
+        if (file.size > MESSAGE_FILE_SIZE_LIMIT) {
+            setErrorMessage(`Max allowed file size is ${formatBytes(MESSAGE_FILE_SIZE_LIMIT)}`)
+            return null;
+        } else {
+            return await convertBase64(file)
+        }
+
     }
-    if (loading) {
-      dispatch(queueMessage(message));
-    }
-    if (chatId) {
-      dispatch(sendNewMessage(message));
-    }
-  };
-  const keypadClasses = classNames(styles.keypad);
-  return (
-    <div>
-      <KeypadErrorMessage>{errorMessage}</KeypadErrorMessage>
-      <div className={`${keypadClasses}`}>
-        <input
-          disabled={isKeypadDisabled}
-          aria-label={t('keypad.input.label')}
-          className={`${styles.input}`}
-          value={userInput}
-          placeholder={t('keypad.input.placeholder')}
-          onChange={(e) => {
-            setUserInput(e.target.value);
-            setErrorMessage('');
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              if (chatStatus === CHAT_STATUS.ENDED && !!chatId) handleTextFeedback();
-              else {
-                event.preventDefault();
-                addNewMessageToState();
-              }
+
+    async function convertBase64(file: File): Promise<any> {
+        return await new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file)
+            fileReader.onload = () => {
+                resolve(fileReader.result);
             }
-          }}
-        />
-        {chatStatus === CHAT_STATUS.ENDED && !!chatId ? (
-          <FeedbackButtonStyle onClick={() => handleTextFeedback()} styleType={StyledButtonType.GRAY}>
-            {t('chat.feedback.button.label')}
-          </FeedbackButtonStyle>
-        ) : (
-          <div
-            onKeyPress={addNewMessageToState}
-            onClick={addNewMessageToState}
-            className={styles.button}
-            title={t('keypad.button.label')}
-            aria-label={t('keypad.button.label')}
-            role="button"
-            tabIndex={0}
-          >
-            <img src={Send} alt="Send icon" />
-          </div>
-        )}
-      </div>
-      <ChatKeypadCharCounter userInput={userInput} />
-    </div>
-  );
+            fileReader.onerror = (error) => {
+                reject(error);
+            }
+        })
+    }
+
+    function handleUploadClear() {
+        setUserInputFile(undefined);
+        setUserInput('');
+        setErrorMessage('');
+    }
+
 };
 
 const FeedbackButtonStyle = styled(StyledButton)`
   padding: 0.5rem 1rem;
 `;
+
 
 export default ChatKeyPad;
