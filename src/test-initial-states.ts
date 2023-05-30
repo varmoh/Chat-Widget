@@ -48,6 +48,18 @@ export const initialChatState: ChatState = {
     data: null,
   },
   emergencyNotice: null
+  contactForm: {
+    data: {
+      chatId: null,
+      endUserEmail: null,
+      endUserPhone: null,
+    },
+    state: {
+      isLoading: false,
+      isSubmitted: false,
+      isFailed: false,
+    }
+  }
 };
 
 export const initialAuthState: AuthenticationState = {

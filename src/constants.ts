@@ -88,6 +88,7 @@ export enum RUUTER_ENDPOINTS {
   CUSTOM_JWT_EXTEND = '/custom-jwt-extend',
   CUSTOM_JWT_USERINFO = '/custom-jwt-userinfo',
   DOWNLOAD_CHAT = '/chat/download',
+  SEND_USER_CONTACTS = '/end-user-email-phone'
 }
 
 export enum StyledButtonType {

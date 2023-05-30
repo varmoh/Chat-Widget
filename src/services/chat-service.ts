@@ -1,3 +1,4 @@
+import { UserContacts } from './../model/user-contacts-model';
 import http from './http-service';
 import http2 from "./http2-service";
 import { Message } from '../model/message-model';
@@ -9,6 +10,17 @@ import { EmergencyNoticeResponse } from '../model/emergency-notice-response-mode
 
 interface Document {
   _id: string;
+}
+
+interface Response {
+  config: Record<any,any>,
+  data: {
+    response: Record<any,any>
+  },
+  headers: Record<any,any>,
+  request: Record<any,any>,
+  status: number,
+  statusText: string,
 }
 
 class ChatService {
@@ -52,8 +64,10 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.SEND_FEEDBACK_MESSAGE, { chatId, feedbackText: userFeedback });
   }
 
-  getEstimatedWaitingTime(): Promise<EstimatedWaiting> {
-    return http.post(RUUTER_ENDPOINTS.GET_WAITING_TIME);
+  async getEstimatedWaitingTime(): Promise<any> { //TODO fix return type // Promise<Response>
+    const result = await http.post(RUUTER_ENDPOINTS.GET_WAITING_TIME);
+    //@ts-ignore 
+    return result.data.response;
   }
 
   sendMessageWithNewEvent(message: Message): Promise<void> {
@@ -70,6 +84,10 @@ class ChatService {
 
   generateDownloadChatRequest(): Promise<void> {
     return http.get(RUUTER_ENDPOINTS.DOWNLOAD_CHAT)
+  }
+
+  sendUserContacts({chatId, endUserEmail, endUserPhone}:UserContacts  ): Promise<void>{
+    return http.post(RUUTER_ENDPOINTS.SEND_USER_CONTACTS);
   }
 
   burokrattOnlineStatus(): Promise<boolean> {

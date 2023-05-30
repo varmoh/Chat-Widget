@@ -19,6 +19,25 @@ const handlers = [
   rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.GET_CHAT_BY_ID}`, (_req, res, ctx) => res(ctx.json(chatById))),
   rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.GET_NEW_MESSAGES}`, (_req, res, ctx) => res(ctx.json(messagesForChatInTimerange))),
   rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.GET_WAITING_TIME}`, (_req, res, ctx) => res(ctx.json(getWaitingTime))),
+  rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.SEND_USER_CONTACTS}`, (req, res, ctx) => {
+console.log('req.body',req.body)
+    const success = {
+      "response": "Updated 123 with example@example.com and +1 404."
+    }
+      
+    const fail = {
+      "response": "Missing chatId in request body."
+    }
+    
+    return res(
+      ctx.status(200),
+      ctx.json(success));
+
+    // return res(
+    //   ctx.status(400),
+    //   ctx.json(fail));
+  }),
+
   rest.get(`${ruuterUrl}${RUUTER_ENDPOINTS.DOWNLOAD_CHAT}`, async (_req, res, ctx) => {
     // TODO fix with correct mocking
     const url = 'https://cors-anywhere.herokuapp.com/https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';

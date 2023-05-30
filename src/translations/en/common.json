@@ -66,6 +66,7 @@
   "widget.form.message": "Type your question here",
   "widget.form.info": "Forwarded contact information",
   "widget.form.success": "Thank you, you will be contacted as soon as possible.",
+  "widget.form.error": "An error occurred!",
   "widget.time.minutes": "minutes",
   "widget.time.minute": "minute"
 }
