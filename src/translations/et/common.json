@@ -17,7 +17,7 @@
   "notifications.authenticate.is-authenticated": "tuvastatud",
   "notifications.customer-service-busy": "Hetkel on kõik klienditeenindajad hõivatud.",
   "notifications.waiting-time": "Eeldatud ooteaeg minutites: {{time}}",
-  "notifications.offline": "Bürokratt ei ole hetkel saadaval!",
+  "notifications.offline": "Teenus pole hetkel saadaval!",
   "notifications.idle-chat-notification": "Kas soovid vestlust jätkata?",
   "notifications.ask-contact-information": "Kas soovite jätta enda kontaktandmed, et klienditeenindaja saaks ise ühendust võtta?",
   "keypad.input.placeholder": "Kirjutage oma sõnum...",

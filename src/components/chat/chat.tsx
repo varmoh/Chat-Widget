@@ -46,7 +46,7 @@ const Chat = (): JSX.Element => {
   const [showFeedbackResult, setShowFeedbackResult] = useState(false);
   const { t } = useTranslation();
   const { isAuthenticated } = useAuthenticationSelector();
-  const { isChatEnded, chatId, messageQueue, estimatedWaiting, showContactForm, customerSupportId, feedback, messages, chatDimensions } = useChatSelector();
+  const { isChatEnded, chatId, messageQueue, estimatedWaiting, idleChat, showContactForm, customerSupportId, feedback, messages, chatDimensions } = useChatSelector();
   const { burokrattOnlineStatus } = useAppSelector((state) => state.widget);
 
   useEffect(() => {
@@ -142,6 +142,7 @@ useLayoutEffect(() => {
           {showWidgetDetails && <WidgetDetails/>}
           {!showWidgetDetails && showContactForm && <EndUserContacts/>}
           {!showWidgetDetails && !showContactForm && <ChatContent/>}
+          {idleChat.isIdle && <IdleChatNotification/>}
           {showFeedbackResult ? (
             <ChatFeedbackConfirmation />
           ) : (
