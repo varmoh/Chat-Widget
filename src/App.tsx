@@ -11,6 +11,7 @@ import {
   SESSION_STORAGE_CHAT_ID_KEY,
   CHAT_STATUS,
   ONLINE_CHECK_INTERVAL_ACTIVE_CHAT,
+  IDLE_CHAT_INTERVAL,
 } from './constants';
 import { getChat, getChatMessages, getEmergencyNotice, setChatId } from "./slices/chat-slice";
 import { useAppDispatch, useAppSelector } from './store';

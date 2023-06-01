@@ -129,7 +129,7 @@ const initialState: ChatState = {
     error: false,
     data: null,
   },
-  emergencyNotice: null
+  emergencyNotice: null,
   contactForm: {
     data: {
       chatId: null,
@@ -182,7 +182,7 @@ export const sendFeedbackMessage = createAsyncThunk('chat/sendFeedbackMessage', 
   ChatService.sendFeedbackMessage({ chatId, userFeedback: args.userInput });
 });
 
-export const endChat = createAsyncThunk('chat/endChat', async (args: { event: CHAT_EVENTS }, thunkApi) => {
+export const endChat = createAsyncThunk('chat/endChat', async (args: { event: CHAT_EVENTS | null}, thunkApi) => {
   const {
     chat: { chatStatus, chatId },
   } = thunkApi.getState() as { chat: ChatState };
@@ -194,7 +194,7 @@ export const endChat = createAsyncThunk('chat/endChat', async (args: { event: CH
       chatId,
       authorTimestamp: new Date().toISOString(),
       authorRole: AUTHOR_ROLES.END_USER,
-      event: args.event.toUpperCase(),
+      event: args.event?.toUpperCase(),
     });
 });
 

@@ -9,7 +9,7 @@ import { CHAT_EVENTS } from '../../constants';
 
 interface Props {
   readonly npsFeedback: {
-    readonly feedback: CHAT_EVENTS;
+    readonly feedback: CHAT_EVENTS | null;
     readonly showNps: boolean;
   };
 }

@@ -5,8 +5,6 @@ const http = axios.create({
   baseURL: window._env_.RUUTER_API_URL,
   headers: {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS'
   },
   withCredentials: true,
 });
