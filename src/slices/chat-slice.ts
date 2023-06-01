@@ -2,10 +2,29 @@ import { UserContacts } from './../model/user-contacts-model';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Attachment, Message, } from '../model/message-model';
 import ChatService from '../services/chat-service';
-import { AUTHOR_ROLES, CHAT_EVENTS, CHAT_STATUS, ERROR_MESSAGE, SESSION_STORAGE_CHAT_ID_KEY, CHAT_WINDOW_HEIGHT, CHAT_WINDOW_WIDTH, CHAT_BUBBLE_ANIMATION, CHAT_BUBBLE_COLOR, CHAT_BUBBLE_MESSAGE_DELAY_SECONDS, CHAT_BUBBLE_PROACTIVE_SECONDS, CHAT_SHOW_BUBBLE_MESSAGE } from '../constants';
+import { 
+  AUTHOR_ROLES,
+  CHAT_EVENTS,
+  CHAT_STATUS,
+  ERROR_MESSAGE,
+  SESSION_STORAGE_CHAT_ID_KEY,
+  LOCAL_STORAGE_CHAT_DIMENSIONS_KEY,
+  CHAT_WINDOW_HEIGHT,
+  CHAT_WINDOW_WIDTH,
+  CHAT_BUBBLE_ANIMATION,
+  CHAT_BUBBLE_COLOR,
+  CHAT_BUBBLE_MESSAGE_DELAY_SECONDS,
+  CHAT_BUBBLE_PROACTIVE_SECONDS,
+  CHAT_SHOW_BUBBLE_MESSAGE
+} from '../constants';
 import { getFromSessionStorage, setToSessionStorage } from '../utils/session-storage-utils';
 import { Chat } from '../model/chat-model';
-import { clearStateVariablesFromSessionStorage, findMatchingMessageFromMessageList } from '../utils/state-management-utils';
+import { 
+  clearStateVariablesFromSessionStorage, 
+  findMatchingMessageFromMessageList, 
+  getInitialChatDimensions 
+} from '../utils/state-management-utils';
+import { setToLocalStorage } from '../utils/local-storage-utils';
 
 export interface EstimatedWaiting {
   positionInUnassignedChats: string;
@@ -19,7 +38,7 @@ export interface ChatState {
   chatDimensions: {
     width: number;
     height: number;
-  }
+  };
   customerSupportId: string;
   lastReadMessageTimestamp: string | null;
   messages: Message[];
@@ -73,10 +92,7 @@ const initialState: ChatState = {
   chatId: null,
   isChatOpen: false,
   chatStatus: null,
-  chatDimensions: {
-    width: CHAT_WINDOW_WIDTH,
-    height: CHAT_WINDOW_HEIGHT
-  },
+  chatDimensions: getInitialChatDimensions(),
   customerSupportId: '',
   lastReadMessageTimestamp: null,
   messages: [],
@@ -226,6 +242,7 @@ export const chatSlice = createSlice({
     },
     setChatDimensions: (state, action: PayloadAction<{ width: number; height: number }>) => {
       state.chatDimensions = action.payload;
+      setToLocalStorage(LOCAL_STORAGE_CHAT_DIMENSIONS_KEY, action.payload);
     },
     clearMessageQueue: (state) => {
       state.messageQueue = [];

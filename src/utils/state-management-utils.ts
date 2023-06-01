@@ -1,7 +1,14 @@
 import { DateTime } from 'luxon';
 import { Message } from '../model/message-model';
-import { CHAT_EVENTS, SESSION_STORAGE_CHAT_ID_KEY } from '../constants';
+import {
+  CHAT_EVENTS,
+  CHAT_WINDOW_HEIGHT,
+  CHAT_WINDOW_WIDTH,
+  LOCAL_STORAGE_CHAT_DIMENSIONS_KEY,
+  SESSION_STORAGE_CHAT_ID_KEY
+} from '../constants';
 import { setToSessionStorage } from './session-storage-utils';
+import { getFromLocalStorage } from './local-storage-utils';
 
 export const findMatchingMessageFromMessageList = (messageToMatch: Message, messages: Message[]): Message | undefined =>
   messages.find(
@@ -22,3 +29,16 @@ export const clearStateVariablesFromSessionStorage = (): void => {
   setToSessionStorage(SESSION_STORAGE_CHAT_ID_KEY, null);
   setToSessionStorage('newMessagesAmount', 0);
 };
+
+export const getInitialChatDimensions = (): { width: number, height: number } => {
+  const storedDimensions = getFromLocalStorage(LOCAL_STORAGE_CHAT_DIMENSIONS_KEY)
+
+  const isValiedValue = !isNaN(storedDimensions?.width) && !isNaN(storedDimensions?.height);
+
+  return isValiedValue
+    ? storedDimensions
+    : {
+      width: CHAT_WINDOW_WIDTH,
+      height: CHAT_WINDOW_HEIGHT
+    };
+}
