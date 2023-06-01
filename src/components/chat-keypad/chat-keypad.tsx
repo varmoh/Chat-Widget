@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useRef, useState} from 'react';
 import classNames from 'classnames';
 import {useTranslation} from 'react-i18next';
 import styled from 'styled-components';
@@ -10,6 +10,7 @@ import {
     queueMessage,
     sendAttachment,
     sendFeedbackMessage,
+    sendMessagePreview,
     sendNewMessage,
     setFeedbackMessageGiven,
     setFeedbackWarning,
@@ -31,6 +32,7 @@ import {Message, Attachment, AttachmentTypes} from '../../model/message-model';
 import StyledButton from '../styled-components/styled-button';
 import Close from "../../static/icons/close.svg";
 import formatBytes from "../../utils/format-bytes";
+import debounce from '../../utils/debounce';
 
 const ChatKeyPad = (): JSX.Element => {
     const [userInput, setUserInput] = useState<string>('');
@@ -125,6 +127,15 @@ const ChatKeyPad = (): JSX.Element => {
         }
     };
 
+    const handleKeyUp = useCallback(debounce(() => {
+      const message: Message = {
+        chatId, 
+        content: userInput,
+        authorTimestamp: new Date().toISOString(),
+      };
+
+      dispatch(sendMessagePreview(message));
+    }), [])
 
     const keypadClasses = classNames(styles.keypad);
     return (
@@ -150,6 +161,7 @@ const ChatKeyPad = (): JSX.Element => {
                             }
                         }
                     }}
+                    onKeyUp={handleKeyUp}
                 />
                 <input
                     type="file"

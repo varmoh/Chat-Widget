@@ -36,6 +36,10 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, message);
   }
 
+  sendMessagePreview({ chatId, content }: Message): Promise<void> {
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE_PREVIEW, { chatId, content });
+  }
+
   getMessages(chatId: string): Promise<Message[]> {
     return http.post(RUUTER_ENDPOINTS.GET_MESSAGES_BY_CHAT_ID, { id: chatId });
   }
