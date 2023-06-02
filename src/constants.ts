@@ -60,6 +60,7 @@ export enum CHAT_EVENTS {
   CONTACT_INFORMATION = 'contact-information',
   CONTACT_INFORMATION_FULFILLED = 'contact-information-fulfilled',
   CONTACT_INFORMATION_REJECTED = 'contact-information-rejected',
+  MESSAGE_READ = 'message-read',
 }
 
 export enum AUTHOR_ROLES {

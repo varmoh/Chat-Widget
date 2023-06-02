@@ -3,7 +3,7 @@ import { memo, useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Resizable, ResizeCallback } from 're-resizable';
 import useChatSelector from '../../hooks/use-chat-selector';
-import { FEEDBACK_CONFIRMATION_TIMEOUT, CHAT_WINDOW_HEIGHT, CHAT_WINDOW_WIDTH, CHAT_EVENTS, IDLE_CHAT_INTERVAL } from '../../constants';
+import { FEEDBACK_CONFIRMATION_TIMEOUT, CHAT_WINDOW_HEIGHT, CHAT_WINDOW_WIDTH, CHAT_EVENTS, IDLE_CHAT_INTERVAL, AUTHOR_ROLES } from '../../constants';
 import ChatContent from '../chat-content/chat-content';
 import ChatHeader from '../chat-header/chat-header';
 import ChatKeyPad from '../chat-keypad/chat-keypad';
@@ -12,10 +12,9 @@ import styles from './chat.module.scss';
 import { useAppDispatch, useAppSelector } from '../../store';
 import {
   endChat,
-  getEstimatedWaitingTime,
   getGreeting,
+  sendNewMessage,
   setChatDimensions,
-  setEstimatedWaitingTimeToZero,
   setIdleChat,
   setIsFeedbackConfirmationShown
 } from '../../slices/chat-slice';
@@ -28,7 +27,7 @@ import useAuthenticationSelector from '../../hooks/use-authentication-selector';
 import OnlineStatusNotification from '../online-status-notification/online-status-notification';
 import IdleChatNotification from '../idle-chat-notification/idle-chat-notification';
 import getIdleTime from '../../utils/getIdleTime';
-import WaitingTimeNotification from '../waiting-time-notification/waiting-time-notification';
+import { Message } from '../../model/message-model';
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -43,6 +42,7 @@ const RESIZABLE_HANDLES = {
 
 const Chat = (): JSX.Element => {
   const dispatch = useAppDispatch();
+  const [submittingMessageRead, setSubmittingMessageRead] = useState(false);
   const [showWidgetDetails, setShowWidgetDetails] = useState(false);
   const [showFeedbackResult, setShowFeedbackResult] = useState(false);
   const { t } = useTranslation();
@@ -116,6 +116,26 @@ useLayoutEffect(() => {
     }
   }
 }, [idleChat.isIdle, messages]);
+
+  useLayoutEffect(() => {
+    if (
+      !submittingMessageRead &&
+      messages.length > 0 &&
+      messages[messages.length - 1].authorRole === AUTHOR_ROLES.BACKOFFICE_USER
+    ) {
+      setSubmittingMessageRead(true);
+      const message: Message = {
+        chatId,
+        content: CHAT_EVENTS.MESSAGE_READ,
+        authorRole: AUTHOR_ROLES.END_USER,
+        authorTimestamp: new Date().toISOString(),
+        event: CHAT_EVENTS.MESSAGE_READ,
+      };
+      dispatch(sendNewMessage(message)).then((_) => {
+        setSubmittingMessageRead(false);
+      });
+    }
+  }, [dispatch, messages]);
 
   return (
     <div className={styles.chatWrapper}>

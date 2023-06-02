@@ -47,7 +47,7 @@ const ChatContent = (): JSX.Element => {
           {messages.map((message) => (
             <ChatMessage
               message={message}
-              key={`${message.authorTimestamp}-${message.created}`}
+              key={`${message.authorTimestamp}-${message.created}-${message.id}`}
             />
           ))}
         </OverlayScrollbarsComponent>
