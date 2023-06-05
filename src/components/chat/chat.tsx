@@ -103,14 +103,14 @@ useLayoutEffect(() => {
         lastActive = idleChat.lastActive
       }
       const differenceInSeconds = getIdleTime(lastActive);
-        if(differenceInSeconds > IDLE_CHAT_INTERVAL) {
+        if(differenceInSeconds >= IDLE_CHAT_INTERVAL) {
           dispatch(setIdleChat({isIdle: true}));
         }
 
-        if(differenceInSeconds > IDLE_CHAT_INTERVAL + 10) {
+        if(differenceInSeconds >= IDLE_CHAT_INTERVAL + 60) {
           dispatch(endChat({event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS}))
         }
-    }, IDLE_CHAT_INTERVAL*1000);
+    }, 60 * 1000);
     return () => {
       clearInterval(interval);
     }

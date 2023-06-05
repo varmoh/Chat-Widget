@@ -41,9 +41,10 @@ const ChatContent = (): JSX.Element => {
             scrollbars: { visibility: 'auto', autoHide: 'leave' },
           }}
         >
-            {~~estimatedWaiting.durationInSeconds > 0 &&
+          {/* TODO: Logic is incorrect, commented out until it gets fixed */}
+            {/* {~~estimatedWaiting.durationInSeconds > 0 &&
             ~~estimatedWaiting.positionInUnassignedChats > 0 &&
-             <WaitingTimeNotification />}
+             <WaitingTimeNotification />} */}
           {messages.map((message) => (
             <ChatMessage
               message={message}
