@@ -11,7 +11,7 @@ import {
   SESSION_STORAGE_CHAT_ID_KEY,
   CHAT_STATUS,
   ONLINE_CHECK_INTERVAL_ACTIVE_CHAT,
-  IDLE_CHAT_INTERVAL,
+  EXTEND_JWT_COOKIE_IN_MS,
 } from './constants';
 import { getChat, getChatMessages, getEmergencyNotice, setChatId } from "./slices/chat-slice";
 import { useAppDispatch, useAppSelector } from './store';
@@ -59,9 +59,9 @@ const App: FC = () => {
 
   useLayoutEffect(() => {
     if (burokrattOnlineStatus === null) dispatch(burokrattOnlineStatusRequest());
-    else if(burokrattOnlineStatus === false) setOnlineCheckInterval(ONLINE_CHECK_INTERVAL);
-      else if(chatStatus === CHAT_STATUS.OPEN) setOnlineCheckInterval(ONLINE_CHECK_INTERVAL_ACTIVE_CHAT)
-  }, [chatStatus,burokrattOnlineStatus]);
+    else if (burokrattOnlineStatus === false) setOnlineCheckInterval(ONLINE_CHECK_INTERVAL);
+    else if (chatStatus === CHAT_STATUS.OPEN) setOnlineCheckInterval(ONLINE_CHECK_INTERVAL_ACTIVE_CHAT)
+  }, [chatStatus, burokrattOnlineStatus]);
 
   useInterval(
     () => dispatch(burokrattOnlineStatusRequest()),
@@ -84,12 +84,12 @@ const App: FC = () => {
   useNewMessageNotification();
 
   useLayoutEffect(() => {
-    let waitTime = IDLE_CHAT_INTERVAL; 
+    if (!displayWidget || !isChatOpen || !chatId) return;
     const interval = setInterval(() => {
-      if(!displayWidget || !isChatOpen || !chatId) return;
+      if (!displayWidget || !isChatOpen || !chatId) return;
       dispatch(customJwtExtend())
-      waitTime = 120 * 60 * 1000;
-    }, waitTime );
+    }, EXTEND_JWT_COOKIE_IN_MS);
+
     return () => clearInterval(interval);
   }, [messages]);
 

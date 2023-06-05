@@ -6,9 +6,11 @@ import { Message } from '../model/message-model';
 import { CHAT_EVENTS, RUUTER_ENDPOINTS } from '../constants';
 import { addMessagesToDisplay, handleStateChangingEventMessages } from '../slices/chat-slice';
 import { isStateChangingEventMessage } from '../utils/state-management-utils';
+import useAuthenticationSelector from './use-authentication-selector';
 
 const useGetNewMessages = (): void => {
   const { lastReadMessageTimestamp, isChatEnded, chatId } = useChatSelector();
+  const { jwtCookie } = useAuthenticationSelector();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -23,7 +25,7 @@ const useGetNewMessages = (): void => {
     });
 
     return () => sseInstance.close();
-  }, [dispatch, lastReadMessageTimestamp, chatId, isChatEnded]);
+  }, [dispatch, lastReadMessageTimestamp, chatId, isChatEnded, jwtCookie]);
 };
 
 export default useGetNewMessages;

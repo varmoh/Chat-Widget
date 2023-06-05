@@ -9,6 +9,7 @@ export interface AuthenticationState {
   userInfo: UserInfo;
   fetchingUserInfo: boolean;
   loggedInWithTaraJwt: boolean;
+  jwtCookie?: string;
 }
 
 const initialState: AuthenticationState = {
@@ -79,7 +80,7 @@ export const authenticationSlice = createSlice({
       state.isAuthenticated = false;
     });
     builder.addCase(customJwtExtend.fulfilled, (state, action) => {
-      state.userInfo.jwtExpirationTimestamp = action.payload.data.custom_jwt_extend;
+      state.jwtCookie = action.payload.jwtCookie;
     });
     // builder.addCase(customJwtExtend.rejected, (state) => {
     //   state.userInfo.jwtExpirationTimestamp = '';

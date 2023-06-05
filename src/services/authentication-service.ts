@@ -1,6 +1,5 @@
 import http from './http-service';
 import { UserInfo } from '../model/user-info-model';
-import { CustomJwtExtendResponse } from '../model/ruuter-response-model';
 
 
 export const customJwt = 'clientCustomJwtCookie';
@@ -14,8 +13,10 @@ class AuthenticationService {
     return http.post('/custom-jwt-userinfo', customJwt);
   }
 
-  customJwtExtend(): Promise<CustomJwtExtendResponse> {
-    return http.post('/custom-jwt-extend')
+  async customJwtExtend(): Promise<{ jwtCookie: string }> {
+    const response = await http.post('/custom-jwt-extend');
+    console.log(response.data);
+    return { jwtCookie: response.data };
   }
 }
 

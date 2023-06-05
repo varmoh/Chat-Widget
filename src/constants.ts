@@ -24,6 +24,7 @@ export const CHAT_WINDOW_WIDTH = 400;
 export const CHAT_WINDOW_HEIGHT = 460;
 export const LOCAL_STORAGE_CHAT_DIMENSIONS_KEY = 'chat-dimensions';
 export const IDLE_CHAT_INTERVAL = 30 * 60;
+export const EXTEND_JWT_COOKIE_IN_MS = 30000;
 export const ONLINE_CHECK_INTERVAL = 30_000;
 export const ONLINE_CHECK_INTERVAL_ACTIVE_CHAT = 10_000;
 export const CHAT_BUBBLE_PROACTIVE_SECONDS = 3;
