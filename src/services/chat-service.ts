@@ -86,8 +86,8 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.GENERATE_FORWARDING_REQUEST);
   }
 
-  generateDownloadChatRequest(): Promise<void> {
-    return http.get(RUUTER_ENDPOINTS.DOWNLOAD_CHAT)
+  generateDownloadChatRequest(chatId: string, email: string | null): Promise<string> {
+    return http2.post(RUUTER_ENDPOINTS.DOWNLOAD_CHAT, { chatId, email })
   }
 
   sendAttachment(attachment: Attachment): Promise<void> {

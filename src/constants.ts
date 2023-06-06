@@ -92,7 +92,7 @@ export enum RUUTER_ENDPOINTS {
   BUROKRATT_ONLINE_STATUS = '/healthz',
   CUSTOM_JWT_EXTEND = '/custom-jwt-extend',
   CUSTOM_JWT_USERINFO = '/custom-jwt-userinfo',
-  DOWNLOAD_CHAT = '/chat/download',
+  DOWNLOAD_CHAT = '/download-chat',
   SEND_ATTACHMENT = '/attachments/add',
   SEND_USER_CONTACTS = '/end-user-email-phone',
 }

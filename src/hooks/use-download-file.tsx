@@ -1,12 +1,12 @@
 import React, { forwardRef, useImperativeHandle, useLayoutEffect, useState } from 'react';
 
 export interface DownloadHandle {
-  download: (params: { title: string; data?: Blob }) => void;
+  download: (params: { title: string; data?: string }) => void;
 }
 
 export const Download = forwardRef<DownloadHandle, {}>((props, ref) => {
   const linkRef = React.useRef<HTMLAnchorElement>(null);
-  const [download, setDownload] = useState<{ title: string; data: Blob }>();
+  const [download, setDownload] = useState<{ title: string; data: string }>();
   useImperativeHandle(ref, () => ({
     download: (params) => {
       if (params.data) {
@@ -26,7 +26,7 @@ export const Download = forwardRef<DownloadHandle, {}>((props, ref) => {
     return null;
   }
   const { title, data } = download;
-  return <a href={window.URL.createObjectURL(data)} download={title} ref={linkRef} />;
+  return <a href={data} download={title} ref={linkRef} />;
 });
 
 export type DownloadElement = React.ElementRef<typeof Download>;

@@ -222,8 +222,15 @@ export const getEstimatedWaitingTime = createAsyncThunk('chat/getEstimatedWaitin
 export const removeChatForwardingValue = createAsyncThunk('chat/removeChatForwardingValue', async () => ChatService.removeChatForwardingValue());
 
 export const generateForwardingRequest = createAsyncThunk('chat/generateForwardingRequest', async () => ChatService.generateForwardingRequest());
-export const downloadChat = createAsyncThunk('chat/downloadChat', async () => ChatService.generateDownloadChatRequest());
 export const sendAttachment = createAsyncThunk('chat/sendAttachment', async (attachment: Attachment) => ChatService.sendAttachment(attachment));
+export const downloadChat = createAsyncThunk("chat/downloadChat", async (isForwardToEmail: boolean, thunkApi) => {
+  const {
+    chat: { chatId, endUserContacts },
+  } = thunkApi.getState() as { chat: ChatState };
+  return chatId
+    ? ChatService.generateDownloadChatRequest(chatId, isForwardToEmail ? endUserContacts.mailAddress : null)
+    : null;
+});
 
 export const chatSlice = createSlice({
   name: 'chat',
