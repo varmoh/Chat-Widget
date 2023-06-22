@@ -24,8 +24,7 @@ import useWidgetSelector from "./hooks/use-widget-selector";
 import { getWidgetConfig } from "./slices/widget-slice";
 import useGetWidgetConfig from "./hooks/use-get-widget-config";
 import useGetEmergencyNotice from "./hooks/use-get-emergency-notice";
-// TODO: Add customJwtExtend
-// import { customJwtExtend } from './slices/authentication-slice';
+import { customJwtExtend } from './slices/authentication-slice';
 
 declare global {
   interface Window {
@@ -88,8 +87,7 @@ const App: FC = () => {
     if (!displayWidget || !isChatOpen || !chatId) return;
     const interval = setInterval(() => {
       if (!displayWidget || !isChatOpen || !chatId) return;
-      // TODO: Add customJwtExtend
-      // dispatch(customJwtExtend())
+      dispatch(customJwtExtend())
     }, EXTEND_JWT_COOKIE_IN_MS);
 
     return () => clearInterval(interval);
