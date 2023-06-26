@@ -15,8 +15,7 @@ class AuthenticationService {
 
   async customJwtExtend(): Promise<{ jwtCookie: string }> {
     const response = await http.post('/custom-jwt-extend');
-    console.log(response.data);
-    return { jwtCookie: response.data };
+    return { jwtCookie: `${response}` };
   }
 }
 
