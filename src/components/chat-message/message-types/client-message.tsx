@@ -1,55 +1,63 @@
-import React from 'react';
-import {motion} from 'framer-motion';
-import classNames from 'classnames';
-import {Message} from '../../../model/message-model';
-import styles from '../chat-message.module.scss';
-import PersonIcon from '../../../static/icons/person.svg';
-import Linkifier from './linkifier';
+import React from "react";
+import { motion } from "framer-motion";
+import classNames from "classnames";
+import { Message } from "../../../model/message-model";
+import styles from "../chat-message.module.scss";
+import PersonIcon from "../../../static/icons/person.svg";
+import Linkifier from "./linkifier";
 import formatBytes from "../../../utils/format-bytes";
-import File from '../../../static/icons/file.svg';
+import File from "../../../static/icons/file.svg";
 
 const rightAnimation = {
-    animate: {opacity: 1, x: 0},
-    initial: {opacity: 0, x: 20},
-    transition: {duration: 0.25, delay: 0.25},
+  animate: { opacity: 1, x: 0 },
+  initial: { opacity: 0, x: 20 },
+  transition: { duration: 0.25, delay: 0.25 },
 };
 
 const ClientMessage = (props: { message: Message }): JSX.Element => {
-    const {
-        message: {content},
-    } = props;
+  const {
+    message: { content },
+  } = props;
 
-    if (!!props.message?.file) {
-        return (
-            <motion.div animate={rightAnimation.animate} initial={rightAnimation.initial}
-                        transition={rightAnimation.transition}>
-                <div className={classNames(styles.message, styles.client)}>
-                    <div className={styles.icon}>
-                        <img src={PersonIcon} alt="Person icon"/>
-                    </div>
-                    <div className={`${styles.content} ${styles.file}`}>
-                        <img className={styles.fileIcon} src={File} alt="File icon"/>
-                        <p className={styles.fileName}>{props.message?.file.name}</p>
-                        <p className={styles.fileData}>{`${props.message?.file.type.split('/')[1].toUpperCase()}, ${formatBytes(props.message?.file.size)}`}</p>
-                    </div>
-                </div>
-            </motion.div>
-        )
-    }
-
+  if (!!props.message?.file) {
     return (
-        <motion.div animate={rightAnimation.animate} initial={rightAnimation.initial}
-                    transition={rightAnimation.transition}>
-            <div className={classNames(styles.message, styles.client)}>
-                <div className={styles.icon}>
-                    <img src={PersonIcon} alt="Person icon"/>
-                </div>
-                <div className={styles.content}>
-                    <Linkifier message={content}/>
-                </div>
-            </div>
-        </motion.div>
+      <motion.div
+        animate={rightAnimation.animate}
+        initial={rightAnimation.initial}
+        transition={rightAnimation.transition}
+      >
+        <div className={classNames(styles.message, styles.client)}>
+          <div className={styles.icon}>
+            <img src={PersonIcon} alt="Person icon" />
+          </div>
+          <div className={`${styles.content} ${styles.file}`}>
+            <img className={styles.fileIcon} src={File} alt="File icon" />
+            <p className={styles.fileName}>{props.message?.file.name}</p>
+            <p className={styles.fileData}>{`${props.message?.file.type
+              .split("/")[1]
+              .toUpperCase()}, ${formatBytes(props.message?.file.size)}`}</p>
+          </div>
+        </div>
+      </motion.div>
     );
+  }
+
+  return (
+    <motion.div
+      animate={rightAnimation.animate}
+      initial={rightAnimation.initial}
+      transition={rightAnimation.transition}
+    >
+      <div className={classNames(styles.message, styles.client)}>
+        <div className={styles.icon}>
+          <img src={PersonIcon} alt="Person icon" />
+        </div>
+        <div className={styles.content}>
+          <Linkifier message={decodeURIComponent(content ?? "")} />
+        </div>
+      </div>
+    </motion.div>
+  );
 };
 
 export default ClientMessage;
