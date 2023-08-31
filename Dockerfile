@@ -7,7 +7,7 @@ WORKDIR /usr/app
 COPY ./package*.json ./
 
 FROM image AS build
-RUN npm set-script prepare=" "
+RUN npm pkg set scripts.prepare=" "
 RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run webpack
