@@ -15,7 +15,8 @@ import {
   CHAT_BUBBLE_COLOR,
   CHAT_BUBBLE_MESSAGE_DELAY_SECONDS,
   CHAT_BUBBLE_PROACTIVE_SECONDS,
-  CHAT_SHOW_BUBBLE_MESSAGE
+  CHAT_SHOW_BUBBLE_MESSAGE,
+  TERMINATE_STATUS
 } from '../constants';
 import { getFromSessionStorage, setToSessionStorage } from '../utils/session-storage-utils';
 import { Chat } from '../model/chat-model';
@@ -198,6 +199,22 @@ export const endChat = createAsyncThunk('chat/endChat', async (args: { event: CH
     });
 });
 
+export const resetChatState = createAsyncThunk('', async (args: { event: CHAT_EVENTS | null}, thunkApi) => {
+  const {
+    chat: { chatStatus, chatId },
+  } = thunkApi.getState() as { chat: ChatState };
+  thunkApi.dispatch(resetState());
+
+  return chatStatus === CHAT_STATUS.ENDED
+    ? null
+    : ChatService.endChat({
+      chatId,
+      authorTimestamp: new Date().toISOString(),
+      authorRole: AUTHOR_ROLES.END_USER,
+      event: args.event?.toUpperCase(),
+    });
+});
+
 export const sendMessageWithRating = createAsyncThunk('chat/sendMessageWithRating', async (message: Message) =>
   ChatService.sendMessageWithRating(message),
 );
@@ -332,6 +349,34 @@ export const chatSlice = createSlice({
             clearStateVariablesFromSessionStorage();
             break;
           case CHAT_EVENTS.TERMINATED:
+            clearStateVariablesFromSessionStorage();
+            state.chatStatus = CHAT_STATUS.ENDED;
+            break;
+          case TERMINATE_STATUS.ACCEPTED:
+            clearStateVariablesFromSessionStorage();
+            state.chatStatus = CHAT_STATUS.ENDED;
+            break;
+          case TERMINATE_STATUS.CLIENT_LEFT_FOR_UNKNOWN_REASONS:
+            clearStateVariablesFromSessionStorage();
+            state.chatStatus = CHAT_STATUS.ENDED;
+            break;
+          case TERMINATE_STATUS.HATE_SPEECH:
+            clearStateVariablesFromSessionStorage();
+            state.chatStatus = CHAT_STATUS.ENDED;
+            break;
+          case TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED: 
+            clearStateVariablesFromSessionStorage();
+            state.chatStatus = CHAT_STATUS.ENDED;
+            break;
+          case TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION: 
+            clearStateVariablesFromSessionStorage();
+            state.chatStatus = CHAT_STATUS.ENDED;
+            break;
+          case TERMINATE_STATUS.OTHER:
+            clearStateVariablesFromSessionStorage();
+            state.chatStatus = CHAT_STATUS.ENDED;
+            break;
+          case TERMINATE_STATUS.RESPONSE_SENT_TO_CLIENT_EMAIL:
             clearStateVariablesFromSessionStorage();
             state.chatStatus = CHAT_STATUS.ENDED;
             break;

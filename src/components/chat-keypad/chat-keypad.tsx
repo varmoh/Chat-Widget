@@ -149,7 +149,7 @@ const ChatKeyPad = (): JSX.Element => {
 
       dispatch(sendMessagePreview(message));
     }),
-    []
+    [chatId, userInput]
   );
 
   const keypadClasses = classNames(styles.keypad);

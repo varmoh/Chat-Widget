@@ -18,6 +18,7 @@
   "notifications.offline": "Service currently not available!",
   "notifications.ask-contact-information": "Would you like to leave your contact information, so customer support can get back to you?",
   "keypad.input.placeholder": "Enter your message...",
+  "keypad.input.feedbackPlaceholder": "Enter your feedback...",
   "keypad.button.label": "Send",
   "keypad.input.label": "Enter text",
   "chatMessage.accept": "accept",

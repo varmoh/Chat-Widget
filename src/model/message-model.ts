@@ -19,6 +19,7 @@ export interface Message {
     authorLastName?: string;
     authorRole?: string;
     created?: string;
+    preview?: string;
     updated?: string;
     data?: {
         forwarding_validation?: string;

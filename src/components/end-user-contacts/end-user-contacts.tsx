@@ -18,6 +18,7 @@ import {
   setEmailAdress,
   setPhoneNumber,
   updateMessage,
+  sendMessagePreview,
 } from "../../slices/chat-slice";
 import { Message } from "../../model/message-model";
 import StyledButton from "../styled-components/styled-button";
@@ -54,6 +55,8 @@ const EndUserContacts = (): JSX.Element => {
     const newMsg: Message = {
       id: contactMsgId,
       chatId,
+      content: "",
+      preview: "",
       authorRole: AUTHOR_ROLES.END_USER,
       authorTimestamp: new Date().toISOString(),
       event: CHAT_EVENTS.CONTACT_INFORMATION_REJECTED,
@@ -61,6 +64,7 @@ const EndUserContacts = (): JSX.Element => {
     dispatch(updateMessage(newMsg));
     dispatch(sendMessageWithNewEvent(newMsg));
     dispatch(setShowContactForm(false));
+    dispatch(sendMessagePreview(newMsg));
   };
 
   const submitForm = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -92,9 +96,12 @@ const EndUserContacts = (): JSX.Element => {
         authorTimestamp: new Date().toISOString(),
         content: message,
         event: CHAT_EVENTS.CONTACT_INFORMATION_FULFILLED,
+        preview: "",
       };
       dispatch(sendNewMessage(newMsg));
       dispatch(setShowContactForm(false));
+      newMsg.content = "";
+      dispatch(sendMessagePreview(newMsg));
     }
   };
 

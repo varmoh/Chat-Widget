@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { useTranslation } from 'react-i18next';
-import StyledButton from '../styled-components/styled-button';
-import { useAppDispatch } from '../../store';
-import { sendChatNpmRating, setFeedbackRatingGiven } from '../../slices/chat-slice';
-import { StyledButtonType } from '../../constants';
-import useChatSelector from '../../hooks/use-chat-selector';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useTranslation } from "react-i18next";
+import StyledButton from "../styled-components/styled-button";
+import { useAppDispatch } from "../../store";
+import {
+  sendChatNpmRating,
+  setFeedbackRatingGiven,
+} from "../../slices/chat-slice";
+import { StyledButtonType } from "../../constants";
+import useChatSelector from "../../hooks/use-chat-selector";
 
 const ChatFeedback = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { feedback } = useChatSelector();
-  const [selectedFeedbackButtonValue, setSelectedFeedbackButtonValue] = useState<string>('');
+  const [selectedFeedbackButtonValue, setSelectedFeedbackButtonValue] =
+    useState<string>("");
 
   const handleFeedback = (feedbackRating: string | null) => {
     if (feedbackRating === null) return;
@@ -21,8 +25,14 @@ const ChatFeedback = (): JSX.Element => {
   };
   return (
     <ChatFeedbackStyle>
-      <p className="feedback-paragraph above">{t('feedback.upperText', { organization: window._env_.ORGANIZATION_NAME })}</p>
-      {feedback.showFeedbackWarning && <p className="missing-feeback">{t('feedback.warningText')}</p>}
+      <p className="feedback-paragraph above">
+        {t("feedback.upperText", {
+          organization: window._env_.ORGANIZATION_NAME,
+        })}
+      </p>
+      {feedback.showFeedbackWarning && (
+        <p className="missing-feeback">{t("feedback.warningText")}</p>
+      )}
       <div className="feedback-box-input">
         {Array.from(Array(11).keys()).map((val: number) => (
           <StyledButton
@@ -36,7 +46,7 @@ const ChatFeedback = (): JSX.Element => {
           </StyledButton>
         ))}
       </div>
-      <p className="feedback-paragraph below">{t('feedback.lowerText')}</p>
+      <p className="feedback-paragraph below">{t("feedback.lowerText")}</p>
     </ChatFeedbackStyle>
   );
 };
@@ -56,7 +66,7 @@ const ChatFeedbackStyle = styled.div`
   }
 
   .feedback-paragraph.above:after {
-    content: '*';
+    content: "*";
     color: #ff4800;
   }
 
