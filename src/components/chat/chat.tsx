@@ -136,7 +136,7 @@ const Chat = (): JSX.Element => {
               );
             }
           }
-        }, 60 * 1000);
+        }, IDLE_CHAT_INTERVAL * 1000);
         return () => {
           clearInterval(interval);
         };
