@@ -33,6 +33,7 @@ export const CHAT_BUBBLE_MESSAGE_DELAY_SECONDS = 5;
 export const CHAT_BUBBLE_COLOR = '#003CFF';
 export const CHAT_BUBBLE_ANIMATION = 'shockwave';
 export const CHAT_INPUT_DEBOUNCE_TIMEOUT = 500;
+export const CURRENT_COUNTRY = 'EE';
 
 export enum CHAT_STATUS {
   ENDED = 'ENDED',
@@ -61,7 +62,12 @@ export enum CHAT_EVENTS {
   CONTACT_INFORMATION = 'contact-information',
   CONTACT_INFORMATION_FULFILLED = 'contact-information-fulfilled',
   CONTACT_INFORMATION_REJECTED = 'contact-information-rejected',
+  UNAVAILABLE_CONTACT_INFORMATION_FULFILLED = 'unavailable-contact-information-fulfilled',
+  CONTACT_INFORMATION_SKIPPED = 'contact-information-skipped',
   MESSAGE_READ = 'message-read',
+  UNAVAILABLE_ORGANIZATION = 'unavailable_organization',
+  UNAVAILABLE_CSAS = 'unavailable_csas',
+  UNAVAILABLE_HOLIDAY = 'unavailable_holiday'
 }
 
 export enum TERMINATE_STATUS {
@@ -83,6 +89,8 @@ export enum RUUTER_ENDPOINTS {
   INIT_CHAT = '/init-chat',
   GET_CHAT_BY_ID = '/get-chat-by-id',
   GET_WIDGET_CONFIG = '/get-widget-config',
+  GET_AVAILABLE_CSAS = 'get-all-available-customer-support-agents',
+  GET_ORGANIZATION_WORKING_TIME = 'get-organization-working-time',
   SEND_CONTACT_INFO = '/end-user-email-phone',
   AUTHENTICATE_USER = '/end-user-id-name',
   GET_NEW_MESSAGES = '/get-new-messages',

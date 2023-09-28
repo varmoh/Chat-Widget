@@ -17,26 +17,35 @@ const IdleChatNotification = () => {
         className={styles.content}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={t('notifications.idle-chat-notification')}
+        aria-labelledby={t("notifications.idle-chat-notification")}
       >
         <h2 className={styles.title}>
-          {t('notifications.idle-chat-notification')}
+          {t("notifications.idle-chat-notification")}
         </h2>
         <div className={styles.actions}>
           <Button
-            title={t('widget.action.yes')}
+            title={t("widget.action.yes")}
             onClick={() => {
-              dispatch(setIdleChat({isIdle: false, lastActive: new Date().getTime()}));
-              dispatch(customJwtExtend())
+              dispatch(
+                setIdleChat({ isIdle: false, lastActive: new Date().getTime() })
+              );
+              dispatch(customJwtExtend());
             }}
           >
-            {t('widget.action.yes')}
+            {t("widget.action.yes")}
           </Button>
           <Button
-            title={t('widget.action.no')}
-            onClick={() => dispatch(endChat({event:CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS}))}
+            title={t("widget.action.no")}
+            onClick={() =>
+              dispatch(
+                endChat({
+                  event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
+                  isUpperCase: true,
+                })
+              )
+            }
           >
-            {t('widget.action.no')}
+            {t("widget.action.no")}
           </Button>
         </div>
       </div>

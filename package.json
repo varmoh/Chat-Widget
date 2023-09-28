@@ -9,6 +9,8 @@
     "axios": "^0.22.0",
     "classnames": "^2.3.1",
     "cross-env": "^7.0.3",
+    "date-fns": "^2.30.0",
+    "date-holidays": "^3.22.0",
     "framer-motion": "4.1.11-beta.5",
     "i18next": "^21.2.4",
     "i18next-browser-languagedetector": "^6.1.2",

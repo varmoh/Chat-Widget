@@ -51,7 +51,10 @@ export const Profile = (): JSX.Element => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (chatId) {
         dispatch(
-          endChat({ event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS })
+          endChat({
+            event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
+            isUpperCase: true,
+          })
         );
       }
     };
@@ -60,7 +63,10 @@ export const Profile = (): JSX.Element => {
       if (event.key === "F5" || (event.ctrlKey && event.key === "r")) {
         if (chatId) {
           dispatch(
-            endChat({ event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS })
+            endChat({
+              event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
+              isUpperCase: true,
+            })
           );
         }
       }

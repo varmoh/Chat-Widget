@@ -7,6 +7,7 @@ import { RUUTER_ENDPOINTS } from '../constants';
 import { EndUserTechnicalData } from '../model/chat-ini-model';
 import { EstimatedWaiting } from '../slices/chat-slice';
 import { EmergencyNoticeResponse } from '../model/emergency-notice-response-model';
+import { OrganizationWorkingTimeResponse } from '../model/organization-working-time-model';
 
 interface Document {
   _id: string;
@@ -24,16 +25,16 @@ interface Response {
 }
 
 class ChatService {
-  init(message: Message, endUserTechnicalData: EndUserTechnicalData): Promise<Chat> {
-    return http.post(RUUTER_ENDPOINTS.INIT_CHAT, { message, endUserTechnicalData });
+  init(message: Message, endUserTechnicalData: EndUserTechnicalData, holidays: string[], holidayNames: string): Promise<Chat> {
+    return http.post(RUUTER_ENDPOINTS.INIT_CHAT, { message, endUserTechnicalData, holidays, holidayNames });
   }
 
   getChatById(chatId: string): Promise<Chat> {
     return http.post(RUUTER_ENDPOINTS.GET_CHAT_BY_ID, { id: chatId });
   }
 
-  sendNewMessage(message: Message): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, message);
+  sendNewMessage(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, {message, holidays, holidayNames});
   }
 
   sendMessagePreview({ chatId, content }: Message): Promise<void> {
@@ -57,6 +58,10 @@ class ChatService {
   }
 
   getEmergencyNotice(): Promise<EmergencyNoticeResponse> {
+    return http2.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
+  }
+
+  get(): Promise<EmergencyNoticeResponse> {
     return http2.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
   }
 

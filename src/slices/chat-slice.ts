@@ -2,6 +2,7 @@ import { UserContacts } from './../model/user-contacts-model';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Attachment, Message, } from '../model/message-model';
 import ChatService from '../services/chat-service';
+import { format } from 'date-fns';
 import { 
   AUTHOR_ROLES,
   CHAT_EVENTS,
@@ -16,7 +17,7 @@ import {
   CHAT_BUBBLE_MESSAGE_DELAY_SECONDS,
   CHAT_BUBBLE_PROACTIVE_SECONDS,
   CHAT_SHOW_BUBBLE_MESSAGE,
-  TERMINATE_STATUS
+  TERMINATE_STATUS,
 } from '../constants';
 import { getFromSessionStorage, setToSessionStorage } from '../utils/session-storage-utils';
 import { Chat } from '../model/chat-model';
@@ -26,6 +27,7 @@ import {
   getInitialChatDimensions 
 } from '../utils/state-management-utils';
 import { setToLocalStorage } from '../utils/local-storage-utils';
+import getHolidays from '../utils/holidays';
 
 export interface EstimatedWaiting {
   positionInUnassignedChats: string;
@@ -54,7 +56,9 @@ export interface ChatState {
   };
   loading: boolean;
   showContactForm: boolean;
+  showUnavailableContactForm: boolean;
   contactMsgId: string;
+  contactContentMessage: string;
   isChatRedirected: boolean;
   feedback: {
     isFeedbackConfirmationShown: boolean;
@@ -102,6 +106,8 @@ const initialState: ChatState = {
   eventMessagesToHandle: [],
   errorMessage: '',
   showContactForm: false,
+  showUnavailableContactForm: false,
+  contactContentMessage: '',
   isChatRedirected: false,
   estimatedWaiting: {
     positionInUnassignedChats: '',
@@ -145,11 +151,13 @@ const initialState: ChatState = {
   }
 };
 
-export const initChat = createAsyncThunk('chat/init', async (message: Message) =>
-  ChatService.init(message, {
+export const initChat = createAsyncThunk('chat/init', async (message: Message) =>  {
+  const {holidays, holidayNames} = getHolidays();
+  return ChatService.init(message, {
     endUserUrl: window.location.href.toString(),
-    endUserOs: navigator.userAgent.toString(),
-  }),
+    endUserOs: navigator.userAgent.toString()
+  },holidays, holidayNames);
+ }
 );
 
 export const getChat = createAsyncThunk('chat/getChat', async (_args, thunkApi) => {
@@ -183,7 +191,7 @@ export const sendFeedbackMessage = createAsyncThunk('chat/sendFeedbackMessage', 
   ChatService.sendFeedbackMessage({ chatId, userFeedback: args.userInput });
 });
 
-export const endChat = createAsyncThunk('chat/endChat', async (args: { event: CHAT_EVENTS | null}, thunkApi) => {
+export const endChat = createAsyncThunk('chat/endChat', async (args: { event: CHAT_EVENTS | null, isUpperCase: boolean}, thunkApi) => {
   const {
     chat: { chatStatus, chatId },
   } = thunkApi.getState() as { chat: ChatState };
@@ -195,7 +203,7 @@ export const endChat = createAsyncThunk('chat/endChat', async (args: { event: CH
       chatId,
       authorTimestamp: new Date().toISOString(),
       authorRole: AUTHOR_ROLES.END_USER,
-      event: args.event?.toUpperCase(),
+      event: args.isUpperCase ? args.event?.toUpperCase() : args.event ?? '',
     });
 });
 
@@ -231,7 +239,11 @@ export const getGreeting = createAsyncThunk('chat/getGreeting', async () => Chat
 
 export const getEmergencyNotice = createAsyncThunk('chat/getEmergencyNotice', async () => ChatService.getEmergencyNotice());
 
-export const sendNewMessage = createAsyncThunk('chat/sendNewMessage', (message: Message) => ChatService.sendNewMessage(message));
+export const sendNewMessage = createAsyncThunk('chat/sendNewMessage', (message: Message) => {
+  const {holidays, holidayNames} = getHolidays();
+  return ChatService.sendNewMessage(message, holidays, holidayNames);
+});
+
 export const sendMessagePreview = createAsyncThunk('chat/post-message-preview', (message: Message) => ChatService.sendMessagePreview(message));
 
 export const getEstimatedWaitingTime = createAsyncThunk('chat/getEstimatedWaitingTime', async () => ChatService.getEstimatedWaitingTime());
@@ -284,6 +296,9 @@ export const chatSlice = createSlice({
     },
     setShowContactForm: (state, action: PayloadAction<boolean>) => {
       state.showContactForm = action.payload;
+    },
+    setShowUnavailableContactForm: (state, action: PayloadAction<boolean>) => {
+      state.showUnavailableContactForm = action.payload;
     },
     queueMessage: (state, action: PayloadAction<Message>) => {
       state.messageQueue.push(action.payload);
@@ -344,6 +359,21 @@ export const chatSlice = createSlice({
             state.showContactForm = true;
             state.contactMsgId = msg.id || '';
             break;
+          case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION:
+            state.showUnavailableContactForm = true;
+            state.contactMsgId = msg.id || '';
+            state.contactContentMessage = msg.content ?? '';
+            break;  
+          case CHAT_EVENTS.UNAVAILABLE_CSAS:
+            state.showUnavailableContactForm = true;
+            state.contactMsgId = msg.id || '';
+            state.contactContentMessage = msg.content ?? '';
+            break;
+          case CHAT_EVENTS.UNAVAILABLE_HOLIDAY:
+            state.showUnavailableContactForm = true;
+            state.contactMsgId = msg.id || '';
+            state.contactContentMessage = msg.content ?? '';
+            break;    
           case CHAT_EVENTS.ANSWERED:
             state.chatStatus = CHAT_STATUS.ENDED;
             clearStateVariablesFromSessionStorage();
@@ -488,6 +518,7 @@ export const {
   setIsFeedbackConfirmationShown,
   setEmailAdress,
   setShowContactForm,
+  setShowUnavailableContactForm,
   setEstimatedWaitingTimeToZero,
   setIdleChat,
   setChat,
