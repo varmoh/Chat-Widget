@@ -53,6 +53,7 @@
   "widget.contacts.contact.header": "Palun sisesta oma kontaktandmed",
   "widget.contacts.contact.submit.label": "kinnita",
   "widget.contacts.contact.close.label": "tühista",
+  "widget.contacts.contact.skip.label": "vahele jätma",
   "widget.contacts.contact.invalid.phone": "Palun veenduge telefoninumbri korrektsuses",
   "widget.contacts.contact.invalid.email": "Palun veenduge e-posti aadressi korrektsuses",
   "widget.contacts.contact.invalid.fields": "palun täitke vähemalt üks väli",

@@ -10,6 +10,7 @@ import {
   CHAT_EVENTS,
   IDLE_CHAT_INTERVAL,
   AUTHOR_ROLES,
+  IDLE_CHAT_CHOICES_INTERVAL,
 } from "../../constants";
 import ChatContent from "../chat-content/chat-content";
 import ChatHeader from "../chat-header/chat-header";
@@ -25,7 +26,6 @@ import {
   setChatDimensions,
   setIdleChat,
   setIsFeedbackConfirmationShown,
-  sendMessagePreview,
 } from "../../slices/chat-slice";
 import WarningNotification from "../warning-notification/warning-notification";
 import ChatFeedback from "../chat-feedback/chat-feedback";
@@ -37,6 +37,7 @@ import OnlineStatusNotification from "../online-status-notification/online-statu
 import IdleChatNotification from "../idle-chat-notification/idle-chat-notification";
 import getIdleTime from "../../utils/getIdleTime";
 import { Message } from "../../model/message-model";
+import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavailable-end-user-contacts";
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -63,6 +64,7 @@ const Chat = (): JSX.Element => {
     estimatedWaiting,
     idleChat,
     showContactForm,
+    showUnavailableContactForm,
     customerSupportId,
     feedback,
     messages,
@@ -132,7 +134,7 @@ const Chat = (): JSX.Element => {
             dispatch(setIdleChat({ isIdle: true }));
             if (showConfirmationModal) {
               dispatch(
-                endChat({ event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS })
+                endChat({ event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS, isUpperCase: true})
               );
             }
           }
@@ -154,11 +156,46 @@ const Chat = (): JSX.Element => {
     feedback.isFeedbackConfirmationShown,
   ]);
 
+  useLayoutEffect(() => {
+    if (isChatEnded === false) {
+      if (messages.length > 0) {
+          const interval = setInterval(() => {
+            let lastActive;
+
+            if (idleChat.lastActive === "") {
+              lastActive = messages[messages.length - 1].authorTimestamp;
+            } else {
+              lastActive = idleChat.lastActive;
+            }
+            const differenceInSeconds = getIdleTime(lastActive);
+            if (
+              differenceInSeconds >=
+              IDLE_CHAT_INTERVAL + IDLE_CHAT_CHOICES_INTERVAL
+            ) {
+              dispatch(
+                endChat({
+                  event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
+                  isUpperCase: true,
+                })
+              );
+            }
+          }, (IDLE_CHAT_CHOICES_INTERVAL) * 1000);
+          return () => {
+            clearInterval(interval);
+          };
+      }
+    }
+  }, [
+    idleChat.isIdle,
+    showConfirmationModal,
+    feedback.isFeedbackConfirmationShown,
+  ]);
+
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (chatId) {
         dispatch(
-          endChat({ event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS })
+          endChat({ event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS, isUpperCase: true })
         );
       }
     };
@@ -167,7 +204,10 @@ const Chat = (): JSX.Element => {
       if (event.key === "F5" || (event.ctrlKey && event.key === "r")) {
         if (chatId) {
           dispatch(
-            endChat({ event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS })
+            endChat({
+              event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
+              isUpperCase: true,
+            })
           );
         }
       }
@@ -231,7 +271,12 @@ const Chat = (): JSX.Element => {
           {/* {estimatedWaiting.time > 0 && estimatedWaiting.isActive && !showWidgetDetails && <WaitingTimeNotification/>} */}
           {showWidgetDetails && <WidgetDetails />}
           {!showWidgetDetails && showContactForm && <EndUserContacts />}
-          {!showWidgetDetails && !showContactForm && <ChatContent />}
+          {!showWidgetDetails && showUnavailableContactForm && (
+            <UnavailableEndUserContacts />
+          )}
+          {!showWidgetDetails &&
+            !showContactForm &&
+            !showUnavailableContactForm && <ChatContent />}
           {idleChat.isIdle && <IdleChatNotification />}
           {showFeedbackResult ? (
             <ChatFeedbackConfirmation />
@@ -239,11 +284,13 @@ const Chat = (): JSX.Element => {
             <>
               {!showWidgetDetails &&
                 !showContactForm &&
+                !showUnavailableContactForm &&
                 !feedback.isFeedbackConfirmationShown &&
                 isChatEnded &&
                 chatId && <ChatFeedback />}
               {!showWidgetDetails &&
                 !showContactForm &&
+                !showUnavailableContactForm &&
                 !feedback.isFeedbackConfirmationShown && <ChatKeyPad />}
               <ConfirmationModal />
             </>

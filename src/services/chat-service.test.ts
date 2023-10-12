@@ -10,13 +10,13 @@ describe('ChatService', () => {
   it('should query init chat', () => {
     const message: Message = { chatId: 'chatID', content: 'test', authorTimestamp: 'timeStamp', authorRole: 'R123123123' };
     const endUserTechnicalData: EndUserTechnicalData = { endUserUrl: '', endUserOs: '' };
-    chatService.init(message, endUserTechnicalData);
+    chatService.init(message, endUserTechnicalData, [], '');
     expect(http.post).toHaveBeenCalledWith(RUUTER_ENDPOINTS.INIT_CHAT, { message, endUserTechnicalData });
   });
 
   it('should send new message', () => {
     const messageToSend: Message = { chatId: '1', content: 'hey', authorTimestamp: new Date().toString() };
-    chatService.sendNewMessage(messageToSend);
+    chatService.sendNewMessage(messageToSend, [], '');
     expect(http.post).toHaveBeenCalledWith(RUUTER_ENDPOINTS.POST_MESSAGE, messageToSend);
   });
 

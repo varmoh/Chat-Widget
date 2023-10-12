@@ -25,6 +25,9 @@ export const isStateChangingEventMessage = (msg: Message): boolean =>
   (msg.event === CHAT_EVENTS.CONTACT_INFORMATION && msg.content?.length === 0) ||
   msg.event === CHAT_EVENTS.ANSWERED ||
   msg.event === CHAT_EVENTS.TERMINATED ||
+  msg.event === CHAT_EVENTS.UNAVAILABLE_ORGANIZATION ||
+  msg.event === CHAT_EVENTS.UNAVAILABLE_CSAS ||
+  msg.event === CHAT_EVENTS.UNAVAILABLE_HOLIDAY ||
   msg.event === TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED ||
   msg.event === TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION || 
   msg.event === TERMINATE_STATUS.CLIENT_LEFT_FOR_UNKNOWN_REASONS || 

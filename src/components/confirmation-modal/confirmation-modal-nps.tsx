@@ -27,6 +27,7 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
   const dispatch = useAppDispatch();
   const endChatParams = {
     event: npsFeedback.feedback,
+    isUpperCase: true
   };
   const [selectedFeedbackButtonValue, setSelectedFeedbackButtonValue] =
     useState<string>("");

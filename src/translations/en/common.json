@@ -47,6 +47,7 @@
   "widget.contacts.contact.header": "Please enter contacts",
   "widget.contacts.contact.submit.label": "submit",
   "widget.contacts.contact.close.label": "decline",
+  "widget.contacts.contact.skip.label": "skip",
   "widget.contacts.contact.phone.label": "Telephone number",
   "widget.contacts.contact.mail.placeholder": "email@gmail.com",
   "widget.contacts.contact.phone.placeholder": "+372 123 456",
