@@ -15,16 +15,23 @@ const useGetNewMessages = (): void => {
 
   useEffect(() => {
     if (!chatId || isChatEnded || !lastReadMessageTimestamp) return undefined;
-    const sseInstance = sse(`${RUUTER_ENDPOINTS.GET_NEW_MESSAGES}?chatId=${chatId}&timeRangeBegin=${lastReadMessageTimestamp.split('+')[0]}`);
-
-    sseInstance.onMessage((messages: Message[]) => {
+    
+    const onMessage = (messages: Message[]) => {
       const newDisplayableMessages = messages.filter((msg) => msg.event !== CHAT_EVENTS.GREETING && msg.event !== TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED && msg.event !== TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION && msg.event !== TERMINATE_STATUS.CLIENT_LEFT_FOR_UNKNOWN_REASONS && msg.event !== TERMINATE_STATUS.ACCEPTED && msg.event !== TERMINATE_STATUS.HATE_SPEECH && msg.event !== TERMINATE_STATUS.OTHER && msg.event !== TERMINATE_STATUS.RESPONSE_SENT_TO_CLIENT_EMAIL);
       const stateChangingEventMessages = messages.filter((msg) => isStateChangingEventMessage(msg));
       dispatch(addMessagesToDisplay(newDisplayableMessages));
       dispatch(handleStateChangingEventMessages(stateChangingEventMessages));
-    });
+    };
 
-    return () => sseInstance.close();
+    const events = sse(
+      `${RUUTER_ENDPOINTS.GET_NEW_MESSAGES}?chatId=${chatId}&timeRangeBegin=${lastReadMessageTimestamp.split('+')[0]}`,
+      onMessage
+    );
+
+    return () => {
+      events.close();
+    };
+
   }, [dispatch, lastReadMessageTimestamp, chatId, isChatEnded, jwtCookie]);
 };
 
