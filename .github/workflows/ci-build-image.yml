@@ -3,7 +3,7 @@ name: Build and publish Chat-Widget
 on:
   push:
     branches:
-      - main
+      - dev
     paths:
       - '.env'
 
