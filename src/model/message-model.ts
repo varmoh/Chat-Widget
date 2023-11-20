@@ -10,6 +10,7 @@ export interface Message {
     chatId: string | null;
     id?: string;
     content?: string;
+    buttons?: string;
     file?: Attachment;
     event?: string;
     rating?: string;

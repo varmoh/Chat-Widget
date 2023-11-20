@@ -18,6 +18,7 @@ import {
   CHAT_BUBBLE_PROACTIVE_SECONDS,
   CHAT_SHOW_BUBBLE_MESSAGE,
   TERMINATE_STATUS,
+  CHAT_MODES,
 } from '../constants';
 import { getFromSessionStorage, setToSessionStorage } from '../utils/session-storage-utils';
 import { Chat } from '../model/chat-model';
@@ -90,7 +91,8 @@ export interface ChatState {
       isSubmitted: boolean,
       isFailed: boolean,
     }
-  }
+  },
+  chatMode: CHAT_MODES,
 }
 
 const initialState: ChatState = {
@@ -148,7 +150,8 @@ const initialState: ChatState = {
       isSubmitted: false,
       isFailed: false,
     }
-  }
+  },
+  chatMode: CHAT_MODES.FREE
 };
 
 export const initChat = createAsyncThunk('chat/init', async (message: Message) =>  {
@@ -348,6 +351,9 @@ export const chatSlice = createSlice({
       state.newMessagesAmount += receivedMessages.length;
       state.messages.push(...receivedMessages);
       setToSessionStorage('newMessagesAmount', state.newMessagesAmount);
+
+      state.chatMode = receivedMessages[receivedMessages.length - 1]?.buttons
+        ? CHAT_MODES.FLOW : CHAT_MODES.FREE;
     },
     handleStateChangingEventMessages: (state, action: PayloadAction<Message[]>) => {
       action.payload.forEach((msg) => {

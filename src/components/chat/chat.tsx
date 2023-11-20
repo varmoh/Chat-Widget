@@ -11,6 +11,7 @@ import {
   IDLE_CHAT_INTERVAL,
   AUTHOR_ROLES,
   IDLE_CHAT_CHOICES_INTERVAL,
+  CHAT_MODES,
 } from "../../constants";
 import ChatContent from "../chat-content/chat-content";
 import ChatHeader from "../chat-header/chat-header";
@@ -65,11 +66,10 @@ const Chat = (): JSX.Element => {
     idleChat,
     showContactForm,
     showUnavailableContactForm,
-    customerSupportId,
     feedback,
     messages,
-    isChatOpen,
     chatDimensions,
+    chatMode,
   } = useChatSelector();
   const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector(
     (state) => state.widget
@@ -291,7 +291,8 @@ const Chat = (): JSX.Element => {
               {!showWidgetDetails &&
                 !showContactForm &&
                 !showUnavailableContactForm &&
-                !feedback.isFeedbackConfirmationShown && <ChatKeyPad />}
+                !feedback.isFeedbackConfirmationShown &&
+                chatMode === CHAT_MODES.FREE && <ChatKeyPad />}
               <ConfirmationModal />
             </>
           )}

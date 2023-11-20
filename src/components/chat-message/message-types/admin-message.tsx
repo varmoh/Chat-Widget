@@ -17,6 +17,7 @@ import {
   updateMessage,
 } from "../../../slices/chat-slice";
 import { useAppDispatch } from "../../../store";
+import ChatButtonGroup from "./chat-button-group";
 
 const leftAnimation = {
   animate: { opacity: 1, x: 0 },
@@ -24,9 +25,8 @@ const leftAnimation = {
   transition: { duration: 0.25, delay: 0.25 },
 };
 
-const AdminMessage = (props: { message: Message }): JSX.Element => {
+const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
   const dispatch = useAppDispatch();
-  const { message } = props;
 
   const setNewFeedbackRating = (newRating: string): void => {
     const updatedMessage = {
@@ -44,9 +44,11 @@ const AdminMessage = (props: { message: Message }): JSX.Element => {
       transition={leftAnimation.transition}
     >
       <div className={classNames(styles.message, styles.admin)}>
-        {CLIENT_NAME_ENABLED && (
-          <div className={styles.name}>{message.authorRole}</div>
-        )}
+        {
+          CLIENT_NAME_ENABLED && (
+            <div className={styles.name}>{message.authorRole}</div>
+          )
+        }
         <div className={styles.main}>
           <div className={styles.icon}>
             {message.event === CHAT_EVENTS.EMERGENCY_NOTICE ? (
@@ -111,6 +113,7 @@ const AdminMessage = (props: { message: Message }): JSX.Element => {
             )}
           </div>
         </div>
+        {message.buttons && <ChatButtonGroup message={message} />}
       </div>
     </motion.div>
   );

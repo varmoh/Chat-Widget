@@ -12,7 +12,7 @@ import { getEstimatedWaitingTime, setEstimatedWaitingTimeToZero } from '../../sl
 
 const ChatContent = (): JSX.Element => {
   const OSref = useRef<OverlayScrollbarsComponent>(null);
-  const { messages,estimatedWaiting,customerSupportId } = useChatSelector();
+  const { messages, estimatedWaiting, customerSupportId } = useChatSelector();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -42,15 +42,14 @@ const ChatContent = (): JSX.Element => {
           }}
         >
           {/* TODO: Logic is incorrect, commented out until it gets fixed */}
-            {/* {~~estimatedWaiting.durationInSeconds > 0 &&
+          {/* {~~estimatedWaiting.durationInSeconds > 0 &&
             ~~estimatedWaiting.positionInUnassignedChats > 0 &&
              <WaitingTimeNotification />} */}
-          {messages.map((message) => (
-            <ChatMessage
+          {messages.map((message) => <ChatMessage 
               message={message}
               key={`${message.authorTimestamp}-${message.created}-${message.id}`}
             />
-          ))}
+          )}
         </OverlayScrollbarsComponent>
       </div>
     </AnimatePresence>

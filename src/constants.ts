@@ -36,6 +36,11 @@ export const CHAT_BUBBLE_ANIMATION = 'shockwave';
 export const CHAT_INPUT_DEBOUNCE_TIMEOUT = 500;
 export const CURRENT_COUNTRY = 'EE';
 
+export enum CHAT_MODES {
+  FLOW = 'flow',
+  FREE = 'free',
+}
+
 export enum CHAT_STATUS {
   ENDED = 'ENDED',
   OPEN = 'OPEN',

@@ -19,22 +19,30 @@ export const findMatchingMessageFromMessageList = (messageToMatch: Message, mess
       message.authorRole === messageToMatch.authorRole,
   );
 
-export const isStateChangingEventMessage = (msg: Message): boolean =>
-  msg.event === CHAT_EVENTS.GREETING ||
-  msg.event === CHAT_EVENTS.ASK_PERMISSION_IGNORED ||
-  (msg.event === CHAT_EVENTS.CONTACT_INFORMATION && msg.content?.length === 0) ||
-  msg.event === CHAT_EVENTS.ANSWERED ||
-  msg.event === CHAT_EVENTS.TERMINATED ||
-  msg.event === CHAT_EVENTS.UNAVAILABLE_ORGANIZATION ||
-  msg.event === CHAT_EVENTS.UNAVAILABLE_CSAS ||
-  msg.event === CHAT_EVENTS.UNAVAILABLE_HOLIDAY ||
-  msg.event === TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED ||
-  msg.event === TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION || 
-  msg.event === TERMINATE_STATUS.CLIENT_LEFT_FOR_UNKNOWN_REASONS || 
-  msg.event === TERMINATE_STATUS.ACCEPTED ||
-  msg.event === TERMINATE_STATUS.HATE_SPEECH || 
-  msg.event === TERMINATE_STATUS.OTHER || 
-  msg.event === TERMINATE_STATUS.RESPONSE_SENT_TO_CLIENT_EMAIL
+export const isStateChangingEventMessage = (msg: Message): boolean => {
+  if(!msg.event)
+    return false;
+
+  const whitelist = [
+    CHAT_EVENTS.GREETING,
+    CHAT_EVENTS.ASK_PERMISSION_IGNORED,
+    CHAT_EVENTS.ANSWERED,
+    CHAT_EVENTS.TERMINATED,
+    CHAT_EVENTS.UNAVAILABLE_ORGANIZATION,
+    CHAT_EVENTS.UNAVAILABLE_CSAS,
+    CHAT_EVENTS.UNAVAILABLE_HOLIDAY,
+    TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED,
+    TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION ,
+    TERMINATE_STATUS.CLIENT_LEFT_FOR_UNKNOWN_REASONS ,
+    TERMINATE_STATUS.ACCEPTED,
+    TERMINATE_STATUS.HATE_SPEECH ,
+    TERMINATE_STATUS.OTHER ,
+    TERMINATE_STATUS.RESPONSE_SENT_TO_CLIENT_EMAIL,
+  ];
+
+  const event = msg.event as CHAT_EVENTS | TERMINATE_STATUS;
+  return whitelist.includes(event) || (event === CHAT_EVENTS.CONTACT_INFORMATION && msg.content?.length === 0);
+}
 
 export const clearStateVariablesFromSessionStorage = (): void => {
   setToSessionStorage(SESSION_STORAGE_CHAT_ID_KEY, null);
