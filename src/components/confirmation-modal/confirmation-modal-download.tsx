@@ -40,9 +40,9 @@ const ConfirmationModalDownload = () => {
           <a onClick={() => handleDownload(false)} className={styles.downloadLink}>
             {t("widget.action.download-chat")}
           </a>
-          <a onClick={() => setShowForwardForm(true)} className={styles.downloadLink}>
+          {/* <a onClick={() => setShowForwardForm(true)} className={styles.downloadLink}>
             {t("widget.action.forward-chat")}
-          </a>
+          </a> */}
         </>
       ) : (
         <>
