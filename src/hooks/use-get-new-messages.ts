@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../store';
 import sse from '../services/sse-service';
 import useChatSelector from './use-chat-selector';
@@ -12,38 +12,51 @@ const useGetNewMessages = (): void => {
   const { lastReadMessageTimestamp, isChatEnded, chatId } = useChatSelector();
   const { jwtCookie } = useAuthenticationSelector();
   const dispatch = useAppDispatch();
+  const [sseUrl, setSseUrl] = useState('');
+  const [lastReadMessageTimestampValue, setLastReadMessageTimestampValue] = useState('');
+  
+  useEffect(() => {
+    if(lastReadMessageTimestamp && !lastReadMessageTimestampValue){
+      setLastReadMessageTimestampValue(lastReadMessageTimestamp);
+    }
+  }, [lastReadMessageTimestamp]);
 
   useEffect(() => {
-    if (!chatId || isChatEnded || !lastReadMessageTimestamp) return undefined;
+    if(isChatEnded || !chatId) {
+      setSseUrl('');
+    }
+    else if (chatId && lastReadMessageTimestampValue) {
+      setSseUrl(`${RUUTER_ENDPOINTS.GET_NEW_MESSAGES}?chatId=${chatId}&timeRangeBegin=${lastReadMessageTimestampValue.split('+')[0]}`);
+    }
+  }, [isChatEnded, chatId, lastReadMessageTimestampValue]);
+
+  useEffect(() => {
+    let events: EventSource | undefined;
+    if (sseUrl) {  
+      const onMessage = (messages: Message[]) => {
+          const nonDisplayableEvent = [
+            CHAT_EVENTS.GREETING.toString(),
+            TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED.toString(), 
+            TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION.toString(), 
+            TERMINATE_STATUS.CLIENT_LEFT_FOR_UNKNOWN_REASONS.toString(), 
+            TERMINATE_STATUS.ACCEPTED.toString(), 
+            TERMINATE_STATUS.HATE_SPEECH.toString(), 
+            TERMINATE_STATUS.OTHER.toString(), 
+            TERMINATE_STATUS.RESPONSE_SENT_TO_CLIENT_EMAIL.toString(),
+          ]
     
-    const onMessage = (messages: Message[]) => {
-      const nonDisplayableEvent = [
-        CHAT_EVENTS.GREETING.toString(),
-        TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED.toString(), 
-        TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION.toString(), 
-        TERMINATE_STATUS.CLIENT_LEFT_FOR_UNKNOWN_REASONS.toString(), 
-        TERMINATE_STATUS.ACCEPTED.toString(), 
-        TERMINATE_STATUS.HATE_SPEECH.toString(), 
-        TERMINATE_STATUS.OTHER.toString(), 
-        TERMINATE_STATUS.RESPONSE_SENT_TO_CLIENT_EMAIL.toString(),
-      ]
+          const newDisplayableMessages = messages.filter((msg) => !nonDisplayableEvent.includes(msg.event!));
+          const stateChangingEventMessages = messages.filter((msg) => isStateChangingEventMessage(msg));
+          dispatch(addMessagesToDisplay(newDisplayableMessages));
+          dispatch(handleStateChangingEventMessages(stateChangingEventMessages));
+      };
 
-      const newDisplayableMessages = messages.filter((msg) => !nonDisplayableEvent.includes(msg.event!));
-      const stateChangingEventMessages = messages.filter((msg) => isStateChangingEventMessage(msg));
-      dispatch(addMessagesToDisplay(newDisplayableMessages));
-      dispatch(handleStateChangingEventMessages(stateChangingEventMessages));
-    };
-
-    const events = sse(
-      `${RUUTER_ENDPOINTS.GET_NEW_MESSAGES}?chatId=${chatId}&timeRangeBegin=${lastReadMessageTimestamp.split('+')[0]}`,
-      onMessage
-    );
-
+      events = sse(sseUrl, onMessage);
+    }
     return () => {
-      events.close();
+      events?.close();
     };
-
-  }, [dispatch, lastReadMessageTimestamp, chatId, isChatEnded, jwtCookie]);
+  }, [sseUrl]);
 };
 
 export default useGetNewMessages;

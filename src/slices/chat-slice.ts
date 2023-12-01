@@ -29,6 +29,7 @@ import {
 } from '../utils/state-management-utils';
 import { setToLocalStorage } from '../utils/local-storage-utils';
 import getHolidays from '../utils/holidays';
+import { getChatModeBasedOnLastMessage } from '../utils/chat-utils';
 
 export interface EstimatedWaiting {
   positionInUnassignedChats: string;
@@ -352,8 +353,7 @@ export const chatSlice = createSlice({
       state.messages.push(...receivedMessages);
       setToSessionStorage('newMessagesAmount', state.newMessagesAmount);
 
-      state.chatMode = receivedMessages[receivedMessages.length - 1]?.buttons
-        ? CHAT_MODES.FLOW : CHAT_MODES.FREE;
+      state.chatMode = getChatModeBasedOnLastMessage(state.messages);
     },
     handleStateChangingEventMessages: (state, action: PayloadAction<Message[]>) => {
       action.payload.forEach((msg) => {
@@ -440,6 +440,8 @@ export const chatSlice = createSlice({
       if (!action.payload) return;
       state.lastReadMessageTimestamp = new Date().toISOString();
       state.messages = action.payload;
+
+      state.chatMode = getChatModeBasedOnLastMessage(state.messages);
     });
     builder.addCase(getGreeting.fulfilled, (state, action) => {
       if (!action.payload.isActive) return;

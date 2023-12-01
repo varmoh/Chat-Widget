@@ -5,30 +5,22 @@ import { AUTHOR_ROLES, CHAT_MODES } from '../../../constants';
 import { useAppDispatch } from '../../../store';
 import { addMessage, initChat, queueMessage, sendNewMessage } from '../../../slices/chat-slice';
 import useChatSelector from '../../../hooks/use-chat-selector';
+import { parseButtons } from '../../../utils/chat-utils';
 import styles from '../chat-message.module.scss';
 
-type MessageButton = {
-  title: string;
-  payload: string;
-}
 
 const ChatButtonGroup = ({ message }: { message: Message }): JSX.Element => {
   const dispatch = useAppDispatch();
   const { chatId, loading, chatMode, messages } = useChatSelector();
   
-  const parsedButtons: MessageButton[] = useMemo(() => {
-    try {
-      return JSON.parse(decodeURIComponent(message.buttons!)) as MessageButton[];
-    } catch(e) {
-      console.error(e);
-      return [];
-    }
+  const parsedButtons = useMemo(() => {
+    return parseButtons(message);
   }, [message.buttons]);
   
   const addNewMessageToState = (buttonPayload: string): void => {
     const message: Message = {
       chatId,
-      content: encodeURIComponent(buttonPayload),
+      content: buttonPayload,
       authorTimestamp: new Date().toISOString(),
       authorRole: AUTHOR_ROLES.END_USER,
     };
@@ -48,11 +40,11 @@ const ChatButtonGroup = ({ message }: { message: Message }): JSX.Element => {
 
   const enabled = messages[messages.length - 1] === message && chatMode === CHAT_MODES.FLOW;
 
-
   return (
     <div className={styles.buttonsRow}>
       {parsedButtons?.map(({ title, payload }) => (
         <button
+          key={payload}
           type="button"
           className={styles['action-button']}
           onClick={() => addNewMessageToState(payload)}

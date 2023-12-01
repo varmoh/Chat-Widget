@@ -48,3 +48,8 @@ export enum AttachmentTypes {
     OGG = 'video/ogg',
     MOV = 'video/quicktime',
 }
+
+export interface MessageButton {
+  title: string;
+  payload: string;
+}
