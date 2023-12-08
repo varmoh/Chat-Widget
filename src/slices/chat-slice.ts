@@ -2,7 +2,6 @@ import { UserContacts } from './../model/user-contacts-model';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Attachment, Message, } from '../model/message-model';
 import ChatService from '../services/chat-service';
-import { format } from 'date-fns';
 import { 
   AUTHOR_ROLES,
   CHAT_EVENTS,
@@ -10,13 +9,6 @@ import {
   ERROR_MESSAGE,
   SESSION_STORAGE_CHAT_ID_KEY,
   LOCAL_STORAGE_CHAT_DIMENSIONS_KEY,
-  CHAT_WINDOW_HEIGHT,
-  CHAT_WINDOW_WIDTH,
-  CHAT_BUBBLE_ANIMATION,
-  CHAT_BUBBLE_COLOR,
-  CHAT_BUBBLE_MESSAGE_DELAY_SECONDS,
-  CHAT_BUBBLE_PROACTIVE_SECONDS,
-  CHAT_SHOW_BUBBLE_MESSAGE,
   TERMINATE_STATUS,
   CHAT_MODES,
 } from '../constants';

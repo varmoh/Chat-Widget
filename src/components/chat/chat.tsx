@@ -39,6 +39,7 @@ import IdleChatNotification from "../idle-chat-notification/idle-chat-notificati
 import getIdleTime from "../../utils/getIdleTime";
 import { Message } from "../../model/message-model";
 import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavailable-end-user-contacts";
+import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -191,36 +192,7 @@ const Chat = (): JSX.Element => {
     feedback.isFeedbackConfirmationShown,
   ]);
 
-  useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (chatId) {
-        dispatch(
-          endChat({ event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS, isUpperCase: true })
-        );
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "F5" || (event.ctrlKey && event.key === "r")) {
-        if (chatId) {
-          dispatch(
-            endChat({
-              event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
-              isUpperCase: true,
-            })
-          );
-        }
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [chatId]);
+  useReloadChatEndEffect();
 
   useLayoutEffect(() => {
     if (

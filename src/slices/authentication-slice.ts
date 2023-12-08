@@ -26,10 +26,12 @@ const initialState: AuthenticationState = {
 };
 
 export const loginWithTaraJwt = createAsyncThunk('auth/loginWithTaraJwt', async (_args, thunkApi) => {
-  const {
-    chat: { chatId },
-  } = thunkApi.getState() as { chat: ChatState };
-  if (chatId) return AuthenticationService.loginWithTaraJwt(chatId);
+  const {chat: { chatId }} = thunkApi.getState() as { chat: ChatState };
+  if (chatId) {
+    const res = await AuthenticationService.loginWithTaraJwt(chatId);
+    thunkApi.dispatch(getUserinfo());
+    return res;
+  }
   return Promise.reject();
 });
 
