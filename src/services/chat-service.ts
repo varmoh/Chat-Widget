@@ -1,6 +1,5 @@
 import { UserContacts } from './../model/user-contacts-model';
 import http from './http-service';
-import http2 from "./http2-service";
 import { Attachment, Message } from '../model/message-model';
 import { Chat } from '../model/chat-model';
 import { RUUTER_ENDPOINTS } from '../constants';
@@ -46,7 +45,7 @@ class ChatService {
   }
 
   sendMessageWithRating(message: Message): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.POST_NEW_RATING, message);
+    return http.post(RUUTER_ENDPOINTS.SEND_MESSAGE_WITH_NEW_EVENT, message);
   }
 
   endChat(message: Message): Promise<void> {
@@ -58,11 +57,11 @@ class ChatService {
   }
 
   getEmergencyNotice(): Promise<EmergencyNoticeResponse> {
-    return http2.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
+    return http.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
   }
 
   get(): Promise<EmergencyNoticeResponse> {
-    return http2.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
+    return http.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
   }
 
   sendNpmRating({ chatId, npmRating }: { chatId: string; npmRating: number }): Promise<void> {
@@ -92,7 +91,7 @@ class ChatService {
   }
 
   generateDownloadChatRequest(chatId: string, email: string | null): Promise<string> {
-    return http2.post(RUUTER_ENDPOINTS.DOWNLOAD_CHAT, { chatId, email })
+    return http.post(RUUTER_ENDPOINTS.DOWNLOAD_CHAT, { chatId, email })
   }
 
   sendAttachment(attachment: Attachment): Promise<void> {

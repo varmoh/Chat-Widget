@@ -30,7 +30,6 @@ declare global {
   interface Window {
     _env_: {
       RUUTER_API_URL: string;
-      RUUTER_2_API_URL: string;
       ENVIRONMENT: "development"; // 'developement | production'
       TIM_AUTHENTICATION_URL: string;
       ORGANIZATION_NAME: string;
