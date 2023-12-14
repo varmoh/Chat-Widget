@@ -11,14 +11,14 @@ describe('HttpService', () => {
 
   it('should handle 200 OK with error message as error', async () => {
     const errorMessage = 'time to start debugging!';
-    const ruuterResponse: RuuterResponse = { data: null, error: errorMessage };
+    const ruuterResponse: RuuterResponse = { response: null };
     server.use(rest.post(`${window._env_.RUUTER_API_URL}/error`, (req, res, ctx) => res(ctx.status(200), ctx.body(JSON.stringify(ruuterResponse)))));
     await expect(http.post('/error')).rejects.toThrow(errorMessage);
   });
 
   it('should unwrap ruuter response', async () => {
     const content = 'string response';
-    const ruuterResponse: RuuterResponse = { data: { some_conf: content }, error: null };
+    const ruuterResponse: RuuterResponse = { response: { some_conf: content }};
     server.use(rest.post(`${window._env_.RUUTER_API_URL}/ok`, (req, res, ctx) => res(ctx.status(200), ctx.body(JSON.stringify(ruuterResponse)))));
     await expect(http.post('/ok')).resolves.toBe(content);
   });

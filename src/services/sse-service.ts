@@ -10,8 +10,8 @@ const sse = <T>(url: string, onMessage: (data: T) => void): EventSource => {
 
     if (response.statusCodeValue === 200) {
       const ruuterResponse = response.body as RuuterResponse;
-      if (ruuterResponse?.data) 
-        onMessage(Object.values(ruuterResponse.data)[0] as T);
+      if (ruuterResponse?.response) 
+        onMessage(Object.values(ruuterResponse.response)[0] as T);
     }
   };
 

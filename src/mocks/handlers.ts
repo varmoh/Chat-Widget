@@ -85,7 +85,7 @@ console.log('req.body',req.body)
       "custom_jwt_extend": "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIiLCJjaGF0SWQiOiJhZWRhODM3Zi03MTdiLTQwMTgtOTkyMC0wYjY0NmU4NDA1N2UiLCJpc3MiOiJieWsuYnVlcm9rcmF0dC5lZSIsImZvcndhcmRUbyI6IiIsImV4cCI6MTY3NTc3NjA2MSwiaWF0IjoxNjc1NzY4ODYxLCJqdGkiOiI0MTVmZWNjNi1kNDQ2LTRkNTctYWU3NS0xNWYzMjhkYjFhM2IifQ.VpQCPYrnfbxBKgLMJ_gLBPZPb6FYJ9sxwt2ScrqpycNqs58LvFZ1qGduDAJUpB3bjtw6oUgzMAPHvfp2XPDzJfiJTiGXKm7HmO7S-3zP4enWt2X6Uv1G9QbKlzO9uRjdSkx8v5GktGj5ThoZupuNLNSGQ-WGecwntU7HqIlNcODvr5GpBoRev5PyKgbMF-Xw3QFe-MOCBzsi7OoL0ZnpXOa_JayFWHPERKdrgTJWIvE3EEI1tyAsGwJaMxvcb3fBfrbdYEtlGiwl4hzkrQS8vFi9G49JILLn6X00EJfWgAOQDy2dTgxeGpFGLdPFYUYcAYOp5idbprrZRmxuNp87JA"
     })
   )),
-  rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.GET_GREETING}`, (_req, res, ctx) => res(
+  rest.get(`${ruuterUrl}${RUUTER_ENDPOINTS.GET_GREETING}`, (_req, res, ctx) => res(
     ctx.status(200),
     ctx.json({
       "greeting": "Tere tulemast! Kuidas ma saan teid aidata?"
@@ -100,7 +100,7 @@ console.log('req.body',req.body)
       "personalCode": "11111",
     })
   )),
-  rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.GET_WAITING_TIME}`, (_req, res, ctx) => res(
+  rest.get(`${ruuterUrl}${RUUTER_ENDPOINTS.GET_WAITING_TIME}`, (_req, res, ctx) => res(
     ctx.status(200),
     ctx.json({
       "isActive": true,

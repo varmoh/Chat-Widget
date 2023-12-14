@@ -53,7 +53,7 @@ class ChatService {
   }
 
   getGreeting(): Promise<{ eng: string; est: string; isActive: boolean }> {
-    return http.post(RUUTER_ENDPOINTS.GET_GREETING);
+    return http.get(RUUTER_ENDPOINTS.GET_GREETING);
   }
 
   getEmergencyNotice(): Promise<EmergencyNoticeResponse> {
@@ -73,7 +73,7 @@ class ChatService {
   }
 
   async getEstimatedWaitingTime(): Promise<any> { //TODO fix return type // Promise<Response>
-    const result = await http.post(RUUTER_ENDPOINTS.GET_WAITING_TIME);
+    const result = await http.get(RUUTER_ENDPOINTS.GET_WAITING_TIME);
     //@ts-ignore 
     return result.data.response;
   }
