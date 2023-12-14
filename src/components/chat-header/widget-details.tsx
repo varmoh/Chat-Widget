@@ -22,7 +22,7 @@ const WidgetDetails = (): JSX.Element => {
           {chatId && !isAuthenticated && (
             <AuthenticateWithTaraStyles
               className="authenticateWithTara"
-              onClick={authRedirectionService.redirectToTim}
+              onClick={() => authRedirectionService.redirectToTim()}
               styleType={StyledButtonType.GRAY}
             >
               {t('authenticate.with-tara')}

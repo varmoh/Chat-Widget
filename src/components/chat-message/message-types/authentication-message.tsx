@@ -17,7 +17,7 @@ const AuthenticationMessage = (): JSX.Element => {
       </div>
       <button
         disabled={isChatEnded || isAuthenticated}
-        onClick={authRedirectionService.redirectToTim}
+        onClick={() => authRedirectionService.redirectToTim()}
         className={`${styles["event-button"]} ${
           isAuthenticated ? styles.authenticated : ""
         }`}
