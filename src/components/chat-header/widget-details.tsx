@@ -8,7 +8,7 @@ import EU_SF_logo_src from '../../static/icons/sf_logo_horizontal.jpg';
 import NEXT_GEN_FLAGS from '../../static/icons/NextGen_Rahastanud_EL_NextGeneration.jpg';
 import useChatSelector from '../../hooks/use-chat-selector';
 import useAuthenticationSelector from '../../hooks/use-authentication-selector';
-import authRedirectionService from '../../services/auth-redirection-service';
+import { redirectToTim } from '../../utils/auth-utils';
 
 const WidgetDetails = (): JSX.Element => {
   const { t } = useTranslation();
@@ -22,7 +22,7 @@ const WidgetDetails = (): JSX.Element => {
           {chatId && !isAuthenticated && (
             <AuthenticateWithTaraStyles
               className="authenticateWithTara"
-              onClick={() => authRedirectionService.redirectToTim()}
+              onClick={redirectToTim}
               styleType={StyledButtonType.GRAY}
             >
               {t('authenticate.with-tara')}

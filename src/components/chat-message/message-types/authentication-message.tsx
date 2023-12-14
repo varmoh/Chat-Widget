@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import useChatSelector from "../../../hooks/use-chat-selector";
 import useAuthenticationSelector from "../../../hooks/use-authentication-selector";
 import styles from "../chat-message.module.scss";
-import authRedirectionService from "../../../services/auth-redirection-service";
+import { redirectToTim } from "../../../utils/auth-utils";
 
 const AuthenticationMessage = (): JSX.Element => {
   const { t } = useTranslation();
@@ -17,7 +17,7 @@ const AuthenticationMessage = (): JSX.Element => {
       </div>
       <button
         disabled={isChatEnded || isAuthenticated}
-        onClick={() => authRedirectionService.redirectToTim()}
+        onClick={redirectToTim}
         className={`${styles["event-button"]} ${
           isAuthenticated ? styles.authenticated : ""
         }`}

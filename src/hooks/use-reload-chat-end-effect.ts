@@ -3,7 +3,7 @@ import { useAppDispatch } from "../store";
 import { CHAT_EVENTS } from "../constants";
 import { endChat } from "../slices/chat-slice";
 import useChatSelector from "./use-chat-selector";
-import authRedirectionService from "../services/auth-redirection-service";
+import { isRedirectPathEmpty } from "../utils/auth-utils";
 
 const useReloadChatEndEffect = () => {
   const { chatId } = useChatSelector();
@@ -11,7 +11,7 @@ const useReloadChatEndEffect = () => {
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (chatId && authRedirectionService.isRedirectPathEmpty()) {
+      if (chatId && isRedirectPathEmpty()) {
         dispatch(
           endChat({
             event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
