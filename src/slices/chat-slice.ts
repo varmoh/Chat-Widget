@@ -171,6 +171,10 @@ export const getChatMessages = createAsyncThunk('chat/getChatMessages', async (a
   return chatId ? ChatService.getMessages(chatId) : null;
 });
 
+export const getNewMessages = createAsyncThunk('chat/getNewMessages', async (args: {timeRangeBegin: string}, _) => {
+  return ChatService.getNewMessages(args.timeRangeBegin);
+});
+
 export const sendChatNpmRating = createAsyncThunk('chat/sendChatNpmRating', (args: { NpmRating: number }, thunkApi) => {
   const {
     chat: { chatId },

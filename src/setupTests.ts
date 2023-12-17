@@ -7,6 +7,7 @@ const { getComputedStyle } = window;
 window.getComputedStyle = (elt) => getComputedStyle(elt);
 window._env_ = {
   RUUTER_API_URL: 'http://localhost:8086',
+  NOTIFICATION_NODE_URL: 'http://localhost:4040',
   ENVIRONMENT: 'development',
   TIM_AUTHENTICATION_URL: 'http://localhost:8085/oauth2/authorization/tara?callback_url=http://localhost:3000/auth/callback',
   TERMS_AND_CONDITIONS_LINK: 'https://www.kratid.ee/kasutustingimused',

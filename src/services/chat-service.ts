@@ -60,6 +60,10 @@ class ChatService {
     return http.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
   }
 
+  getNewMessages(timeRangeBegin: string): Promise<Message[]> {
+    return http.get(RUUTER_ENDPOINTS.GET_NEW_MESSAGES, {params: {timeRangeBegin: timeRangeBegin}});
+  }
+
   get(): Promise<EmergencyNoticeResponse> {
     return http.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
   }

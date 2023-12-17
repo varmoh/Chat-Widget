@@ -41,6 +41,7 @@ Snippet can be embedded to any site using the following html:
 <script>
   window._env_ = {
     RUUTER_API_URL: 'LOCATION_OF_RUUTER',
+    NOTIFICATION_NODE_URL: 'Notification Node Server Url'
     ENVIRONMENT: 'development', // 'developement | production'
     TIM_AUTHENTICATION_URL: 'TIM url with callback parameter',
     OFFICE_HOURS: {

@@ -7,8 +7,7 @@ const OnlineStatusNotification = () => {
   const { burokrattOnlineStatus } = useAppSelector((state) => state.widget);
 
   if (burokrattOnlineStatus !== true) {
-    return null;
-    // return <div className={styles.container}>{t('notifications.offline')}</div>; // TODO: Healthz check
+    return <div className={styles.container}>{t("notifications.offline")}</div>;
   } else {
     return null;
   }

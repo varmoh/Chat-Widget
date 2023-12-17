@@ -35,6 +35,7 @@ declare global {
   interface Window {
     _env_: {
       RUUTER_API_URL: string;
+      NOTIFICATION_NODE_URL: string;
       ENVIRONMENT: "development"; // 'developement | production'
       TIM_AUTHENTICATION_URL: string;
       ORGANIZATION_NAME: string;
@@ -88,7 +89,8 @@ const App: FC = () => {
   useGetWidgetConfig();
   useGetEmergencyNotice();
   useAuthentication();
-  useGetChat();
+  // TODO: TO BE DISCUSSED IF NEEDED
+  // useGetChat();
   useGetNewMessages();
   useNewMessageNotification();
 
@@ -119,7 +121,7 @@ const App: FC = () => {
     if (!widgetConfig.isLoaded) dispatch(getWidgetConfig());
   }, [chatId, dispatch, messages, widgetConfig]);
 
-  // if (burokrattOnlineStatus !== true) return <></>; // TODO: Healthz check
+  if (burokrattOnlineStatus !== true) return <></>;
   if (displayWidget && widgetConfig.isLoaded)
     return isChatOpen ? <Chat /> : <Profile />;
   return <></>;
