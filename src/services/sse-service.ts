@@ -1,17 +1,11 @@
-import { RuuterResponse } from '../model/ruuter-response-model';
-
-const ruuterUrl = window._env_.RUUTER_API_URL;
-
 const sse = <T>(url: string, onMessage: (data: T) => void): EventSource => {
-  const eventSource = new EventSource(`${ruuterUrl}/sse${url}`, { withCredentials: true });
+  const eventSource = new EventSource(`${window._env_.NOTIFICATION_NODE_URL}/sse/notifications${url}`);
 
   eventSource.onmessage = (event: MessageEvent) => {
     const response = JSON.parse(event.data);
 
-    if (response.statusCodeValue === 200) {
-      const ruuterResponse = response.body as RuuterResponse;
-      if (ruuterResponse?.data) 
-        onMessage(Object.values(ruuterResponse.data)[0] as T);
+    if (response != undefined) {
+      onMessage(Object.values(response)[0] as T);
     }
   };
 

@@ -44,6 +44,8 @@ import StyledButton from "../styled-components/styled-button";
 import Close from "../../static/icons/close.svg";
 import formatBytes from "../../utils/format-bytes";
 import debounce from "../../utils/debounce";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
 
 const ChatKeyPad = (): JSX.Element => {
   const [userInput, setUserInput] = useState<string>("");
@@ -125,7 +127,7 @@ const ChatKeyPad = (): JSX.Element => {
     };
 
     dispatch(addMessage(message));
-    dispatch(sendAttachment(userInputFile!));
+    // dispatch(sendAttachment(userInputFile!)); // TODO: Send attachment
     handleUploadClear();
 
     if (!chatId && !loading) {
@@ -139,6 +141,23 @@ const ChatKeyPad = (): JSX.Element => {
     }
   };
 
+  const [previewSubject] = useState(() => new Subject<Message>());
+  useEffect(() => {
+    const subscription = previewSubject
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(300),
+        switchMap((message: Message) => {
+          return dispatch(sendMessagePreview(message));
+        })
+      )
+      .subscribe((_) => {});
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   const handleKeyUp = useCallback(
     debounce(() => {
       const message: Message = {
@@ -147,7 +166,9 @@ const ChatKeyPad = (): JSX.Element => {
         authorTimestamp: new Date().toISOString(),
       };
 
-      dispatch(sendMessagePreview(message));
+      if (chatId) {
+        previewSubject.next(message);
+      }
     }),
     [chatId, userInput]
   );

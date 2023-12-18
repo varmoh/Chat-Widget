@@ -1,14 +1,14 @@
-import http2 from "./http2-service";
+import http from "./http-service";
 import { RUUTER_ENDPOINTS } from "../constants";
 import { WidgetConfigResponse } from "../model/widget-config-response-model";
 
 class WidgetService {
   getWidgetConfig(): Promise<WidgetConfigResponse> {
-    return http2.get(RUUTER_ENDPOINTS.GET_WIDGET_CONFIG);
+    return http.get(RUUTER_ENDPOINTS.GET_WIDGET_CONFIG);
   }
 
   sendContactInfo(chatId:string, email: string, phone: string): Promise<WidgetConfigResponse> {
-    return http2.post(RUUTER_ENDPOINTS.SEND_CONTACT_INFO, {
+    return http.post(RUUTER_ENDPOINTS.SEND_CONTACT_INFO, {
       "chatId": chatId,
       "endUserEmail": email,
       "endUserPhone": phone
@@ -16,7 +16,7 @@ class WidgetService {
   }
 
   authenticateUser(chatId:string, id: string, firstName: string, lastName: string): Promise<WidgetConfigResponse> {
-    return http2.post(RUUTER_ENDPOINTS.AUTHENTICATE_USER, {
+    return http.post(RUUTER_ENDPOINTS.AUTHENTICATE_USER, {
       "chatId": chatId,
       "endUserId": id,
       "endUserFirstName": firstName,

@@ -44,7 +44,7 @@ describe('ChatService', () => {
   it('should query message with rating', () => {
     const message: Message = { chatId: '1', content: 'hey', authorTimestamp: new Date().toString(), rating: RATING_TYPES.LIKED };
     chatService.sendMessageWithRating(message);
-    expect(http.post).toHaveBeenCalledWith(RUUTER_ENDPOINTS.POST_NEW_RATING, message);
+    expect(http.post).toHaveBeenCalledWith(RUUTER_ENDPOINTS.SEND_MESSAGE_WITH_NEW_EVENT, message);
   });
 
   it('should query npm rating', () => {

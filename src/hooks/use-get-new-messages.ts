@@ -4,9 +4,11 @@ import sse from '../services/sse-service';
 import useChatSelector from './use-chat-selector';
 import { Message } from '../model/message-model';
 import { CHAT_EVENTS, RUUTER_ENDPOINTS, TERMINATE_STATUS } from '../constants';
-import { addMessagesToDisplay, handleStateChangingEventMessages } from '../slices/chat-slice';
+import { addMessagesToDisplay, getNewMessages, handleStateChangingEventMessages } from '../slices/chat-slice';
 import { isStateChangingEventMessage } from '../utils/state-management-utils';
 import useAuthenticationSelector from './use-authentication-selector';
+import { use } from 'i18next';
+import chatService from '../services/chat-service';
 
 const useGetNewMessages = (): void => {
   const { lastReadMessageTimestamp, isChatEnded, chatId } = useChatSelector();
@@ -26,14 +28,16 @@ const useGetNewMessages = (): void => {
       setSseUrl('');
     }
     else if (chatId && lastReadMessageTimestampValue) {
-      setSseUrl(`${RUUTER_ENDPOINTS.GET_NEW_MESSAGES}?chatId=${chatId}&timeRangeBegin=${lastReadMessageTimestampValue.split('+')[0]}`);
+      setSseUrl(`/${chatId}`);
     }
   }, [isChatEnded, chatId, lastReadMessageTimestampValue]);
 
   useEffect(() => {
     let events: EventSource | undefined;
     if (sseUrl) {  
-      const onMessage = (messages: Message[]) => {
+      const onMessage = async () => {
+        const messages: Message[] = await chatService.getNewMessages(lastReadMessageTimestampValue.split('+')[0]);
+        setLastReadMessageTimestampValue(messages[messages.length - 1].created ?? `${lastReadMessageTimestamp}`);
           const nonDisplayableEvent = [
             CHAT_EVENTS.GREETING.toString(),
             TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED.toString(), 

@@ -10,18 +10,9 @@ const http = axios.create({
 });
 
 http.interceptors.response.use((response) => {
-  if (response.status === 200) {
-    if (!response.data) {
-      return Promise.reject(new Error('200 OK with no response body!'));
-    }
-    const ruuterResponse = response.data as RuuterResponse;
-    if (ruuterResponse.error) {
-      return Promise.reject(new Error(ruuterResponse.error));
-    }
-    if (ruuterResponse.data) {
-      return Object.values(ruuterResponse.data)[0];
-    }
-  }
+  if (response.status !== 200) return Promise.reject(response);
+  const ruuterResponse = response.data as RuuterResponse;
+  if (ruuterResponse.response) return ruuterResponse.response;
   return response;
 });
 
