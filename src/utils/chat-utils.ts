@@ -1,5 +1,6 @@
-import { CHAT_MODES } from "../constants";
+import { AUTHOR_ROLES, CHAT_EVENTS, CHAT_MODES } from "../constants";
 import { Message, MessageButton } from "../model/message-model";
+import { EndUserContacts } from "../slices/chat-slice";
 
 export const parseButtons = (message: Message): MessageButton[] => {
   try {
@@ -20,4 +21,35 @@ export const getChatModeBasedOnLastMessage = (messages: Message[]): CHAT_MODES =
   }
 
   return lastMsgButtonsCount === 0 ? CHAT_MODES.FREE : CHAT_MODES.FLOW;
+}
+
+export const getContactFormFulfilledNewMessage = (
+  endUserContacts: EndUserContacts,
+  chatId: string | null,
+  t: any,
+): Message => {
+  let message;
+  if (endUserContacts.phoneNr && endUserContacts.mailAddress) {
+    message = t("chatMessage.email-and-phone-template", {
+      email: endUserContacts.mailAddress,
+      phoneNr: endUserContacts.phoneNr,
+    });
+  } else if (endUserContacts.mailAddress)
+    message = t("chatMessage.email-only-template", {
+      email: endUserContacts.mailAddress,
+    });
+
+  else
+    message = t("chatMessage.phone-only-template", {
+      phoneNr: endUserContacts.phoneNr,
+    });
+
+  return {
+    chatId,
+    authorRole: AUTHOR_ROLES.END_USER,
+    authorTimestamp: new Date().toISOString(),
+    content: message,
+    event: CHAT_EVENTS.CONTACT_INFORMATION_FULFILLED,
+    preview: "",
+  };
 }

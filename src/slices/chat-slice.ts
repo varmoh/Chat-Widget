@@ -28,6 +28,13 @@ export interface EstimatedWaiting {
   durationInSeconds: string;
 }
 
+export interface EndUserContacts {
+  idCode: string;
+  mailAddress: string;
+  phoneNr: string;
+  comment: string; 
+}
+
 export interface ChatState {
   chatId: string | null;
   isChatOpen: boolean;
@@ -60,12 +67,7 @@ export interface ChatState {
     isFeedbackRatingGiven: boolean;
     showFeedbackWarning: boolean;
   };
-  endUserContacts: {
-    idCode: string;
-    mailAddress: string;
-    phoneNr: string;
-    comment: string;
-  };
+  endUserContacts: EndUserContacts;
   downloadChat: {
     isLoading: boolean;
     error: any;
