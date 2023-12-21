@@ -95,7 +95,6 @@ export enum RUUTER_ENDPOINTS {
   GET_CHAT_BY_ID = '/get-chat-by-id',
   GET_WIDGET_CONFIG = '/get-widget-config',
   GET_AVAILABLE_CSAS = 'get-all-available-customer-support-agents',
-  GET_ORGANIZATION_WORKING_TIME = 'get-organization-working-time',
   SEND_CONTACT_INFO = '/end-user-email-phone',
   AUTHENTICATE_USER = '/end-user-id-name',
   GET_NEW_MESSAGES = '/get-new-messages',

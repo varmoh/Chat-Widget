@@ -2,7 +2,7 @@ import { UserContacts } from './../model/user-contacts-model';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Attachment, Message, } from '../model/message-model';
 import ChatService from '../services/chat-service';
-import { 
+import {
   AUTHOR_ROLES,
   CHAT_EVENTS,
   CHAT_STATUS,
@@ -368,53 +368,21 @@ export const chatSlice = createSlice({
             state.showContactForm = true;
             state.contactMsgId = msg.id || '';
             break;
-          case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION:
-            state.showUnavailableContactForm = true;
-            state.contactMsgId = msg.id || '';
-            state.contactContentMessage = msg.content ?? '';
-            break;  
-          case CHAT_EVENTS.UNAVAILABLE_CSAS:
-            state.showUnavailableContactForm = true;
-            state.contactMsgId = msg.id || '';
-            state.contactContentMessage = msg.content ?? '';
-            break;
           case CHAT_EVENTS.UNAVAILABLE_HOLIDAY:
+          case CHAT_EVENTS.UNAVAILABLE_CSAS:
+          case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION:
             state.showUnavailableContactForm = true;
             state.contactMsgId = msg.id || '';
             state.contactContentMessage = msg.content ?? '';
             break;    
           case CHAT_EVENTS.ANSWERED:
-            state.chatStatus = CHAT_STATUS.ENDED;
-            clearStateVariablesFromSessionStorage();
-            break;
           case CHAT_EVENTS.TERMINATED:
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.ACCEPTED:
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.CLIENT_LEFT_FOR_UNKNOWN_REASONS:
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.HATE_SPEECH:
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED: 
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION: 
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.OTHER:
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.RESPONSE_SENT_TO_CLIENT_EMAIL:
             clearStateVariablesFromSessionStorage();
             state.chatStatus = CHAT_STATUS.ENDED;

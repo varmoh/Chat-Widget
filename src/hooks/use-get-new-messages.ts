@@ -5,7 +5,7 @@ import useChatSelector from './use-chat-selector';
 import { Message } from '../model/message-model';
 import { CHAT_EVENTS, RUUTER_ENDPOINTS, TERMINATE_STATUS } from '../constants';
 import { addMessagesToDisplay, handleStateChangingEventMessages } from '../slices/chat-slice';
-import { isStateChangingEventMessage } from '../utils/state-management-utils';
+import { isDisplayableMessages, isStateChangingEventMessage } from '../utils/state-management-utils';
 import useAuthenticationSelector from './use-authentication-selector';
 
 const useGetNewMessages = (): void => {
@@ -33,22 +33,9 @@ const useGetNewMessages = (): void => {
   useEffect(() => {
     let events: EventSource | undefined;
     if (sseUrl) {  
-      const onMessage = (messages: Message[]) => {
-          const nonDisplayableEvent = [
-            CHAT_EVENTS.GREETING.toString(),
-            TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED.toString(), 
-            TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION.toString(), 
-            TERMINATE_STATUS.CLIENT_LEFT_FOR_UNKNOWN_REASONS.toString(), 
-            TERMINATE_STATUS.ACCEPTED.toString(), 
-            TERMINATE_STATUS.HATE_SPEECH.toString(), 
-            TERMINATE_STATUS.OTHER.toString(), 
-            TERMINATE_STATUS.RESPONSE_SENT_TO_CLIENT_EMAIL.toString(),
-          ]
-    
-          const newDisplayableMessages = messages.filter((msg) => !nonDisplayableEvent.includes(msg.event!));
-          const stateChangingEventMessages = messages.filter((msg) => isStateChangingEventMessage(msg));
-          dispatch(addMessagesToDisplay(newDisplayableMessages));
-          dispatch(handleStateChangingEventMessages(stateChangingEventMessages));
+      const onMessage = (messages: Message[]) => {    
+        dispatch(addMessagesToDisplay(messages.filter(isDisplayableMessages)));
+        dispatch(handleStateChangingEventMessages(messages.filter(isStateChangingEventMessage)));
       };
 
       events = sse(sseUrl, onMessage);

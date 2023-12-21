@@ -13,7 +13,6 @@ import {
 } from "../../constants";
 import {
   sendMessageWithNewEvent,
-  sendNewMessage,
   setShowUnavailableContactForm,
   setEmailAdress,
   setPhoneNumber,
