@@ -7,9 +7,9 @@ export function redirectToTim() {
 
 export function redirectIfComeBackFromTim() {
   const redirectPath = getRedirectPath();
-  if (!!redirectPath) {
+  if (redirectPath) {
     removeRedirectPath();
-    window.location.href = window.location.origin + redirectPath;
+    window.location.href = redirectPath;
   }
 }
 
@@ -25,10 +25,10 @@ function getRedirectPath() {
   return localStorage.getItem(LOCAL_STORAGE_TARA_LOGIN_REDIRECT);
 }
 
-function isRedirectPathSet() {
-  return !!getRedirectPath();
-}
-
 function removeRedirectPath() {
   localStorage.removeItem(LOCAL_STORAGE_TARA_LOGIN_REDIRECT);
+}
+
+function isRedirectPathSet() {
+  return !!getRedirectPath();
 }
