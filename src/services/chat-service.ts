@@ -5,9 +5,7 @@ import { Attachment, Message } from '../model/message-model';
 import { Chat } from '../model/chat-model';
 import { RUUTER_ENDPOINTS } from '../constants';
 import { EndUserTechnicalData } from '../model/chat-ini-model';
-import { EstimatedWaiting } from '../slices/chat-slice';
 import { EmergencyNoticeResponse } from '../model/emergency-notice-response-model';
-import { OrganizationWorkingTimeResponse } from '../model/organization-working-time-model';
 
 interface Document {
   _id: string;
@@ -105,6 +103,14 @@ class ChatService {
 
   burokrattOnlineStatus(): Promise<boolean> {
     return http.get(RUUTER_ENDPOINTS.BUROKRATT_ONLINE_STATUS);
+  }
+
+  getNameVisibility(): Promise<{ isVisible: boolean }> {
+    return http2.get(RUUTER_ENDPOINTS.GET_CSA_NAME_VISIBILITY);
+  }
+
+  getTitleVisibility(): Promise<{ isVisible: boolean }> {
+    return http2.get(RUUTER_ENDPOINTS.GET_CSA_TITLE_VISIBILITY);
   }
 }
 

@@ -6,7 +6,6 @@ import styles from "../chat-message.module.scss";
 import RobotIcon from "../../../static/icons/buerokratt.svg";
 import {
   CHAT_EVENTS,
-  CLIENT_NAME_ENABLED,
   MAXIMUM_MESSAGE_TEXT_LENGTH_FOR_ONE_ROW,
   RATING_TYPES,
 } from "../../../constants";
@@ -19,6 +18,8 @@ import {
 import { useAppDispatch } from "../../../store";
 import ChatButtonGroup from "./chat-button-group";
 import { parseButtons } from '../../../utils/chat-utils';
+import useChatSelector from "../../../hooks/use-chat-selector";
+import { stat } from "fs";
 
 
 const leftAnimation = {
@@ -29,6 +30,7 @@ const leftAnimation = {
 
 const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
   const dispatch = useAppDispatch();
+  const { nameVisibility, titleVisibility } = useChatSelector();
 
   const setNewFeedbackRating = (newRating: string): void => {
     const updatedMessage = {
@@ -43,6 +45,8 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
     return parseButtons(message).length > 0;
   }, [message.buttons]);
 
+  const csaName = (message.authorFirstName + ' ' + message.authorLastName).trim();
+
   return (
     <motion.div
       animate={leftAnimation.animate}
@@ -51,7 +55,12 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
     >
       <div className={classNames(styles.message, styles.admin)}>
         {
-          CLIENT_NAME_ENABLED && (
+          nameVisibility && csaName && (
+            <div className={styles.name}>{csaName}</div>
+          )
+        }
+        {
+          titleVisibility && message.authorRole && (
             <div className={styles.name}>{message.authorRole}</div>
           )
         }

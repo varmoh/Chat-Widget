@@ -63,6 +63,8 @@ export const initialChatState: ChatState = {
     }
   },
   chatMode: CHAT_MODES.FREE,
+  nameVisibility: false,
+  titleVisibility: false,
 };
 
 export const initialAuthState: AuthenticationState = {
