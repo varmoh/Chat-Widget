@@ -12,7 +12,8 @@ const useAuthentication = (): void => {
    redirectIfComeBackFromTim()
     
     if (!isAuthenticated || loggedInWithTaraJwt) {
-      dispatch(getUserinfo());
+      // TODO: TO be uncommented later when end user authentication is ready
+      // dispatch(getUserinfo());
     }
   }, [isAuthenticated, loggedInWithTaraJwt]);
 

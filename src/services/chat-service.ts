@@ -109,11 +109,11 @@ class ChatService {
   }
 
   getNameVisibility(): Promise<{ isVisible: boolean }> {
-    return http2.get(RUUTER_ENDPOINTS.GET_CSA_NAME_VISIBILITY);
+    return http.get(RUUTER_ENDPOINTS.GET_CSA_NAME_VISIBILITY);
   }
 
   getTitleVisibility(): Promise<{ isVisible: boolean }> {
-    return http2.get(RUUTER_ENDPOINTS.GET_CSA_TITLE_VISIBILITY);
+    return http.get(RUUTER_ENDPOINTS.GET_CSA_TITLE_VISIBILITY);
   }
 }
 
