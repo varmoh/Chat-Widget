@@ -117,8 +117,8 @@ export enum RUUTER_ENDPOINTS {
   DOWNLOAD_CHAT = '/download-chat',
   SEND_ATTACHMENT = '/attachments/add',
   SEND_USER_CONTACTS = '/end-user-email-phone',
-  GET_CSA_NAME_VISIBILITY = '/get-csa-name-visibility',
-  GET_CSA_TITLE_VISIBILITY = '/get-csa-title-visibility',
+  GET_CSA_NAME_VISIBILITY = '/name-visibility',
+  GET_CSA_TITLE_VISIBILITY = '/title-visibility',
 }
 
 export enum StyledButtonType {
