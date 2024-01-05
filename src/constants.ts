@@ -126,6 +126,7 @@ export enum StyledButtonType {
   GRAY = 'GRAY',
   DARK = 'DARK',
 }
+
 export enum RATING_TYPES {
   LIKED = 'liked',
   DISLIKED = 'disliked',
