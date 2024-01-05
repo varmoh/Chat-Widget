@@ -2,7 +2,7 @@ import { UserContacts } from './../model/user-contacts-model';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Attachment, Message, } from '../model/message-model';
 import ChatService from '../services/chat-service';
-import { 
+import {
   AUTHOR_ROLES,
   CHAT_EVENTS,
   CHAT_STATUS,
@@ -26,6 +26,13 @@ import { getChatModeBasedOnLastMessage } from '../utils/chat-utils';
 export interface EstimatedWaiting {
   positionInUnassignedChats: string;
   durationInSeconds: string;
+}
+
+export interface EndUserContacts {
+  idCode: string;
+  mailAddress: string;
+  phoneNr: string;
+  comment: string; 
 }
 
 export interface ChatState {
@@ -60,12 +67,7 @@ export interface ChatState {
     isFeedbackRatingGiven: boolean;
     showFeedbackWarning: boolean;
   };
-  endUserContacts: {
-    idCode: string;
-    mailAddress: string;
-    phoneNr: string;
-    comment: string;
-  };
+  endUserContacts: EndUserContacts;
   downloadChat: {
     isLoading: boolean;
     error: any;
@@ -86,6 +88,8 @@ export interface ChatState {
     }
   },
   chatMode: CHAT_MODES,
+  nameVisibility: boolean,
+  titleVisibility: boolean,
 }
 
 const initialState: ChatState = {
@@ -144,7 +148,9 @@ const initialState: ChatState = {
       isFailed: false,
     }
   },
-  chatMode: CHAT_MODES.FREE
+  chatMode: CHAT_MODES.FREE,
+  nameVisibility: false,
+  titleVisibility: false,
 };
 
 export const initChat = createAsyncThunk('chat/init', async (message: Message) =>  {
@@ -260,6 +266,8 @@ export const downloadChat = createAsyncThunk("chat/downloadChat", async (isForwa
     ? ChatService.generateDownloadChatRequest(chatId, isForwardToEmail ? endUserContacts.mailAddress : null)
     : null;
 });
+export const getNameVisibility = createAsyncThunk('chat/getNameVisibility', async () => ChatService.getNameVisibility());
+export const getTitleVisibility = createAsyncThunk('chat/getTitleVisibility', async () => ChatService.getTitleVisibility());
 
 export const chatSlice = createSlice({
   name: 'chat',
@@ -337,13 +345,18 @@ export const chatSlice = createSlice({
       let receivedMessages = action.payload || [];
       if (!receivedMessages.length) return;
 
-      state.messages = state.messages.map((existingMessage) => {
+      const newMessagesList = state.messages.map((existingMessage) => {
         const matchingMessage = findMatchingMessageFromMessageList(existingMessage, receivedMessages);
         if (!matchingMessage) return existingMessage;
         receivedMessages = receivedMessages.filter((rMsg) => rMsg.id !== matchingMessage.id);
         return { ...existingMessage, ...matchingMessage };
       });
 
+      newMessagesList.push(...receivedMessages);
+      if(newMessagesList.length === state.messages.length){
+        return;
+      }
+      state.messages = newMessagesList;
       state.lastReadMessageTimestamp = new Date().toISOString();
       state.newMessagesAmount += receivedMessages.length;
       state.messages.push(...receivedMessages);
@@ -361,53 +374,21 @@ export const chatSlice = createSlice({
             state.showContactForm = true;
             state.contactMsgId = msg.id || '';
             break;
-          case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION:
-            state.showUnavailableContactForm = true;
-            state.contactMsgId = msg.id || '';
-            state.contactContentMessage = msg.content ?? '';
-            break;  
-          case CHAT_EVENTS.UNAVAILABLE_CSAS:
-            state.showUnavailableContactForm = true;
-            state.contactMsgId = msg.id || '';
-            state.contactContentMessage = msg.content ?? '';
-            break;
           case CHAT_EVENTS.UNAVAILABLE_HOLIDAY:
+          case CHAT_EVENTS.UNAVAILABLE_CSAS:
+          case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION:
             state.showUnavailableContactForm = true;
             state.contactMsgId = msg.id || '';
             state.contactContentMessage = msg.content ?? '';
             break;    
           case CHAT_EVENTS.ANSWERED:
-            state.chatStatus = CHAT_STATUS.ENDED;
-            clearStateVariablesFromSessionStorage();
-            break;
           case CHAT_EVENTS.TERMINATED:
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.ACCEPTED:
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.CLIENT_LEFT_FOR_UNKNOWN_REASONS:
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.HATE_SPEECH:
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED: 
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION: 
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.OTHER:
-            clearStateVariablesFromSessionStorage();
-            state.chatStatus = CHAT_STATUS.ENDED;
-            break;
           case TERMINATE_STATUS.RESPONSE_SENT_TO_CLIENT_EMAIL:
             clearStateVariablesFromSessionStorage();
             state.chatStatus = CHAT_STATUS.ENDED;
@@ -447,6 +428,12 @@ export const chatSlice = createSlice({
         event: 'greeting',
         authorTimestamp: new Date().toISOString(),
       });
+    });
+    builder.addCase(getNameVisibility.fulfilled, (state, action) => {
+      state.nameVisibility = action.payload.isVisible;
+    });
+    builder.addCase(getTitleVisibility.fulfilled, (state, action) => {
+      state.titleVisibility = action.payload.isVisible;
     });
     builder.addCase(getEmergencyNotice.fulfilled, (state, action) => {
       state.emergencyNotice = {

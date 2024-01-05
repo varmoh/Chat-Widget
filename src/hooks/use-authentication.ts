@@ -2,14 +2,14 @@ import { useEffect } from 'react';
 import { useAppDispatch } from '../store';
 import { getUserinfo, loginWithTaraJwt } from '../slices/authentication-slice';
 import useAuthenticationSelector from './use-authentication-selector';
-import authRedirectionService from '../services/auth-redirection-service';
+import { redirectIfComeBackFromTim } from '../utils/auth-utils';
 
 const useAuthentication = (): void => {
   const dispatch = useAppDispatch();
   const { isAuthenticated, fetchingUserInfo, loggedInWithTaraJwt } = useAuthenticationSelector();
 
   useEffect(() => {
-   authRedirectionService.redirectIfComeBackFromTim()
+   redirectIfComeBackFromTim()
     
     if (!isAuthenticated || loggedInWithTaraJwt) {
       dispatch(getUserinfo());

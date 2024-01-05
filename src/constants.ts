@@ -1,9 +1,8 @@
 /* eslint-disable */
 export const SESSION_STORAGE_CHAT_ID_KEY = 'byk-va-cid';
-export const SESSION_STORAGE_TARA_LOGIN_REDIRECT = 'byk-va-tara-login-redirect';
+export const LOCAL_STORAGE_TARA_LOGIN_REDIRECT = 'byk-va-tara-login-redirect';
 export const OFFICE_HOURS_INTERVAL_TIMEOUT = 60000;
 // BYK-648 enable to show customer service agent name in chat window
-export const CLIENT_NAME_ENABLED = false;
 export const EMAIL_REGEX =
   '^$|^[\\wöäüÖÄÜ!#$%&’*+\\/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+\\/=?`{|}~^-]+)*@(?:[a-zA-ZöäüÖÄÜ0-9-]+\\.)+[a-zA-ZöäüÖÄÜ]{2,6}$';
 export const PHONE_NR_REGEX = '^$|^[+]*[0-9]{1,4}[-\\s.0-9]{6,15}$';
@@ -118,6 +117,8 @@ export enum RUUTER_ENDPOINTS {
   DOWNLOAD_CHAT = '/download-chat',
   SEND_ATTACHMENT = '/attachments/add',
   SEND_USER_CONTACTS = '/end-user-email-phone',
+  GET_CSA_NAME_VISIBILITY = '/get-csa-name-visibility',
+  GET_CSA_TITLE_VISIBILITY = '/get-csa-title-visibility',
 }
 
 export enum StyledButtonType {
