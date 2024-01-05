@@ -1,6 +1,5 @@
 import { UserContacts } from './../model/user-contacts-model';
 import http from './http-service';
-import http2 from "./http2-service";
 import { Attachment, Message } from '../model/message-model';
 import { Chat } from '../model/chat-model';
 import { RUUTER_ENDPOINTS } from '../constants';
@@ -44,7 +43,7 @@ class ChatService {
   }
 
   sendMessageWithRating(message: Message): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.POST_NEW_RATING, message);
+    return http.post(RUUTER_ENDPOINTS.SEND_MESSAGE_WITH_NEW_EVENT, message);
   }
 
   endChat(message: Message): Promise<void> {
@@ -52,15 +51,19 @@ class ChatService {
   }
 
   getGreeting(): Promise<{ eng: string; est: string; isActive: boolean }> {
-    return http.post(RUUTER_ENDPOINTS.GET_GREETING);
+    return http.get(RUUTER_ENDPOINTS.GET_GREETING);
   }
 
   getEmergencyNotice(): Promise<EmergencyNoticeResponse> {
-    return http2.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
+    return http.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
+  }
+
+  getNewMessages(timeRangeBegin: string): Promise<Message[]> {
+    return http.get(RUUTER_ENDPOINTS.GET_NEW_MESSAGES, {params: {timeRangeBegin: timeRangeBegin}});
   }
 
   get(): Promise<EmergencyNoticeResponse> {
-    return http2.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
+    return http.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
   }
 
   sendNpmRating({ chatId, npmRating }: { chatId: string; npmRating: number }): Promise<void> {
@@ -72,7 +75,7 @@ class ChatService {
   }
 
   async getEstimatedWaitingTime(): Promise<any> { //TODO fix return type // Promise<Response>
-    const result = await http.post(RUUTER_ENDPOINTS.GET_WAITING_TIME);
+    const result = await http.get(RUUTER_ENDPOINTS.GET_WAITING_TIME);
     //@ts-ignore 
     return result.data.response;
   }
@@ -90,7 +93,7 @@ class ChatService {
   }
 
   generateDownloadChatRequest(chatId: string, email: string | null): Promise<string> {
-    return http2.post(RUUTER_ENDPOINTS.DOWNLOAD_CHAT, { chatId, email })
+    return http.post(RUUTER_ENDPOINTS.DOWNLOAD_CHAT, { chatId, email })
   }
 
   sendAttachment(attachment: Attachment): Promise<void> {

@@ -7,6 +7,8 @@ import { CHAT_EVENTS, RUUTER_ENDPOINTS, TERMINATE_STATUS } from '../constants';
 import { addMessagesToDisplay, handleStateChangingEventMessages } from '../slices/chat-slice';
 import { isDisplayableMessages, isStateChangingEventMessage } from '../utils/state-management-utils';
 import useAuthenticationSelector from './use-authentication-selector';
+import { use } from 'i18next';
+import chatService from '../services/chat-service';
 
 const useGetNewMessages = (): void => {
   const { lastReadMessageTimestamp, isChatEnded, chatId } = useChatSelector();
@@ -26,7 +28,7 @@ const useGetNewMessages = (): void => {
       setSseUrl('');
     }
     else if (chatId && lastReadMessageTimestampValue) {
-      setSseUrl(`${RUUTER_ENDPOINTS.GET_NEW_MESSAGES}?chatId=${chatId}&timeRangeBegin=${lastReadMessageTimestampValue.split('+')[0]}`);
+      setSseUrl(`/${chatId}`);
     }
   }, [isChatEnded, chatId, lastReadMessageTimestampValue]);
 

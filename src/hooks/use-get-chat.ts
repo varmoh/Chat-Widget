@@ -15,7 +15,7 @@ const useGetChat = (): void => {
     if (isChatEnded || !chatId){
       setSseUrl('');
     } else if(chatId) {
-      setSseUrl(`${RUUTER_ENDPOINTS.GET_CHAT_BY_ID}?id=${chatId}`);
+      setSseUrl(chatId);
     }
   }, [chatId, isChatEnded]);
 
