@@ -100,7 +100,7 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.SEND_ATTACHMENT, attachment)
   }
 
-  sendUserContacts({chatId, endUserEmail, endUserPhone}:UserContacts  ): Promise<void>{
+  sendUserContacts({chatId, endUserEmail, endUserPhone}: UserContacts): Promise<void>{
     return http.post(RUUTER_ENDPOINTS.SEND_USER_CONTACTS);
   }
 
@@ -108,11 +108,11 @@ class ChatService {
     return http.get(RUUTER_ENDPOINTS.BUROKRATT_ONLINE_STATUS);
   }
 
-  getNameVisibility(): Promise<{ isVisible: boolean }> {
+  async getNameVisibility(): Promise<String> {
     return http.get(RUUTER_ENDPOINTS.GET_CSA_NAME_VISIBILITY);
   }
 
-  getTitleVisibility(): Promise<{ isVisible: boolean }> {
+  getTitleVisibility(): Promise<String> {
     return http.get(RUUTER_ENDPOINTS.GET_CSA_TITLE_VISIBILITY);
   }
 }
