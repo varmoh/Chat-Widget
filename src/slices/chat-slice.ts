@@ -352,10 +352,10 @@ export const chatSlice = createSlice({
         return { ...existingMessage, ...matchingMessage };
       });
 
-      newMessagesList.push(...receivedMessages);
-      if(newMessagesList.length === state.messages.length){
+      if((newMessagesList.length + receivedMessages.length) === state.messages.length){
         return;
       }
+
       state.messages = newMessagesList;
       state.lastReadMessageTimestamp = new Date().toISOString();
       state.newMessagesAmount += receivedMessages.length;
