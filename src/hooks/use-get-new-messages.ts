@@ -3,11 +3,9 @@ import { useAppDispatch } from '../store';
 import sse from '../services/sse-service';
 import useChatSelector from './use-chat-selector';
 import { Message } from '../model/message-model';
-import { CHAT_EVENTS, RUUTER_ENDPOINTS, TERMINATE_STATUS } from '../constants';
 import { addMessagesToDisplay, handleStateChangingEventMessages } from '../slices/chat-slice';
 import { isDisplayableMessages, isStateChangingEventMessage } from '../utils/state-management-utils';
 import useAuthenticationSelector from './use-authentication-selector';
-import { use } from 'i18next';
 import chatService from '../services/chat-service';
 
 const useGetNewMessages = (): void => {
@@ -35,7 +33,9 @@ const useGetNewMessages = (): void => {
   useEffect(() => {
     let events: EventSource | undefined;
     if (sseUrl) {  
-      const onMessage = (messages: Message[]) => {    
+      const onMessage = async () => {    
+        const messages: Message[] = await chatService.getNewMessages(lastReadMessageTimestampValue.split('+')[0]);
+        setLastReadMessageTimestampValue(messages[messages.length - 1].created ?? `${lastReadMessageTimestamp}`);
         dispatch(addMessagesToDisplay(messages.filter(isDisplayableMessages)));
         dispatch(handleStateChangingEventMessages(messages.filter(isStateChangingEventMessage)));
       };

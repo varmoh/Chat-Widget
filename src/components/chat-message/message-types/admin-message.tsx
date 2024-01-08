@@ -17,10 +17,9 @@ import {
 } from "../../../slices/chat-slice";
 import { useAppDispatch } from "../../../store";
 import ChatButtonGroup from "./chat-button-group";
-import { parseButtons } from '../../../utils/chat-utils';
+import { parseButtons } from "../../../utils/chat-utils";
 import useChatSelector from "../../../hooks/use-chat-selector";
 import { stat } from "fs";
-
 
 const leftAnimation = {
   animate: { opacity: 1, x: 0 },
@@ -45,7 +44,11 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
     return parseButtons(message).length > 0;
   }, [message.buttons]);
 
-  const csaName = (message.authorFirstName + ' ' + message.authorLastName).trim();
+  const csaName = (
+    (message.authorFirstName ?? "") +
+    " " +
+    (message.authorLastName ?? "")
+  ).trim();
 
   return (
     <motion.div
@@ -54,16 +57,12 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
       transition={leftAnimation.transition}
     >
       <div className={classNames(styles.message, styles.admin)}>
-        {
-          nameVisibility && csaName && (
-            <div className={styles.name}>{csaName}</div>
-          )
-        }
-        {
-          titleVisibility && message.authorRole && (
-            <div className={styles.name}>{message.authorRole}</div>
-          )
-        }
+        {nameVisibility && csaName && (
+          <div className={styles.name}>{csaName}</div>
+        )}
+        {titleVisibility && message.authorRole && (
+          <div className={styles.name}>{message.authorRole}</div>
+        )}
         <div className={styles.main}>
           <div className={styles.icon}>
             {message.event === CHAT_EVENTS.EMERGENCY_NOTICE ? (
@@ -92,40 +91,41 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
           >
             {![CHAT_EVENTS.GREETING, CHAT_EVENTS.EMERGENCY_NOTICE].includes(
               message.event as CHAT_EVENTS
-            ) && !hasButtons && (
-              <div>
-                <button
-                  type="button"
-                  className={
-                    message.rating === RATING_TYPES.LIKED
-                      ? styles.highlight
-                      : styles.grey
-                  }
-                  onClick={() => {
-                    setNewFeedbackRating(RATING_TYPES.LIKED);
-                  }}
-                >
-                  <img src={Thumbs} alt="thumbs up icon" />
-                </button>
-                <button
-                  type="button"
-                  className={
-                    message.rating === RATING_TYPES.DISLIKED
-                      ? styles.highlight
-                      : styles.grey
-                  }
-                  onClick={() => {
-                    setNewFeedbackRating(RATING_TYPES.DISLIKED);
-                  }}
-                >
-                  <img
-                    className={styles.thumbsDownImg}
-                    src={Thumbs}
-                    alt="thumbs down icon"
-                  />
-                </button>
-              </div>
-            )}
+            ) &&
+              !hasButtons && (
+                <div>
+                  <button
+                    type="button"
+                    className={
+                      message.rating === RATING_TYPES.LIKED
+                        ? styles.highlight
+                        : styles.grey
+                    }
+                    onClick={() => {
+                      setNewFeedbackRating(RATING_TYPES.LIKED);
+                    }}
+                  >
+                    <img src={Thumbs} alt="thumbs up icon" />
+                  </button>
+                  <button
+                    type="button"
+                    className={
+                      message.rating === RATING_TYPES.DISLIKED
+                        ? styles.highlight
+                        : styles.grey
+                    }
+                    onClick={() => {
+                      setNewFeedbackRating(RATING_TYPES.DISLIKED);
+                    }}
+                  >
+                    <img
+                      className={styles.thumbsDownImg}
+                      src={Thumbs}
+                      alt="thumbs down icon"
+                    />
+                  </button>
+                </div>
+              )}
           </div>
         </div>
         {hasButtons && <ChatButtonGroup message={message} />}

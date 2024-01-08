@@ -352,10 +352,10 @@ export const chatSlice = createSlice({
         return { ...existingMessage, ...matchingMessage };
       });
 
-      newMessagesList.push(...receivedMessages);
-      if(newMessagesList.length === state.messages.length){
+      if((newMessagesList.length + receivedMessages.length) === state.messages.length){
         return;
       }
+
       state.messages = newMessagesList;
       state.lastReadMessageTimestamp = new Date().toISOString();
       state.newMessagesAmount += receivedMessages.length;
@@ -430,10 +430,10 @@ export const chatSlice = createSlice({
       });
     });
     builder.addCase(getNameVisibility.fulfilled, (state, action) => {
-      state.nameVisibility = action.payload.isVisible;
+      state.nameVisibility = action.payload === 'true' ? true : false;
     });
     builder.addCase(getTitleVisibility.fulfilled, (state, action) => {
-      state.titleVisibility = action.payload.isVisible;
+      state.titleVisibility = action.payload === 'true' ? true : false;
     });
     builder.addCase(getEmergencyNotice.fulfilled, (state, action) => {
       state.emergencyNotice = {
