@@ -146,7 +146,7 @@ const ChatKeyPad = (): JSX.Element => {
     const subscription = previewSubject
       .pipe(
         distinctUntilChanged(),
-        debounceTime(300),
+        debounceTime(1000),
         switchMap((message: Message) => {
           return dispatch(sendMessagePreview(message));
         })
