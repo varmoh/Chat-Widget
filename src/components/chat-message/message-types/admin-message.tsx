@@ -61,7 +61,9 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
           <div className={styles.name}>{csaName}</div>
         )}
         {titleVisibility && message.authorRole && (
-          <div className={styles.name}>{message.authorRole}</div>
+          <div className={styles.name}>
+            {message.csaTitle ?? message.authorRole}
+          </div>
         )}
         <div className={styles.main}>
           <div className={styles.icon}>

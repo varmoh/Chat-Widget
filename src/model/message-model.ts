@@ -22,6 +22,7 @@ export interface Message {
     created?: string;
     preview?: string;
     updated?: string;
+    csaTitle?: string;
     data?: {
         forwarding_validation?: string;
     };
