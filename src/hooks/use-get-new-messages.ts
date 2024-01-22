@@ -35,9 +35,11 @@ const useGetNewMessages = (): void => {
     if (sseUrl) {  
       const onMessage = async () => {    
         const messages: Message[] = await chatService.getNewMessages(lastReadMessageTimestampValue.split('+')[0]);
-        setLastReadMessageTimestampValue(messages[messages.length - 1].created ?? `${lastReadMessageTimestamp}`);
-        dispatch(addMessagesToDisplay(messages.filter(isDisplayableMessages)));
-        dispatch(handleStateChangingEventMessages(messages.filter(isStateChangingEventMessage)));
+        if (messages.length != 0) {
+         setLastReadMessageTimestampValue(messages[messages.length - 1].created ?? `${lastReadMessageTimestamp}`);
+         dispatch(addMessagesToDisplay(messages.filter(isDisplayableMessages)));
+         dispatch(handleStateChangingEventMessages(messages.filter(isStateChangingEventMessage)));
+        }
       };
 
       events = sse(sseUrl, onMessage);
