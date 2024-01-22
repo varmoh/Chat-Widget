@@ -90,8 +90,7 @@ const App: FC = () => {
   useGetWidgetConfig();
   useGetEmergencyNotice();
   useAuthentication();
-  // TODO: TO BE DISCUSSED IF NEEDED
-  // useGetChat();
+  useGetChat();
   useGetNewMessages();
   useNewMessageNotification();
 

@@ -1,17 +1,25 @@
-import { LOCAL_STORAGE_TARA_LOGIN_REDIRECT } from "../constants";
+import { LOCAL_STORAGE_TARA_LOGIN_REDIRECT, RUUTER_ENDPOINTS } from "../constants";
 import widgetService from "../services/widget-service";
+import { setIsAuthenticated } from "../slices/authentication-slice";
+import { useAppDispatch } from "../store";
+
 
 export function redirectToTim() {
   saveCurrentBrowserPath();
   window.location.assign(window._env_.TIM_AUTHENTICATION_URL);
 }
 
-export function redirectIfComeBackFromTim() {
+export function redirectIfComeBackFromTim(callback: any) {
   const redirectPath = getRedirectPath();
   if (redirectPath) {
-    removeRedirectPath();
-    window.location.href = redirectPath;
-    widgetService.authenticateUser();
+
+    if (document.cookie.indexOf('JWTTOKEN') != -1) {
+      setTimeout(async () => {
+      removeRedirectPath();
+      widgetService.authenticateUser();
+      callback()
+     }, 500);
+    }
   }
 }
 

@@ -5,6 +5,7 @@ import useChatSelector from './use-chat-selector';
 import { RUUTER_ENDPOINTS } from '../constants';
 import { setChat } from '../slices/chat-slice';
 import { Chat } from '../model/chat-model';
+import chatService from '../services/chat-service';
 
 const useGetChat = (): void => {
   const { isChatEnded, chatId } = useChatSelector();
@@ -15,17 +16,21 @@ const useGetChat = (): void => {
     if (isChatEnded || !chatId){
       setSseUrl('');
     } else if(chatId) {
-      setSseUrl(chatId);
+      setSseUrl('/chat-list');
     }
   }, [chatId, isChatEnded]);
 
   useEffect(() => {
     let events: EventSource | undefined;
-    if (sseUrl){
-      events = sse(
-        sseUrl,
-        (data: Chat) => dispatch(setChat(data))
-      );
+    if (sseUrl) {  
+      const onMessage = async (data: any) => {   
+        if (data === chatId) {
+          const chat = await chatService.getChatById();
+          dispatch(setChat(chat))
+        } 
+      };
+
+      events = sse(sseUrl, onMessage);
     }
     return () => {
       events?.close();
