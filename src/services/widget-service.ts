@@ -15,13 +15,8 @@ class WidgetService {
     });
   }
 
-  authenticateUser(chatId:string, id: string, firstName: string, lastName: string): Promise<WidgetConfigResponse> {
-    return http.post(RUUTER_ENDPOINTS.AUTHENTICATE_USER, {
-      "chatId": chatId,
-      "endUserId": id,
-      "endUserFirstName": firstName,
-      "endUserLastName": lastName
-    });
+  authenticateUser(): Promise<WidgetConfigResponse> {
+    return http.get(RUUTER_ENDPOINTS.AUTHENTICATE_USER);
   }
 }
 
