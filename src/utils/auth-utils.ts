@@ -11,8 +11,8 @@ export function redirectIfComeBackFromTim() {
   if (redirectPath) {
     removeRedirectPath();
     window.location.href = redirectPath;
+    widgetService.authenticateUser();
   }
-  widgetService.authenticateUser();
 }
 
 export function isRedirectPathEmpty() {
