@@ -26,8 +26,8 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.INIT_CHAT, { message, endUserTechnicalData, holidays, holidayNames });
   }
 
-  getChatById(chatId: string): Promise<Chat> {
-    return http.post(RUUTER_ENDPOINTS.GET_CHAT_BY_ID, { id: chatId });
+  getChatById(): Promise<Chat> {
+    return http.get(RUUTER_ENDPOINTS.GET_CHAT_BY_ID);
   }
 
   sendNewMessage(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
@@ -38,8 +38,8 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.POST_MESSAGE_PREVIEW, { chatId, content });
   }
 
-  getMessages(chatId: string): Promise<Message[]> {
-    return http.post(RUUTER_ENDPOINTS.GET_MESSAGES_BY_CHAT_ID, { id: chatId });
+  getMessages(): Promise<Message[]> {
+    return http.post(RUUTER_ENDPOINTS.GET_MESSAGES_BY_CHAT_ID);
   }
 
   sendMessageWithRating(message: Message): Promise<Document> {

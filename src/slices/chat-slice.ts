@@ -166,7 +166,7 @@ export const getChat = createAsyncThunk('chat/getChat', async (_args, thunkApi) 
   const {
     chat: { chatId },
   } = thunkApi.getState() as { chat: ChatState };
-  if (chatId) return ChatService.getChatById(chatId);
+  if (chatId) return ChatService.getChatById();
   return null;
 });
 
@@ -174,7 +174,7 @@ export const getChatMessages = createAsyncThunk('chat/getChatMessages', async (a
   const {
     chat: { chatId },
   } = thunkApi.getState() as { chat: ChatState };
-  return chatId ? ChatService.getMessages(chatId) : null;
+  return chatId ? ChatService.getMessages() : null;
 });
 
 export const getNewMessages = createAsyncThunk('chat/getNewMessages', async (args: {timeRangeBegin: string}, _) => {
