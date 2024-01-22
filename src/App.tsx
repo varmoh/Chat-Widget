@@ -18,6 +18,7 @@ import {
   getChatMessages,
   getEmergencyNotice,
   setChatId,
+  setIsChatOpen,
 } from "./slices/chat-slice";
 import { useAppDispatch, useAppSelector } from "./store";
 import useNewMessageNotification from "./hooks/use-new-message-notification";
@@ -108,8 +109,10 @@ const App: FC = () => {
     const sessionStorageChatId = getFromSessionStorage(
       SESSION_STORAGE_CHAT_ID_KEY
     );
-    if (sessionStorageChatId !== null)
+    if (sessionStorageChatId !== null) {
       dispatch(setChatId(sessionStorageChatId));
+      dispatch(setIsChatOpen(true));
+    }
   }, [dispatch]);
 
   useEffect(() => {
