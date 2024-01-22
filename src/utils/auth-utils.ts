@@ -1,4 +1,5 @@
 import { LOCAL_STORAGE_TARA_LOGIN_REDIRECT } from "../constants";
+import widgetService from "../services/widget-service";
 
 export function redirectToTim() {
   saveCurrentBrowserPath();
@@ -11,6 +12,7 @@ export function redirectIfComeBackFromTim() {
     removeRedirectPath();
     window.location.href = redirectPath;
   }
+  widgetService.authenticateUser();
 }
 
 export function isRedirectPathEmpty() {
