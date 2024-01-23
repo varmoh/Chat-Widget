@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from '../store';
-import { getUserinfo, loginWithTaraJwt } from '../slices/authentication-slice';
+import { getUserinfo, loginWithTaraJwt, setIsAuthenticated } from '../slices/authentication-slice';
 import useAuthenticationSelector from './use-authentication-selector';
 import { redirectIfComeBackFromTim } from '../utils/auth-utils';
 
@@ -9,7 +9,9 @@ const useAuthentication = (): void => {
   const { isAuthenticated, fetchingUserInfo, loggedInWithTaraJwt } = useAuthenticationSelector();
 
   useEffect(() => {
-   redirectIfComeBackFromTim()
+   redirectIfComeBackFromTim(() => {
+      dispatch(setIsAuthenticated());
+   });
     
     if (!isAuthenticated || loggedInWithTaraJwt) {
       // TODO: TO be uncommented later when end user authentication is ready
