@@ -26,6 +26,7 @@ export const getChatModeBasedOnLastMessage = (messages: Message[]): CHAT_MODES =
 export const getContactFormFulfilledNewMessage = (
   endUserContacts: EndUserContacts,
   chatId: string | null,
+  messageId: string,
   t: any,
 ): Message => {
   let message;
@@ -46,6 +47,7 @@ export const getContactFormFulfilledNewMessage = (
 
   return {
     chatId,
+    id: messageId,
     authorRole: AUTHOR_ROLES.END_USER,
     authorTimestamp: new Date().toISOString(),
     content: message,

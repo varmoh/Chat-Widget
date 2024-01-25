@@ -4,11 +4,7 @@ import styled from "styled-components";
 import { InputText } from "primereact/inputtext";
 import useChatSelector from "../../hooks/use-chat-selector";
 import { useAppDispatch } from "../../store";
-import {
-  AUTHOR_ROLES,
-  CHAT_EVENTS,
-  StyledButtonType,
-} from "../../constants";
+import { AUTHOR_ROLES, CHAT_EVENTS, StyledButtonType } from "../../constants";
 import {
   sendMessageWithNewEvent,
   setShowContactForm,
@@ -55,7 +51,12 @@ const EndUserContacts = (): JSX.Element => {
         endUserContacts.phoneNr
       ).catch(console.error);
 
-      const newMsg = getContactFormFulfilledNewMessage(endUserContacts, chatId, t);
+      const newMsg = getContactFormFulfilledNewMessage(
+        endUserContacts,
+        chatId,
+        contactMsgId,
+        t
+      );
       dispatch(sendMessageWithNewEvent(newMsg));
       dispatch(setShowContactForm(false));
       newMsg.content = "";

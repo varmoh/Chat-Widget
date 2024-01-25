@@ -4,11 +4,7 @@ import styled from "styled-components";
 import { InputText } from "primereact/inputtext";
 import useChatSelector from "../../hooks/use-chat-selector";
 import { useAppDispatch } from "../../store";
-import {
-  AUTHOR_ROLES,
-  CHAT_EVENTS,
-  StyledButtonType,
-} from "../../constants";
+import { AUTHOR_ROLES, CHAT_EVENTS, StyledButtonType } from "../../constants";
 import {
   sendMessageWithNewEvent,
   setShowUnavailableContactForm,
@@ -25,7 +21,8 @@ import useMessageValidator from "../../hooks/use-message-validator";
 import { getContactFormFulfilledNewMessage } from "../../utils/chat-utils";
 
 const UnavailableEndUserContacts = (): JSX.Element => {
-  const { endUserContacts, chatId, contactMsgId, contactContentMessage } = useChatSelector();
+  const { endUserContacts, chatId, contactMsgId, contactContentMessage } =
+    useChatSelector();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { validateInput, invalidMessage } = useMessageValidator();
@@ -61,14 +58,20 @@ const UnavailableEndUserContacts = (): JSX.Element => {
         endUserContacts.phoneNr
       ).catch(console.error);
 
-      const newMsg = getContactFormFulfilledNewMessage(endUserContacts, chatId, t);
+      const newMsg = getContactFormFulfilledNewMessage(
+        endUserContacts,
+        chatId,
+        contactMsgId,
+        t
+      );
       dispatch(sendMessageWithNewEvent(newMsg));
       dispatch(setShowUnavailableContactForm(false));
       newMsg.content = "";
       dispatch(sendMessagePreview(newMsg));
       dispatch(
         endChat({
-          event: CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED, isUpperCase: false
+          event: CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED,
+          isUpperCase: false,
         })
       );
       dispatch(setShowUnavailableContactForm(false));
