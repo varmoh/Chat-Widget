@@ -32,7 +32,7 @@ describe('ChatService', () => {
 
   it('should end given chat session', () => {
     const messageToSend: Message = { chatId: '1', content: 'hey', authorTimestamp: new Date().toString() };
-    chatService.endChat(messageToSend);
+    chatService.endChat(messageToSend, null);
     expect(http.post).toHaveBeenCalledWith(RUUTER_ENDPOINTS.END_CHAT, messageToSend);
   });
 

@@ -46,8 +46,8 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.SEND_MESSAGE_WITH_NEW_EVENT, message);
   }
 
-  endChat(message: Message): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.END_CHAT, message);
+  endChat(message: Message, status: string | null): Promise<void> {
+    return http.post(RUUTER_ENDPOINTS.END_CHAT, {message: message, status: status});
   }
 
   getGreeting(): Promise<{ eng: string; est: string; isActive: boolean }> {

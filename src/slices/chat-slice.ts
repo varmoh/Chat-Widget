@@ -203,14 +203,16 @@ export const endChat = createAsyncThunk('chat/endChat', async (args: { event: CH
   } = thunkApi.getState() as { chat: ChatState };
   thunkApi.dispatch(resetState());
 
+  const endEvent = args.isUpperCase ? args.event?.toUpperCase() : args.event ?? ''
+
   return chatStatus === CHAT_STATUS.ENDED
     ? null
     : ChatService.endChat({
       chatId,
       authorTimestamp: new Date().toISOString(),
       authorRole: AUTHOR_ROLES.END_USER,
-      event: args.isUpperCase ? args.event?.toUpperCase() : args.event ?? '',
-    });
+      event: endEvent,
+    }, endEvent === CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED ? "IDLE" : null);
 });
 
 export const resetChatState = createAsyncThunk('', async (args: { event: CHAT_EVENTS | null}, thunkApi) => {
@@ -219,14 +221,16 @@ export const resetChatState = createAsyncThunk('', async (args: { event: CHAT_EV
   } = thunkApi.getState() as { chat: ChatState };
   thunkApi.dispatch(resetState());
 
+  const resetEvent = args.event?.toUpperCase();
+
   return chatStatus === CHAT_STATUS.ENDED
     ? null
     : ChatService.endChat({
       chatId,
       authorTimestamp: new Date().toISOString(),
       authorRole: AUTHOR_ROLES.END_USER,
-      event: args.event?.toUpperCase(),
-    });
+      event: resetEvent,
+    }, resetEvent === CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED ? "IDLE" : null);
 });
 
 export const sendMessageWithRating = createAsyncThunk('chat/sendMessageWithRating', async (message: Message) =>
