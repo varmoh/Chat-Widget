@@ -239,8 +239,6 @@ const Chat = (): JSX.Element => {
             <WarningNotification warningMessage={t("chat.error-message")} />
           )}
           {burokrattOnlineStatus !== true && <OnlineStatusNotification />}
-          {/* TODO: Needs fix - commented out because it's broken */}
-          {/* {estimatedWaiting.time > 0 && estimatedWaiting.isActive && !showWidgetDetails && <WaitingTimeNotification/>} */}
           {showWidgetDetails && <WidgetDetails />}
           {!showWidgetDetails && showContactForm && <EndUserContacts />}
           {!showWidgetDetails && showUnavailableContactForm && (

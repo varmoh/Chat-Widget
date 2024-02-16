@@ -336,6 +336,9 @@ export const chatSlice = createSlice({
     setEmailAdress: (state, action) => {
       state.endUserContacts.mailAddress = action.payload;
     },
+    setContactFormComment: (state, action) => {
+      state.endUserContacts.comment = action.payload;
+    },
     setPhoneNumber: (state, action) => {
       state.endUserContacts.phoneNr = action.payload;
     },
@@ -512,6 +515,7 @@ export const {
   setPhoneNumber,
   setIsFeedbackConfirmationShown,
   setEmailAdress,
+  setContactFormComment,
   setShowContactForm,
   setShowUnavailableContactForm,
   setEstimatedWaitingTimeToZero,

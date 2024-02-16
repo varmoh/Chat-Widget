@@ -52,10 +52,6 @@ const ChatContent = (): JSX.Element => {
             scrollbars: { visibility: 'auto', autoHide: 'leave' },
           }}
         >
-          {/* TODO: Logic is incorrect, commented out until it gets fixed */}
-          {/* {~~estimatedWaiting.durationInSeconds > 0 &&
-            ~~estimatedWaiting.positionInUnassignedChats > 0 &&
-             <WaitingTimeNotification />} */}
           {messages.map((message) => <ChatMessage 
               message={message}
               key={`${message.authorTimestamp}-${message.created}-${message.id}`}

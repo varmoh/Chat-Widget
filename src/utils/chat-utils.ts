@@ -35,15 +35,15 @@ export const getContactFormFulfilledNewMessage = (
       email: endUserContacts.mailAddress,
       phoneNr: endUserContacts.phoneNr,
     });
-  } else if (endUserContacts.mailAddress)
+  } else if (endUserContacts.mailAddress){
     message = t("chatMessage.email-only-template", {
       email: endUserContacts.mailAddress,
     });
-
-  else
+  } else {
     message = t("chatMessage.phone-only-template", {
       phoneNr: endUserContacts.phoneNr,
     });
+  }
 
   return {
     chatId,
@@ -52,6 +52,25 @@ export const getContactFormFulfilledNewMessage = (
     authorTimestamp: new Date().toISOString(),
     content: message,
     event: CHAT_EVENTS.CONTACT_INFORMATION_FULFILLED,
+    preview: "",
+  };
+}
+
+export const getContactCommentNewMessage = (
+  comment: string,
+  chatId: string | null,
+  messageId: string,
+  t: any,
+): Message => {
+  const message = t("chatMessage.comment-template", { comment });
+  
+  return {
+    chatId,
+    id: messageId,
+    authorRole: AUTHOR_ROLES.END_USER,
+    authorTimestamp: new Date().toISOString(),
+    content: message,
+    event: "",
     preview: "",
   };
 }
