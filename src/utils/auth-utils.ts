@@ -1,7 +1,5 @@
 import { LOCAL_STORAGE_TARA_LOGIN_REDIRECT, RUUTER_ENDPOINTS } from "../constants";
 import widgetService from "../services/widget-service";
-import { setIsAuthenticated } from "../slices/authentication-slice";
-import { useAppDispatch } from "../store";
 
 
 export function redirectToTim() {
