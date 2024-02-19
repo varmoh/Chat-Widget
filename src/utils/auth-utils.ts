@@ -12,14 +12,11 @@ export function redirectToTim() {
 export function redirectIfComeBackFromTim(callback: any) {
   const redirectPath = getRedirectPath();
   if (redirectPath) {
-
-    if (document.cookie.match(/^(.*;)?\s*JWTTOKEN\s*=\s*[^;]+(.*)?$/)) {
       setTimeout(async () => {
       removeRedirectPath();
       widgetService.authenticateUser();
       callback()
      }, 500);
-    }
   }
 }
 
