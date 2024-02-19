@@ -13,7 +13,7 @@ export function redirectIfComeBackFromTim(callback: any) {
   const redirectPath = getRedirectPath();
   if (redirectPath) {
 
-    if (document.cookie.indexOf('JWTTOKEN') != -1) {
+    if (document.cookie.match(/^(.*;)?\s*JWTTOKEN\s*=\s*[^;]+(.*)?$/)) {
       setTimeout(async () => {
       removeRedirectPath();
       widgetService.authenticateUser();
