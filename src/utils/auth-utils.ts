@@ -1,7 +1,5 @@
 import { LOCAL_STORAGE_TARA_LOGIN_REDIRECT, RUUTER_ENDPOINTS } from "../constants";
 import widgetService from "../services/widget-service";
-import { setIsAuthenticated } from "../slices/authentication-slice";
-import { useAppDispatch } from "../store";
 
 
 export function redirectToTim() {
@@ -12,14 +10,11 @@ export function redirectToTim() {
 export function redirectIfComeBackFromTim(callback: any) {
   const redirectPath = getRedirectPath();
   if (redirectPath) {
-
-    if (document.cookie.match(/^(.*;)?\s*JWTTOKEN\s*=\s*[^;]+(.*)?$/)) {
       setTimeout(async () => {
       removeRedirectPath();
       widgetService.authenticateUser();
       callback()
      }, 500);
-    }
   }
 }
 
