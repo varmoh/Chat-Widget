@@ -37,7 +37,7 @@ export const Profile = (): JSX.Element => {
   }, []);
 
   useReloadChatEndEffect();
-  
+
   const getActiveProfileClass = () => {
     if (delayFinished && widgetConfig.animation === "jump")
       return styles.profile__jump;
@@ -69,7 +69,8 @@ export const Profile = (): JSX.Element => {
           src={Buerokratt}
           alt="Buerokratt logo"
           width={45}
-          style={{ filter: "brightness(0) invert(1)" }}
+          style={{ filter: "brightness(0) invert(1)", imageRendering: "auto" }}
+          loading="eager"
         />
       </motion.div>
       {widgetConfig.showMessage && (
