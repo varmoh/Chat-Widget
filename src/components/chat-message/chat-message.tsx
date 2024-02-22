@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message } from '../../model/message-model';
 import { AUTHOR_ROLES, CHAT_EVENTS } from '../../constants';
@@ -16,12 +16,13 @@ const ChatMessage = (props: { message: Message }): JSX.Element => {
     message: { authorRole, event },
   } = props;
 
-  const endChatMessage = (
+  const endChatMessage = useMemo(() => (
     <>
       <div>{t('notifications.chat-ended')}</div>
       <div>{t('notifications.chat-ended-new-chat')}</div>
     </>
-  );
+  ),[]);
+
   if (event === CHAT_EVENTS.MESSAGE_READ) return <></>
   if (event === CHAT_EVENTS.ASK_PERMISSION_IGNORED) return <EventMessage content={t('notifications.ask-permission-ignored')} />;
   if (event === CHAT_EVENTS.ASK_PERMISSION_ACCEPTED) return <EventMessage content={t('notifications.ask-permission-accepted')} />;
@@ -36,7 +37,6 @@ const ChatMessage = (props: { message: Message }): JSX.Element => {
   if (event === CHAT_EVENTS.REQUESTED_CHAT_FORWARD_ACCEPTED) return <EventMessage content={t('redirect.ask-permission-accepted')} />;
   if (event === CHAT_EVENTS.REQUESTED_CHAT_FORWARD_REJECTED) return <EventMessage content={t('redirect.ask-permission-rejected')} />;
   if (event === CHAT_EVENTS.CONTACT_INFORMATION_FULFILLED || authorRole === AUTHOR_ROLES.END_USER) return <ClientMessage message={message} />;
-  if (authorRole === AUTHOR_ROLES.END_USER) return <ClientMessage message={message} />;
   return <AdminMessage aria-live="polite" message={message} />;
 };
 

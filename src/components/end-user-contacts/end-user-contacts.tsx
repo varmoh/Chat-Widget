@@ -12,12 +12,15 @@ import {
   setPhoneNumber,
   updateMessage,
   sendMessagePreview,
+  sendNewMessage,
+  setContactFormComment,
+  sendNewSilentMessage,
 } from "../../slices/chat-slice";
 import { Message } from "../../model/message-model";
 import StyledButton from "../styled-components/styled-button";
 import WidgetService from "../../services/widget-service";
 import useMessageValidator from "../../hooks/use-message-validator";
-import { getContactFormFulfilledNewMessage } from "../../utils/chat-utils";
+import { getContactCommentNewMessage, getContactFormFulfilledNewMessage } from "../../utils/chat-utils";
 
 const EndUserContacts = (): JSX.Element => {
   const { endUserContacts, chatId, contactMsgId } = useChatSelector();
@@ -61,6 +64,12 @@ const EndUserContacts = (): JSX.Element => {
       dispatch(setShowContactForm(false));
       newMsg.content = "";
       dispatch(sendMessagePreview(newMsg));
+
+      if(endUserContacts.comment) {
+        const commentMsg = getContactCommentNewMessage(endUserContacts.comment, chatId, contactMsgId, t);
+        dispatch(sendNewSilentMessage(commentMsg));
+      }
+      
       dispatch(setShowContactForm(false));
     }
   };
@@ -94,17 +103,29 @@ const EndUserContacts = (): JSX.Element => {
                 onChange={(e) => dispatch(setPhoneNumber(e.target.value))}
               />
             </div>
+            <div className="comment-group">
+              <h5>{t("widget.contacts.contact.comment.label")}</h5>
+              <TextAreaStyle
+                rows={4}
+                id="comment-input"
+                className="comment-input"
+                name="comment"
+                placeholder={t('widget.contacts.contact.comment.placeholder')}
+                value={endUserContacts.comment}
+                onChange={(e) => dispatch(setContactFormComment(e.target.value))}
+              />
+            </div>
           </div>
           <div className="form-footer">
             <StyledButton
               styleType={StyledButtonType.GRAY}
-              onClick={(e) => declineForm(e)}
+              onClick={declineForm}
             >
               {t("widget.contacts.contact.close.label")}
             </StyledButton>
             <StyledButton
               styleType={StyledButtonType.GRAY}
-              onClick={(e) => submitForm(e)}
+              onClick={submitForm}
             >
               {t("widget.contacts.contact.submit.label")}
             </StyledButton>
@@ -115,10 +136,22 @@ const EndUserContacts = (): JSX.Element => {
   );
 };
 
+const TextAreaStyle = styled.textarea`
+  width: 100%;
+  outline: 0;
+  border: 0;
+  background: transparent;
+  resize: vertical;
+  overflow: auto;
+  height: 86px;
+  resize: none;
+`;
+
 const EndUserContactsStyle = styled.div`
   height: 100%;
 
-  input {
+  input,
+  textarea  {
     border: 0;
     border-bottom: 1px solid #003cff;
     padding-bottom: 5px;
@@ -159,12 +192,13 @@ const EndUserContactsStyle = styled.div`
     justify-content: center;
     font-size: medium;
 
-    .email-group {
+    .email-group,
+    .phone-nr-group {
       padding-bottom: 1rem;
       width: 100%;
     }
 
-    .phone-nr-group {
+    .comment-group {
       width: 100%;
     }
 

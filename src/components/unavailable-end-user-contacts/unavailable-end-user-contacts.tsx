@@ -216,8 +216,7 @@ const UnavailableEndUserContactsStyle = styled.div`
     }
 
     .email-input:invalid,
-    .phone-nr-input:invalid,
-    .comment-input:invalid {
+    .phone-nr-input:invalid {
       border-color: #ff4800;
     }
   }

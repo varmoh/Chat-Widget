@@ -34,6 +34,10 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, {message, holidays, holidayNames});
   }
 
+  sendNewSilentMessage(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, {message, holidays, holidayNames, silent: true});
+  }
+
   sendMessagePreview({ chatId, content }: Message): Promise<void> {
     return http.post(RUUTER_ENDPOINTS.POST_MESSAGE_PREVIEW, { chatId, content });
   }

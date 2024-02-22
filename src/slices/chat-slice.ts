@@ -254,6 +254,11 @@ export const sendNewMessage = createAsyncThunk('chat/sendNewMessage', (message: 
   return ChatService.sendNewMessage(message, holidays, holidayNames);
 });
 
+export const sendNewSilentMessage = createAsyncThunk('chat/sendNewSilentMessage', (message: Message) => {
+  const {holidays, holidayNames} = getHolidays();
+  return ChatService.sendNewSilentMessage(message, holidays, holidayNames);
+});
+
 export const sendMessagePreview = createAsyncThunk('chat/post-message-preview', (message: Message) => ChatService.sendMessagePreview(message));
 
 export const getEstimatedWaitingTime = createAsyncThunk('chat/getEstimatedWaitingTime', async () => ChatService.getEstimatedWaitingTime());
