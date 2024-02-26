@@ -56,6 +56,7 @@ export enum CHAT_EVENTS {
   GREETING = 'greeting',
   RATING = 'rating',
   REQUESTED_AUTHENTICATION = 'requested-authentication',
+  USER_AUTHENTICATED = 'user-authenticated',
   ASK_PERMISSION = 'ask-permission',
   ASK_PERMISSION_ACCEPTED = 'ask-permission-accepted',
   ASK_PERMISSION_REJECTED = 'ask-permission-rejected',

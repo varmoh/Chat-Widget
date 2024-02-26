@@ -4,17 +4,17 @@ import { useTranslation } from "react-i18next";
 import { setIsChatOpen } from "../../slices/chat-slice";
 import Buerokratt from "../../static/icons/buerokratt.svg";
 import { useAppDispatch } from "../../store";
-import { getFromSessionStorage } from "../../utils/session-storage-utils";
 import styles from "./profile.module.scss";
 import useWidgetSelector from "../../hooks/use-widget-selector";
 import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
+import { getFromLocalStorage } from "../../utils/local-storage-utils";
 
 export const Profile = (): JSX.Element => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { widgetConfig } = useWidgetSelector();
   const [delayFinished, setDelayFinished] = useState(false);
-  const newMessagesAmount = getFromSessionStorage("newMessagesAmount");
+  const newMessagesAmount = getFromLocalStorage("newMessagesAmount");
 
   const openChat = () => {
     dispatch(setIsChatOpen(true));

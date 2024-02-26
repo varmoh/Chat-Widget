@@ -11,7 +11,9 @@ const useReloadChatEndEffect = () => {
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (chatId && isRedirectPathEmpty()) {
+      const sessions = localStorage.getItem("sessions");
+      if (chatId && isRedirectPathEmpty() && sessions && parseInt(sessions) === 1) {
+        localStorage.setItem("sessions", "1");
         dispatch(
           endChat({
             event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,

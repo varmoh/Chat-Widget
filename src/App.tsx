@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useLayoutEffect, useState } from "react";
-import { getFromSessionStorage } from "./utils/session-storage-utils";
 import { isOfficeHours } from "./utils/office-hours-utils";
 import Profile from "./components/profile/profile";
 import Chat from "./components/chat/chat";
@@ -17,6 +16,9 @@ import {
   getChat,
   getChatMessages,
   getEmergencyNotice,
+  getNameVisibility,
+  getTitleVisibility,
+  resetState,
   setChatId,
   setIsChatOpen,
 } from "./slices/chat-slice";
@@ -31,6 +33,7 @@ import { getWidgetConfig } from "./slices/widget-slice";
 import useGetWidgetConfig from "./hooks/use-get-widget-config";
 import useGetEmergencyNotice from "./hooks/use-get-emergency-notice";
 import { customJwtExtend } from "./slices/authentication-slice";
+import { getFromLocalStorage } from "./utils/local-storage-utils";
 
 declare global {
   interface Window {
@@ -57,7 +60,7 @@ const App: FC = () => {
   const { isChatOpen, messages, chatId, emergencyNotice } = useChatSelector();
   const { widgetConfig } = useWidgetSelector();
   const [displayWidget, setDisplayWidget] = useState(
-    !!getFromSessionStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()
+    !!getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()
   );
   const [onlineCheckInterval, setOnlineCheckInterval] = useState(
     ONLINE_CHECK_INTERVAL
@@ -82,7 +85,7 @@ const App: FC = () => {
   useInterval(
     () =>
       setDisplayWidget(
-        !!getFromSessionStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()
+        !!getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()
       ),
     OFFICE_HOURS_INTERVAL_TIMEOUT
   );
@@ -93,6 +96,40 @@ const App: FC = () => {
   useGetChat();
   useGetNewMessages();
   useNewMessageNotification();
+
+  useEffect(() => {
+    const storageHandler = () => {
+      const storedData = getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY);
+      if (storedData === null) {
+        setChatId("");
+        dispatch(setChatId(""));
+        dispatch(setIsChatOpen(false));
+        dispatch(resetState());
+      }
+    };
+
+    window.addEventListener("storage", storageHandler);
+
+    return () => {
+      window.removeEventListener("storage", storageHandler);
+    };
+  }, [SESSION_STORAGE_CHAT_ID_KEY]);
+
+  useEffect(() => {
+    const sessions = localStorage.getItem("sessions");
+    if (sessions == null) {
+      localStorage.setItem("sessions", "1");
+    } else {
+      localStorage.setItem("sessions", `${parseInt(sessions) + 1}`);
+    }
+
+    window.onunload = function (_) {
+      const newSessionsCount = localStorage.getItem("sessions");
+      if (newSessionsCount !== null) {
+        localStorage.setItem("sessions", `${parseInt(newSessionsCount) - 1}`);
+      }
+    };
+  }, []);
 
   useLayoutEffect(() => {
     if (!displayWidget || !isChatOpen || !chatId) return;
@@ -105,17 +142,19 @@ const App: FC = () => {
   }, [messages]);
 
   useEffect(() => {
-    const sessionStorageChatId = getFromSessionStorage(
+    const sessionStorageChatId = getFromLocalStorage(
       SESSION_STORAGE_CHAT_ID_KEY
     );
-    if (sessionStorageChatId !== null) {
+    if (sessionStorageChatId) {
       dispatch(setChatId(sessionStorageChatId));
       dispatch(setIsChatOpen(true));
     }
-  }, [dispatch]);
+  }, [dispatch, chatId]);
 
   useEffect(() => {
     if (chatId && !messages.length) {
+      dispatch(getNameVisibility());
+      dispatch(getTitleVisibility());
       dispatch(getChat());
       dispatch(getChatMessages());
     }

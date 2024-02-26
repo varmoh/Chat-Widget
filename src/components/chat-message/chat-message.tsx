@@ -22,8 +22,7 @@ const ChatMessage = (props: { message: Message }): JSX.Element => {
       <div>{t('notifications.chat-ended-new-chat')}</div>
     </>
   ),[]);
-
-  if (event === CHAT_EVENTS.MESSAGE_READ) return <></>
+  if (event === CHAT_EVENTS.MESSAGE_READ || event === CHAT_EVENTS.USER_AUTHENTICATED) return <></>
   if (event === CHAT_EVENTS.ASK_PERMISSION_IGNORED) return <EventMessage content={t('notifications.ask-permission-ignored')} />;
   if (event === CHAT_EVENTS.ASK_PERMISSION_ACCEPTED) return <EventMessage content={t('notifications.ask-permission-accepted')} />;
   if (event === CHAT_EVENTS.ASK_PERMISSION_REJECTED) return <EventMessage content={t('notifications.ask-permission-rejected')} />;

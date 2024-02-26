@@ -57,14 +57,16 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
       transition={leftAnimation.transition}
     >
       <div className={classNames(styles.message, styles.admin)}>
-        {nameVisibility && csaName && (
+        {nameVisibility && csaName && message.event != CHAT_EVENTS.GREETING && (
           <div className={styles.name}>{csaName}</div>
         )}
-        {titleVisibility && message.authorRole && (
-          <div className={styles.name}>
-            {message.csaTitle ?? message.authorRole}
-          </div>
-        )}
+        {titleVisibility &&
+          message.authorRole &&
+          message.event != CHAT_EVENTS.GREETING && (
+            <div className={styles.name}>
+              {message.csaTitle ?? message.authorRole}
+            </div>
+          )}
         <div className={styles.main}>
           <div className={styles.icon}>
             {message.event === CHAT_EVENTS.EMERGENCY_NOTICE ? (
