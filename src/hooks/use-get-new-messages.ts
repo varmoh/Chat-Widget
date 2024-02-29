@@ -26,7 +26,7 @@ const useGetNewMessages = (): void => {
       setSseUrl('');
     }
     else if (chatId && lastReadMessageTimestampValue) {
-      setSseUrl(`/${chatId}`);
+      setSseUrl(`/notifications/${chatId}`);
     }
   }, [isChatEnded, chatId, lastReadMessageTimestampValue]);
 

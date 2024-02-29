@@ -16,6 +16,7 @@
   "notifications.authenticate.needs-authentication": "tuvasta",
   "notifications.authenticate.is-authenticated": "tuvastatud",
   "notifications.customer-service-busy": "Hetkel on kõik klienditeenindajad hõivatud.",
+  "notifications.queue-number": "Hetkel on kõik klienditeenindajad hõivatud. Olete järjekorras {{number}}. kohal",
   "notifications.waiting-time": "Eeldatud ooteaeg minutites: {{time}}",
   "notifications.offline": "Teenus pole hetkel saadaval!",
   "notifications.idle-chat-notification": "Kas soovid vestlust jätkata?",

@@ -1,5 +1,5 @@
 const sse = <T>(url: string, onMessage: (data: T) => void): EventSource => {
-  const eventSource = new EventSource(`${window._env_.NOTIFICATION_NODE_URL}/sse/notifications${url}`);
+  const eventSource = new EventSource(`${window._env_.NOTIFICATION_NODE_URL}/sse${url}`);
 
   eventSource.onmessage = (event: MessageEvent) => {
     const response = JSON.parse(event.data);

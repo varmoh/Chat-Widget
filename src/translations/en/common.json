@@ -13,6 +13,7 @@
   "notifications.authenticate.needs-authentication": "authenticate",
   "notifications.authenticate.is-authenticated": "authenticated",
   "notifications.customer-service-busy": "All customer service agents are currently busy.",
+  "notifications.queue-number": "All customer service agents are currently busy. You are {{number}} in the queue",
   "notifications.waiting-time": "Estimated waiting time in minutes: {{time}}",
   "notifications.idle-chat-notification": "Do you want to continue the conversation?",
   "notifications.offline": "Service currently not available!",

@@ -40,6 +40,7 @@ import getIdleTime from "../../utils/getIdleTime";
 import { Message } from "../../model/message-model";
 import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavailable-end-user-contacts";
 import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
+import useQueueCounter from "../../hooks/use-queue-counter";
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -63,7 +64,6 @@ const Chat = (): JSX.Element => {
     isChatEnded,
     chatId,
     messageQueue,
-    estimatedWaiting,
     idleChat,
     showContactForm,
     showUnavailableContactForm,
@@ -75,6 +75,8 @@ const Chat = (): JSX.Element => {
   const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector(
     (state) => state.widget
   );
+
+  const queueCount = useQueueCounter();
 
   useEffect(() => {
     if (
@@ -237,6 +239,10 @@ const Chat = (): JSX.Element => {
           />
           {messageQueue.length >= 5 && (
             <WarningNotification warningMessage={t("chat.error-message")} />
+          )}
+          {
+            !!queueCount && (
+            <WarningNotification warningMessage={t("notifications.queue-number", { number: queueCount })} />
           )}
           {burokrattOnlineStatus !== true && <OnlineStatusNotification />}
           {showWidgetDetails && <WidgetDetails />}
