@@ -143,7 +143,6 @@ const TextAreaStyle = styled.textarea`
   background: transparent;
   resize: vertical;
   overflow: auto;
-  height: 86px;
   resize: none;
 `;
 
@@ -151,7 +150,7 @@ const EndUserContactsStyle = styled.div`
   height: 100%;
 
   input,
-  textarea  {
+  textarea {
     border: 0;
     border-bottom: 1px solid #003cff;
     padding-bottom: 5px;
@@ -175,14 +174,14 @@ const EndUserContactsStyle = styled.div`
   }
 
   form {
-    height: 100%;
+    height: 115%;
     width: 100%;
     padding: 0.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: -2rem;
+    margin-top: -3rem;
   }
 
   .form-body {

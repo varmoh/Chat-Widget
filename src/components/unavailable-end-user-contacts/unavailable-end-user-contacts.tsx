@@ -20,7 +20,10 @@ import { Message } from "../../model/message-model";
 import StyledButton from "../styled-components/styled-button";
 import WidgetService from "../../services/widget-service";
 import useMessageValidator from "../../hooks/use-message-validator";
-import { getContactCommentNewMessage, getContactFormFulfilledNewMessage } from "../../utils/chat-utils";
+import {
+  getContactCommentNewMessage,
+  getContactFormFulfilledNewMessage,
+} from "../../utils/chat-utils";
 
 const UnavailableEndUserContacts = (): JSX.Element => {
   const { endUserContacts, chatId, contactMsgId, contactContentMessage } =
@@ -71,8 +74,13 @@ const UnavailableEndUserContacts = (): JSX.Element => {
       newMsg.content = "";
       dispatch(sendMessagePreview(newMsg));
 
-      if(endUserContacts.comment) {
-        const commentMsg = getContactCommentNewMessage(endUserContacts.comment, chatId, contactMsgId, t);
+      if (endUserContacts.comment) {
+        const commentMsg = getContactCommentNewMessage(
+          endUserContacts.comment,
+          chatId,
+          contactMsgId,
+          t
+        );
         dispatch(sendNewMessage(commentMsg));
       }
 
@@ -118,21 +126,20 @@ const UnavailableEndUserContacts = (): JSX.Element => {
             <div className="comment-group">
               <h5>{t("widget.contacts.contact.comment.label")}</h5>
               <TextAreaStyle
-                rows={4}
+                rows={3}
                 id="comment-input"
                 className="comment-input"
                 name="comment"
-                placeholder={t('widget.contacts.contact.comment.placeholder')}
+                placeholder={t("widget.contacts.contact.comment.placeholder")}
                 value={endUserContacts.comment}
-                onChange={(e) => dispatch(setContactFormComment(e.target.value))}
+                onChange={(e) =>
+                  dispatch(setContactFormComment(e.target.value))
+                }
               />
             </div>
           </div>
           <div className="form-footer">
-            <StyledButton
-              styleType={StyledButtonType.GRAY}
-              onClick={skipForm}
-            >
+            <StyledButton styleType={StyledButtonType.GRAY} onClick={skipForm}>
               {t("widget.contacts.contact.skip.label")}
             </StyledButton>
             <StyledButton
@@ -155,7 +162,6 @@ const TextAreaStyle = styled.textarea`
   background: transparent;
   resize: vertical;
   overflow: auto;
-  height: 86px;
   resize: none;
 `;
 
@@ -188,12 +194,12 @@ const UnavailableEndUserContactsStyle = styled.div`
   }
 
   form {
-    height: 100%;
+    height: 115%;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: -3rem;
+    margin-top: -2.5rem;
     margin-left: 1rem;
     margin-right: 1rem;
   }
@@ -207,7 +213,7 @@ const UnavailableEndUserContactsStyle = styled.div`
 
     .email-group,
     .phone-nr-group {
-      padding-bottom: 1rem;
+      padding-bottom: 0.7rem;
       width: 100%;
     }
 
