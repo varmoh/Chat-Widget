@@ -91,6 +91,11 @@ export interface ChatState {
   titleVisibility: boolean,
 }
 
+const initialEstimatedTime = {
+  positionInUnassignedChats: '',
+  durationInSeconds: '',
+}
+
 const initialState: ChatState = {
   chatId: null,
   isChatOpen: false,
@@ -107,10 +112,7 @@ const initialState: ChatState = {
   showUnavailableContactForm: false,
   contactContentMessage: '',
   isChatRedirected: false,
-  estimatedWaiting: {
-    positionInUnassignedChats: '',
-    durationInSeconds: '',
-  },
+  estimatedWaiting: initialEstimatedTime,
   idleChat: {
     isIdle: false,
     lastActive: '',
@@ -260,7 +262,13 @@ export const sendNewSilentMessage = createAsyncThunk('chat/sendNewSilentMessage'
 
 export const sendMessagePreview = createAsyncThunk('chat/post-message-preview', (message: Message) => ChatService.sendMessagePreview(message));
 
-export const getEstimatedWaitingTime = createAsyncThunk('chat/getEstimatedWaitingTime', async () => ChatService.getEstimatedWaitingTime());
+export const getEstimatedWaitingTime = createAsyncThunk('chat/getEstimatedWaitingTime', async (_args, thunkApi) => {
+  const { chat: { chatId } } = (thunkApi.getState() as { chat: ChatState }) || '';
+  
+  return chatId 
+    ? ChatService.getEstimatedWaitingTime(chatId)
+    : initialEstimatedTime;
+});
 
 export const removeChatForwardingValue = createAsyncThunk('chat/removeChatForwardingValue', async () => ChatService.removeChatForwardingValue());
 
@@ -330,6 +338,7 @@ export const chatSlice = createSlice({
     },
     setEstimatedWaitingTimeToZero: (state) => {
       state.estimatedWaiting.durationInSeconds = '';
+      state.estimatedWaiting.positionInUnassignedChats = '';
     },
     setIdleChat: (state, action) => {
       state.idleChat = {
@@ -468,6 +477,10 @@ export const chatSlice = createSlice({
     });
     builder.addCase(getEstimatedWaitingTime.fulfilled, (state, action) => {
       state.estimatedWaiting = action.payload;
+      state.messages.push({
+        chatId: 'estimatedWaiting',
+        authorTimestamp: '',
+      });
     });
     builder.addCase(generateForwardingRequest.fulfilled, (state, action) => {
       if (action.payload[0].externalId) {

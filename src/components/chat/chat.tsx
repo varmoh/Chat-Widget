@@ -40,7 +40,7 @@ import getIdleTime from "../../utils/getIdleTime";
 import { Message } from "../../model/message-model";
 import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavailable-end-user-contacts";
 import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
-import useQueueCounter from "../../hooks/use-queue-counter";
+import parseStringNumber from "../../utils/parse-string-number";
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -71,12 +71,12 @@ const Chat = (): JSX.Element => {
     messages,
     chatDimensions,
     chatMode,
+    estimatedWaiting,
   } = useChatSelector();
-  const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector(
-    (state) => state.widget
-  );
 
-  const queueCount = useQueueCounter();
+  const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector((state) => state.widget);
+  
+  const queueCount = parseStringNumber(estimatedWaiting.positionInUnassignedChats);
 
   useEffect(() => {
     if (
@@ -241,7 +241,7 @@ const Chat = (): JSX.Element => {
             <WarningNotification warningMessage={t("chat.error-message")} />
           )}
           {
-            !!queueCount && (
+            queueCount > 0 && (
             <WarningNotification warningMessage={t("notifications.queue-number", { number: queueCount })} />
           )}
           {burokrattOnlineStatus !== true && <OnlineStatusNotification />}

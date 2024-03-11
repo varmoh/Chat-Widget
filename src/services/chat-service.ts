@@ -5,6 +5,7 @@ import { Chat } from '../model/chat-model';
 import { RUUTER_ENDPOINTS } from '../constants';
 import { EndUserTechnicalData } from '../model/chat-ini-model';
 import { EmergencyNoticeResponse } from '../model/emergency-notice-response-model';
+import { EstimatedWaiting } from '../slices/chat-slice';
 
 interface Document {
   _id: string;
@@ -78,10 +79,8 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.SEND_FEEDBACK_MESSAGE, { chatId, feedbackText: userFeedback });
   }
 
-  async getEstimatedWaitingTime(): Promise<any> { //TODO fix return type // Promise<Response>
-    const result = await http.get(RUUTER_ENDPOINTS.GET_WAITING_TIME);
-    //@ts-ignore 
-    return result.data.response;
+  getEstimatedWaitingTime(chatId: string): Promise<EstimatedWaiting> { 
+    return http.post(RUUTER_ENDPOINTS.GET_WAITING_TIME, { chatId });
   }
 
   sendMessageWithNewEvent(message: Message): Promise<void> {

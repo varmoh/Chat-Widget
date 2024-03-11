@@ -1,29 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useChatSelector from '../../hooks/use-chat-selector';
 import styles from './waiting-time-notification.module.scss';
 import Button, { ButtonColor } from '../button/button';
 import formatTime from '../../utils/format-time';
 import WaitingTimeNotificationForm from './waiting-time-notification-form';
+import NotificationMessage from './notification-message';
+import useChatSelector from '../../hooks/use-chat-selector';
 import 'overlayscrollbars/css/OverlayScrollbars.css';
 import '../chat-content/os-custom-theme.scss';
-import NotificationMessage from './notification-message';
-import { useAppDispatch } from '../../store';
-import {
-  getEstimatedWaitingTime,
-  setEstimatedWaitingTimeToZero,
-} from '../../slices/chat-slice';
 
-const WaitingTimeNotification = (): JSX.Element => {
+const WaitingTimeNotification: React.FC = () => {
   const { t } = useTranslation();
+  const { estimatedWaiting } = useChatSelector();
   const [showForm, setShowForm] = useState(false);
 
-  const estimatedWaiting2 = {
-    time: 300,
-    isActive: true,
-}
+  const FORMATTED_TIME = formatTime(estimatedWaiting.durationInSeconds);
 
-const FORMATTED_TIME = formatTime(estimatedWaiting2.time)
+  if(!estimatedWaiting.durationInSeconds || estimatedWaiting.durationInSeconds === '0') {
+    return <></>;
+  }
 
   return (
     <div className={styles.container}>

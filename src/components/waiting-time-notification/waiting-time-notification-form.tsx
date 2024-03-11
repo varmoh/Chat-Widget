@@ -1,12 +1,18 @@
-import styles from './waiting-time-notification.module.scss';
 import Button, { ButtonColor } from '../button/button';
 import { useState } from 'react';
 import WaitingTImeNotificationFormSuccess from './waiting-time-notification-form-success';
 import NotificationMessage from './notification-message';
 import { useTranslation } from 'react-i18next';
+import { sendMessageWithNewEvent, sendNewSilentMessage } from '../../slices/chat-slice';
+import { useAppDispatch } from '../../store';
+import { getContactCommentNewMessage, getContactFormFulfilledNewMessage } from '../../utils/chat-utils';
+import useChatSelector from '../../hooks/use-chat-selector';
+import styles from './waiting-time-notification.module.scss';
 
 const WaitingTimeNotificationForm = () => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const { chatId } = useChatSelector();
   const [formData, setFormData] = useState({
     phone: '',
     email: '',
@@ -16,23 +22,35 @@ const WaitingTimeNotificationForm = () => {
 
   function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setFormData({
-      ...formData,
-      sent: true,
-    });
+
+    const info = {phoneNr: formData.phone, mailAddress: formData.email, idCode: '', comment: formData.message};
+    const newMsg = getContactFormFulfilledNewMessage(info, chatId, '', t);
+    dispatch(sendMessageWithNewEvent(newMsg));
+    if(formData.message) {
+      const commentMsg = getContactCommentNewMessage(formData.message, chatId, '', t);
+      dispatch(sendNewSilentMessage(commentMsg));
+    }
+
+    setFormData({ ...formData, sent: true });
   }
 
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   }
 
-  return formData.sent === false ? (
+  if(formData.sent) {
+    return (
+      <>
+        <WaitingTImeNotificationFormSuccess formData={formData} />
+        <NotificationMessage showIcon>
+          {t('widget.form.success')}
+        </NotificationMessage>
+      </>
+    )
+  }
+
+  return (
     <form className={styles.form} onSubmit={handleFormSubmit}>
       <input
         type="phone"
@@ -61,16 +79,9 @@ const WaitingTimeNotificationForm = () => {
         color={ButtonColor.BLUE}
         type="submit"
       >
-{t('chat.feedback.button.label')}
+        {t('chat.feedback.button.label')}
       </Button>
     </form>
-  ) : (
-    <>
-      <WaitingTImeNotificationFormSuccess formData={formData} />
-      <NotificationMessage showIcon={true}>
-      {t('widget.form.success')}
-      </NotificationMessage>
-    </>
   );
 };
 
