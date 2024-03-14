@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './waiting-time-notification.module.scss';
 import Button, { ButtonColor } from '../button/button';
@@ -15,10 +15,6 @@ const WaitingTimeNotification: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
 
   const FORMATTED_TIME = formatTime(estimatedWaiting.durationInSeconds);
-
-  if(!estimatedWaiting.durationInSeconds || estimatedWaiting.durationInSeconds === '0') {
-    return <></>;
-  }
 
   return (
     <div className={styles.container}>

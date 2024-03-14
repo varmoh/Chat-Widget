@@ -41,6 +41,7 @@ import { Message } from "../../model/message-model";
 import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavailable-end-user-contacts";
 import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
 import parseStringNumber from "../../utils/parse-string-number";
+import useQueueCounter from "../../hooks/use-queue-counter";
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -71,13 +72,12 @@ const Chat = (): JSX.Element => {
     messages,
     chatDimensions,
     chatMode,
-    estimatedWaiting,
   } = useChatSelector();
 
   const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector((state) => state.widget);
   
-  const queueCount = parseStringNumber(estimatedWaiting.positionInUnassignedChats);
-
+  const queueCount = useQueueCounter();
+    
   useEffect(() => {
     if (
       feedback.isFeedbackRatingGiven &&
