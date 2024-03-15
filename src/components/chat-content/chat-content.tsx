@@ -21,7 +21,6 @@ const ChatContent = (): JSX.Element => {
     }
   }, [messages]);
 
-  useEstimatedWaitingTime();
   useNameAndTitleVisibility();
 
   return (

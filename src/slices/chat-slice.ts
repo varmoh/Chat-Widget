@@ -154,6 +154,11 @@ const initialState: ChatState = {
   titleVisibility: false,
 };
 
+const showEstimatedWaitingMessage = {
+  chatId: 'estimatedWaiting',
+  authorTimestamp: '',
+}
+
 export const initChat = createAsyncThunk('chat/init', async (message: Message) =>  {
   const {holidays, holidayNames} = getHolidays();
   return ChatService.init(message, {
@@ -477,10 +482,7 @@ export const chatSlice = createSlice({
     });
     builder.addCase(getEstimatedWaitingTime.fulfilled, (state, action) => {
       state.estimatedWaiting = action.payload;
-      state.messages.push({
-        chatId: 'estimatedWaiting',
-        authorTimestamp: '',
-      });
+      state.messages.push(showEstimatedWaitingMessage);
     });
     builder.addCase(generateForwardingRequest.fulfilled, (state, action) => {
       if (action.payload[0].externalId) {
