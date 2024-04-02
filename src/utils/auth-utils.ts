@@ -1,6 +1,8 @@
-import { LOCAL_STORAGE_TARA_LOGIN_REDIRECT, RUUTER_ENDPOINTS } from "../constants";
+import {
+  LOCAL_STORAGE_TARA_LOGIN_REDIRECT,
+  RUUTER_ENDPOINTS,
+} from "../constants";
 import widgetService from "../services/widget-service";
-
 
 export function redirectToTim() {
   saveCurrentBrowserPath();
@@ -10,11 +12,14 @@ export function redirectToTim() {
 export function redirectIfComeBackFromTim(callback: any) {
   const redirectPath = getRedirectPath();
   if (redirectPath) {
-      setTimeout(async () => {
+    setTimeout(async () => {
+      if (window.location.href != redirectPath) {
+        window.location.replace(redirectPath);
+      }
       removeRedirectPath();
       widgetService.authenticateUser();
-      callback()
-     }, 500);
+      callback();
+    }, 500);
   }
 }
 
