@@ -38,7 +38,7 @@ const ChatContent = (): JSX.Element => {
         >
           {messages.map((message) => 
             message.chatId === 'estimatedWaiting' 
-            ? <WaitingTimeNotification />
+            ? <WaitingTimeNotification key={message.authorTimestamp} />
             : <ChatMessage 
                 message={message}
                 key={`${message.authorTimestamp}-${message.created}-${message.id}`}

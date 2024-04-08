@@ -21,6 +21,7 @@ import {
 import { getFromLocalStorage, setToLocalStorage } from '../utils/local-storage-utils';
 import getHolidays from '../utils/holidays';
 import { getChatModeBasedOnLastMessage } from '../utils/chat-utils';
+import { isChatAboutToBeTerminated, isLastSession, wasPageReloaded } from '../utils/browser-utils';
 
 export interface EstimatedWaiting {
   positionInUnassignedChats: string;
@@ -154,11 +155,6 @@ const initialState: ChatState = {
   titleVisibility: false,
 };
 
-const showEstimatedWaitingMessage = {
-  chatId: 'estimatedWaiting',
-  authorTimestamp: '',
-}
-
 export const initChat = createAsyncThunk('chat/init', async (message: Message) =>  {
   const {holidays, holidayNames} = getHolidays();
   return ChatService.init(message, {
@@ -209,7 +205,7 @@ export const endChat = createAsyncThunk('chat/endChat', async (args: { event: CH
   } = thunkApi.getState() as { chat: ChatState };
   thunkApi.dispatch(resetState());
 
-  const endEvent = args.isUpperCase ? args.event?.toUpperCase() : args.event ?? ''
+  const endEvent = args.isUpperCase ? args.event?.toUpperCase() : args.event ?? '';
 
   return chatStatus === CHAT_STATUS.ENDED
     ? null
@@ -219,6 +215,34 @@ export const endChat = createAsyncThunk('chat/endChat', async (args: { event: CH
       authorRole: AUTHOR_ROLES.END_USER,
       event: endEvent,
     }, endEvent === CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED ? "IDLE" : null);
+});
+
+export const addChatToTerminationQueue = createAsyncThunk('chat/addChatToTerminationQueue', async (args, thunkApi) => {  
+  const { chat } = thunkApi.getState() as { chat: ChatState };
+
+  sessionStorage.setItem('terminationTime', Date.now().toString());
+  localStorage.setItem('previousChatId', chat.chatId ?? '');
+  
+  thunkApi.dispatch(resetState());
+
+  if(chat.chatId) {
+    return ChatService.addChatToTerminationQueue(chat.chatId);
+  }
+});
+
+export const removeChatFromTerminationQueue = createAsyncThunk('chat/removeChatFromTerminationQueue', async (args, thunkApi) => {
+  if(!wasPageReloaded() || !isChatAboutToBeTerminated()) {
+    return null;
+  }
+
+  const chatId = localStorage.getItem('previousChatId');
+  setToLocalStorage(SESSION_STORAGE_CHAT_ID_KEY, chatId);
+  sessionStorage.removeItem('terminationTime');
+  
+  if(chatId) {
+    thunkApi.dispatch(resetStateWithValue(chatId));
+    return ChatService.removeChatFromTerminationQueue(chatId);
+  }
 });
 
 export const resetChatState = createAsyncThunk('', async (args: { event: CHAT_EVENTS | null}, thunkApi) => {
@@ -295,6 +319,9 @@ export const chatSlice = createSlice({
   initialState,
   reducers: {
     resetState: () => initialState,
+    resetStateWithValue: (state, action: PayloadAction<string>) => {
+      state.chatId = action.payload;
+    },
     setChatId: (state, action: PayloadAction<string>) => {
       state.chatId = action.payload;
     },
@@ -473,6 +500,13 @@ export const chatSlice = createSlice({
       state.feedback.isFeedbackMessageGiven = false;
       state.feedback.isFeedbackRatingGiven = false;
       clearStateVariablesFromLocalStorage();
+      localStorage.removeItem('previousChatId');
+    });
+    builder.addCase(addChatToTerminationQueue.fulfilled, (state) => {
+      state.chatStatus = CHAT_STATUS.ENDED;
+      state.feedback.isFeedbackMessageGiven = false;
+      state.feedback.isFeedbackRatingGiven = false;
+      clearStateVariablesFromLocalStorage();
     });
     builder.addCase(sendChatNpmRating.rejected, (state) => {
       state.errorMessage = ERROR_MESSAGE;
@@ -482,7 +516,10 @@ export const chatSlice = createSlice({
     });
     builder.addCase(getEstimatedWaitingTime.fulfilled, (state, action) => {
       state.estimatedWaiting = action.payload;
-      state.messages.push(showEstimatedWaitingMessage);
+      state.messages.push({
+        chatId: 'estimatedWaiting',
+        authorTimestamp: new Date().toISOString(),
+      });
     });
     builder.addCase(generateForwardingRequest.fulfilled, (state, action) => {
       if (action.payload[0].externalId) {
@@ -542,6 +579,7 @@ export const {
   setChat,
   addMessagesToDisplay,
   handleStateChangingEventMessages,
+  resetStateWithValue,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

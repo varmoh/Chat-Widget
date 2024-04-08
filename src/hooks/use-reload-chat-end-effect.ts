@@ -1,31 +1,29 @@
 import { useEffect } from "react";
 import { useAppDispatch } from "../store";
-import { CHAT_EVENTS } from "../constants";
-import { endChat } from "../slices/chat-slice";
+import { addChatToTerminationQueue, removeChatFromTerminationQueue } from "../slices/chat-slice";
 import useChatSelector from "./use-chat-selector";
 import { isRedirectPathEmpty } from "../utils/auth-utils";
+import { isLastSession } from "../utils/browser-utils";
 
 const useReloadChatEndEffect = () => {
   const { chatId } = useChatSelector();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      const sessions = localStorage.getItem("sessions");
-      if (chatId && isRedirectPathEmpty() && sessions && parseInt(sessions) === 1) {
+    dispatch(removeChatFromTerminationQueue());
+  }, []);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (chatId && isRedirectPathEmpty() && isLastSession()) {
         localStorage.setItem("sessions", "1");
-        dispatch(
-          endChat({
-            event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
-            isUpperCase: true,
-          })
-        );
+        dispatch(addChatToTerminationQueue());
       }
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "F5" || (event.ctrlKey && event.key === "r")) {
-        handleBeforeUnload(event);
+        handleBeforeUnload();
       }
     };
 

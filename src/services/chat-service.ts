@@ -118,6 +118,14 @@ class ChatService {
   getTitleVisibility(): Promise<String> {
     return http.get(RUUTER_ENDPOINTS.GET_CSA_TITLE_VISIBILITY);
   }
+
+  addChatToTerminationQueue(chatId: string): Promise<void> {
+    return http.post(RUUTER_ENDPOINTS.ADD_CHAT_TO_TERMINATION_QUEUE, { chatId });
+  }
+
+  removeChatFromTerminationQueue(chatId: string): Promise<void> {
+    return http.post(RUUTER_ENDPOINTS.REMOVE_CHAT_FROM_TERMINATION_QUEUE, { chatId });
+  }
 }
 
 export default new ChatService();
