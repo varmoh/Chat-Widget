@@ -1,5 +1,7 @@
 const sse = <T>(url: string, onMessage: (data: T) => void): EventSource => {
-  const eventSource = new EventSource(`${window._env_.NOTIFICATION_NODE_URL}/sse${url}`);
+  const eventSource = new EventSource(
+    `${window._env_.NOTIFICATION_NODE_URL}/sse${url}`
+  );
 
   eventSource.onmessage = (event: MessageEvent) => {
     const response = JSON.parse(event.data);
@@ -10,14 +12,14 @@ const sse = <T>(url: string, onMessage: (data: T) => void): EventSource => {
   };
 
   eventSource.onopen = () => {
-    console.log('SSE connection opened, url:', url);
+    console.log("SSE connection opened, url:", url);
   };
-  
+
   eventSource.onerror = () => {
-    console.error('SSE error, url:', url);
+    // console.error('SSE error, url:', url); // Uncomment this line to see the error in the console
   };
 
   return eventSource;
-}
+};
 
 export default sse;
