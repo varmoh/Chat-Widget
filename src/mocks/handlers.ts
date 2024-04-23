@@ -39,7 +39,7 @@ const handlers = [
   }),
 
   rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.SEND_ATTACHMENT}`, (_req, res, ctx) => res(ctx.status(200))),
-  rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.SEND_USER_CONTACTS}`, (req, res, ctx) => {
+  rest.post(`${ruuterUrl}${RUUTER_ENDPOINTS.SEND_CONTACT_INFO}`, (req, res, ctx) => {
 console.log('req.body',req.body)
     const success = {
       "response": "Updated 123 with example@example.com and +1 404."

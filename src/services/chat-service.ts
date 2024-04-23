@@ -104,7 +104,7 @@ class ChatService {
   }
 
   sendUserContacts({chatId, endUserEmail, endUserPhone}: UserContacts): Promise<void>{
-    return http.post(RUUTER_ENDPOINTS.SEND_USER_CONTACTS);
+    return http.post(RUUTER_ENDPOINTS.SEND_CONTACT_INFO);
   }
 
   burokrattOnlineStatus(): Promise<boolean> {

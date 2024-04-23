@@ -289,7 +289,7 @@ export const sendNewSilentMessage = createAsyncThunk('chat/sendNewSilentMessage'
   return ChatService.sendNewSilentMessage(message, holidays, holidayNames);
 });
 
-export const sendMessagePreview = createAsyncThunk('chat/post-message-preview', (message: Message) => ChatService.sendMessagePreview(message));
+export const sendMessagePreview = createAsyncThunk('chat/postMessagePreview', (message: Message) => ChatService.sendMessagePreview(message));
 
 export const getEstimatedWaitingTime = createAsyncThunk('chat/getEstimatedWaitingTime', async (_args, thunkApi) => {
   const { chat: { chatId } } = (thunkApi.getState() as { chat: ChatState }) || '';
