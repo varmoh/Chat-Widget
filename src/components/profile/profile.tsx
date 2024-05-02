@@ -49,7 +49,7 @@ export const Profile = (): JSX.Element => {
 
   return (
     <div className={styles.profile__wrapper}>
-      <motion.div
+      <motion.button
         className={`${styles.profile} ${getActiveProfileClass()}`}
         variants={variants}
         initial="initial"
@@ -58,7 +58,6 @@ export const Profile = (): JSX.Element => {
           animationIterationCount: widgetConfig.proactiveSeconds,
           backgroundColor: widgetConfig.color,
         }}
-        role="button"
         aria-label={t("profile.button.open-chat")}
         title={t("profile.button.open-chat")}
         onKeyDown={openChat}
@@ -72,7 +71,7 @@ export const Profile = (): JSX.Element => {
           style={{ filter: "brightness(0) invert(1)", imageRendering: "auto" }}
           loading="eager"
         />
-      </motion.div>
+      </motion.button>
       {widgetConfig.showMessage && (
         <div
           className={`${styles.profile__greeting_message} ${

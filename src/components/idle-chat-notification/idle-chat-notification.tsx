@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import Button from '../button/button';
 import styles from './idle-chat-notification.module.scss';
 import { useAppDispatch } from '../../store';
-import { closeConfirmationModal } from '../../slices/widget-slice';
 import { endChat, setIdleChat } from '../../slices/chat-slice';
 import { CHAT_EVENTS } from '../../constants';
 import { customJwtExtend } from '../../slices/authentication-slice';
@@ -13,9 +12,8 @@ const IdleChatNotification = () => {
 
   return (
     <div className={styles.container}>
-      <div
+      <dialog
         className={styles.content}
-        role="dialog"
         aria-modal="true"
         aria-labelledby={t("notifications.idle-chat-notification")}
       >
@@ -48,7 +46,7 @@ const IdleChatNotification = () => {
             {t("widget.action.no")}
           </Button>
         </div>
-      </div>
+      </dialog>
     </div>
   );
 };

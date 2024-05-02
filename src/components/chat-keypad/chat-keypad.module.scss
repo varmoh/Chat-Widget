@@ -43,6 +43,8 @@
     height: 32px;
     display: flex;
     justify-content: center;
+    background-color: transparent;
+    border: none;
     align-items: center;
     margin: 0;
     &:focus {

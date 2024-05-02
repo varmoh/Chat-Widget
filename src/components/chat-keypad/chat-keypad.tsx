@@ -14,7 +14,6 @@ import {
   clearMessageQueue,
   initChat,
   queueMessage,
-  sendAttachment,
   sendFeedbackMessage,
   sendMessagePreview,
   sendNewMessage,
@@ -51,7 +50,7 @@ const ChatKeyPad = (): JSX.Element => {
   const [userInput, setUserInput] = useState<string>("");
   const [userInputFile, setUserInputFile] = useState<Attachment>();
   const [errorMessage, setErrorMessage] = useState("");
-  const [isKeypadDisabled, setKeypadDisabled] = useState(false);
+  const [isKeypadDisabled, setIsKeypadDisabled] = useState(false);
   const { feedback, chatId, loading, messageQueue, chatStatus } =
     useChatSelector();
   const { t } = useTranslation();
@@ -87,11 +86,11 @@ const ChatKeyPad = (): JSX.Element => {
     dispatch(setFeedbackWarning(false));
     dispatch(sendFeedbackMessage({ userInput }));
     dispatch(setFeedbackMessageGiven(true));
-    setKeypadDisabled(true);
+    setIsKeypadDisabled(true);
   };
   useEffect(() => {
     if (messageQueue.length >= MESSAGE_QUE_MAX_LENGTH) {
-      setKeypadDisabled(true);
+      setIsKeypadDisabled(true);
     }
   }, [messageQueue]);
 
@@ -103,7 +102,7 @@ const ChatKeyPad = (): JSX.Element => {
         }, 250);
       });
       dispatch(clearMessageQueue());
-      setKeypadDisabled(false);
+      setIsKeypadDisabled(false);
     }
   }, [chatId, dispatch, loading, messageQueue]);
 
@@ -127,7 +126,7 @@ const ChatKeyPad = (): JSX.Element => {
     };
 
     dispatch(addMessage(message));
-    // dispatch(sendAttachment(userInputFile!)); // TODO: Send attachment
+    // dispatch(sendAttachment(userInputFile!)); // To be done: Send attachment
     handleUploadClear();
 
     if (!chatId && !loading) {
@@ -179,10 +178,10 @@ const ChatKeyPad = (): JSX.Element => {
       <KeypadErrorMessage>{errorMessage}</KeypadErrorMessage>
       <div className={`${keypadClasses}`}>
         <input
-          disabled={!!userInputFile ? true : isKeypadDisabled}
+          disabled={userInputFile ? true : isKeypadDisabled}
           aria-label={t("keypad.input.label")}
           className={`${styles.input}`}
-          value={!!userInputFile ? userInputFile.name : userInput}
+          value={userInputFile ? userInputFile.name : userInput}
           placeholder={t("keypad.input.placeholder")}
           onChange={(e) => {
             setUserInput(e.target.value);
@@ -216,42 +215,39 @@ const ChatKeyPad = (): JSX.Element => {
           </FeedbackButtonStyle>
         ) : (
           <>
-            <div
-              onKeyPress={addNewMessageToState}
+            <button
+              onKeyDown={addNewMessageToState}
               onClick={addNewMessageToState}
               className={styles.button}
               title={t("keypad.button.label")}
               aria-label={t("keypad.button.label")}
-              role="button"
               tabIndex={0}
             >
               <img src={Send} alt="Send message icon" />
-            </div>
+            </button>
 
-            {!!userInputFile ? (
-              <div
-                onKeyPress={() => null}
+            {userInputFile ? (
+              <button
+                onKeyDown={() => null}
                 onClick={handleUploadClear}
                 className={styles.button_cancelUpload}
                 title={t("keypad.button.label")}
                 aria-label={t("keypad.button.label")}
-                role="button"
                 tabIndex={0}
               >
                 <img src={Close} alt="Close icon" />
-              </div>
+              </button>
             ) : (
-              <div
-                onKeyPress={() => null}
+              <button
+                onKeyDown={() => null}
                 onClick={handleUploadClick}
                 className={styles.button}
                 title={t("keypad.button.label")}
                 aria-label={t("keypad.button.label")}
-                role="button"
                 tabIndex={0}
               >
                 <img src={File} alt="Send file icon" />
-              </div>
+              </button>
             )}
           </>
         )}
@@ -284,7 +280,7 @@ const ChatKeyPad = (): JSX.Element => {
         resolve(fileReader.result);
       };
       fileReader.onerror = (error) => {
-        reject(error);
+        reject(new Error("Error reading file"));
       };
     });
   }

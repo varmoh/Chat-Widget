@@ -40,7 +40,6 @@ import getIdleTime from "../../utils/getIdleTime";
 import { Message } from "../../model/message-model";
 import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavailable-end-user-contacts";
 import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
-import parseStringNumber from "../../utils/parse-string-number";
 import useQueueCounter from "../../hooks/use-queue-counter";
 
 const RESIZABLE_HANDLES = {
@@ -146,11 +145,9 @@ const Chat = (): JSX.Element => {
           clearInterval(interval);
         };
       }
-    } else {
-      if (feedback.isFeedbackConfirmationShown) {
+    } else if (feedback.isFeedbackConfirmationShown) {
         dispatch(resetChatState({ event: null }));
       }
-    }
   }, [
     idleChat.isIdle,
     messages,

@@ -1,7 +1,7 @@
 import { ChatState } from './slices/chat-slice';
 import { AuthenticationState } from './slices/authentication-slice';
 import { Message } from './model/message-model';
-import { CHAT_STATUS, CHAT_WINDOW_WIDTH, CHAT_WINDOW_HEIGHT, CHAT_BUBBLE_ANIMATION, CHAT_BUBBLE_COLOR, CHAT_BUBBLE_MESSAGE_DELAY_SECONDS, CHAT_BUBBLE_PROACTIVE_SECONDS, CHAT_SHOW_BUBBLE_MESSAGE, CHAT_MODES } from './constants';
+import { CHAT_STATUS, CHAT_WINDOW_WIDTH, CHAT_WINDOW_HEIGHT, CHAT_MODES } from './constants';
 
 export const initialChatState: ChatState = {
   endUserContacts: {

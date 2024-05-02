@@ -32,7 +32,7 @@ export const loginWithTaraJwt = createAsyncThunk('auth/loginWithTaraJwt', async 
     thunkApi.dispatch(getUserinfo());
     return res;
   }
-  return Promise.reject();
+  return Promise.reject(new Error('Error Logging in with Tara'));
 });
 
 export const getUserinfo = createAsyncThunk('auth/getUserinfo', () => AuthenticationService.customJwtUserinfo());
@@ -84,10 +84,6 @@ export const authenticationSlice = createSlice({
     builder.addCase(customJwtExtend.fulfilled, (state, action) => {
       state.jwtCookie = action.payload.jwtCookie;
     });
-    // builder.addCase(customJwtExtend.rejected, (state) => {
-    //   state.userInfo.jwtExpirationTimestamp = '';
-    //   state.isAuthenticated = false;
-    // });
   },
 });
 

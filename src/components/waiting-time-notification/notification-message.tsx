@@ -1,4 +1,4 @@
-import { Children, FC } from 'react';
+import { FC } from 'react';
 import InfoIcon from './info-icon';
 import styles from './waiting-time-notification.module.scss';
 

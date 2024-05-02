@@ -12,7 +12,6 @@ import {
   setPhoneNumber,
   updateMessage,
   sendMessagePreview,
-  sendNewMessage,
   setContactFormComment,
   sendNewSilentMessage,
 } from "../../slices/chat-slice";

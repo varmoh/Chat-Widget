@@ -9,7 +9,6 @@ import {
 } from "../../slices/chat-slice";
 import styles from "./confirmation-modal.module.scss";
 import { useTranslation } from "react-i18next";
-import Stars from "../stars/stars";
 import { CHAT_EVENTS, StyledButtonType } from "../../constants";
 import StyledButton from "../styled-components/styled-button";
 import styled from "styled-components";

@@ -20,7 +20,8 @@ const ConfirmationModalDownload = () => {
   const handleDownload = async (isForwardToEmail: boolean) => {
     if (
       isForwardToEmail &&
-      (endUserContacts.mailAddress === "" || !new RegExp(EMAIL_REGEX).test(endUserContacts.mailAddress))
+      (endUserContacts.mailAddress === "" ||
+        !new RegExp(EMAIL_REGEX).test(endUserContacts.mailAddress))
     ) {
       setInvalidMessage(t("widget.contacts.contact.invalid.email"));
       return false;
@@ -28,7 +29,10 @@ const ConfirmationModalDownload = () => {
 
     const response = await dispatch(downloadChat(isForwardToEmail));
     if (response.meta.requestStatus === "rejected") return false;
-    downloadRef.current?.download({ title: `chat-history.pdf`, data: (response.payload as any).data });
+    downloadRef.current?.download({
+      title: `chat-history.pdf`,
+      data: (response.payload as any).data,
+    });
     return true;
   };
 
@@ -37,53 +41,56 @@ const ConfirmationModalDownload = () => {
       {!showForwardForm ? (
         <>
           <Download ref={downloadRef} />
-          <a onClick={() => handleDownload(false)} className={styles.downloadLink}>
+          <button
+            className={styles.downloadLink}
+            onClick={() => handleDownload(false)}
+          >
             {t("widget.action.download-chat")}
-          </a>
+          </button>
           {/* <a onClick={() => setShowForwardForm(true)} className={styles.downloadLink}>
             {t("widget.action.forward-chat")}
           </a> */}
         </>
       ) : (
-        <>
-          <form className={styles.forwardForm}>
-            <div className={styles.forwardInput}>
-              <InputText
-                id="email-input"
-                className="email-input"
-                placeholder={t("widget.action.forward-email")}
-                pattern={EMAIL_REGEX}
-                value={endUserContacts.mailAddress}
-                onChange={(e) => {
-                  dispatch(setEmailAdress(e.target.value));
-                  setInvalidMessage("");
-                }}
-              />
-              <hr className={styles.divider} />
-              {invalidMessage && <p className={styles.missingFeedback}>{invalidMessage}</p>}
-            </div>
-            <div className={styles.downloadActions}>
-              <Button
-                onClick={() => setShowForwardForm(false)}
-                title={t("widget.action.skip")}
-                color={ButtonColor.GRAY}
-              >
-                {t("widget.action.skip")}
-              </Button>
-              <Button
-                onClick={() =>
-                  handleDownload(true).then((res) => {
-                    if (res) setShowForwardForm(false);
-                  })
-                }
-                title={t("widget.action.confirm")}
-                color={ButtonColor.BLUE}
-              >
-                {t("widget.action.confirm")}
-              </Button>
-            </div>
-          </form>
-        </>
+        <form className={styles.forwardForm}>
+          <div className={styles.forwardInput}>
+            <InputText
+              id="email-input"
+              className="email-input"
+              placeholder={t("widget.action.forward-email")}
+              pattern={EMAIL_REGEX}
+              value={endUserContacts.mailAddress}
+              onChange={(e) => {
+                dispatch(setEmailAdress(e.target.value));
+                setInvalidMessage("");
+              }}
+            />
+            <hr className={styles.divider} />
+            {invalidMessage && (
+              <p className={styles.missingFeedback}>{invalidMessage}</p>
+            )}
+          </div>
+          <div className={styles.downloadActions}>
+            <Button
+              onClick={() => setShowForwardForm(false)}
+              title={t("widget.action.skip")}
+              color={ButtonColor.GRAY}
+            >
+              {t("widget.action.skip")}
+            </Button>
+            <Button
+              onClick={() =>
+                handleDownload(true).then((res) => {
+                  if (res) setShowForwardForm(false);
+                })
+              }
+              title={t("widget.action.confirm")}
+              color={ButtonColor.BLUE}
+            >
+              {t("widget.action.confirm")}
+            </Button>
+          </div>
+        </form>
       )}
     </div>
   );

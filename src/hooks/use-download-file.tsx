@@ -26,7 +26,7 @@ export const Download = forwardRef<DownloadHandle, {}>((props, ref) => {
     return null;
   }
   const { title, data } = download;
-  return <a href={data} download={title} ref={linkRef} />;
+  return <a href={data} download={title} ref={linkRef} title='' />;
 });
 
 export type DownloadElement = React.ElementRef<typeof Download>;

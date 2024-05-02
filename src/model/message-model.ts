@@ -29,7 +29,7 @@ export interface Message {
 }
 
 export enum AttachmentTypes {
-    // TODO not all types displayed correctly or specified in the AC
+    // To be added: not all types displayed correctly or specified in the AC
     PDF = 'application/pdf',
     PNG = 'image/png',
     JPEG = 'image/jpeg',
@@ -38,7 +38,6 @@ export enum AttachmentTypes {
     ODT = 'application/vnd.oasis.opendocument.text',
     XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     ODS = 'ods',
-    BDOC = 'application/vnd.etsi.asic-e+zip',
     CDOC = 'application/x-cdoc',
     ASICE = 'application/vnd.etsi.asic-e+zip',
     MP3 = 'audio/mpeg',

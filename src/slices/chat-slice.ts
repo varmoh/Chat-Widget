@@ -21,7 +21,7 @@ import {
 import { getFromLocalStorage, setToLocalStorage } from '../utils/local-storage-utils';
 import getHolidays from '../utils/holidays';
 import { getChatModeBasedOnLastMessage } from '../utils/chat-utils';
-import { isChatAboutToBeTerminated, isLastSession, wasPageReloaded } from '../utils/browser-utils';
+import { isChatAboutToBeTerminated, wasPageReloaded } from '../utils/browser-utils';
 
 export interface EstimatedWaiting {
   positionInUnassignedChats: string;
@@ -206,15 +206,22 @@ export const endChat = createAsyncThunk('chat/endChat', async (args: { event: CH
   thunkApi.dispatch(resetState());
 
   const endEvent = args.isUpperCase ? args.event?.toUpperCase() : args.event ?? '';
+  let chatServiceStatus = null;
+  if (endEvent === CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED) {
+    chatServiceStatus = "IDLE";
+  }
 
   return chatStatus === CHAT_STATUS.ENDED
     ? null
-    : ChatService.endChat({
-      chatId,
-      authorTimestamp: new Date().toISOString(),
-      authorRole: AUTHOR_ROLES.END_USER,
-      event: endEvent,
-    }, endEvent === CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED ? "IDLE" : null);
+    : ChatService.endChat(
+        {
+          chatId,
+          authorTimestamp: new Date().toISOString(),
+          authorRole: AUTHOR_ROLES.END_USER,
+          event: endEvent,
+        },
+        chatServiceStatus
+      );
 });
 
 export const addChatToTerminationQueue = createAsyncThunk('chat/addChatToTerminationQueue', async (args, thunkApi) => {  
@@ -252,15 +259,22 @@ export const resetChatState = createAsyncThunk('', async (args: { event: CHAT_EV
   thunkApi.dispatch(resetState());
 
   const resetEvent = args.event?.toUpperCase();
+  let chatServiceStatus = null;
+  if (resetEvent === CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED) {
+    chatServiceStatus = "IDLE";
+  }
 
   return chatStatus === CHAT_STATUS.ENDED
     ? null
-    : ChatService.endChat({
-      chatId,
-      authorTimestamp: new Date().toISOString(),
-      authorRole: AUTHOR_ROLES.END_USER,
-      event: resetEvent,
-    }, resetEvent === CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED ? "IDLE" : null);
+    : ChatService.endChat(
+        {
+          chatId,
+          authorTimestamp: new Date().toISOString(),
+          authorRole: AUTHOR_ROLES.END_USER,
+          event: resetEvent,
+        },
+        chatServiceStatus
+      );
 });
 
 export const sendMessageWithRating = createAsyncThunk('chat/sendMessageWithRating', async (message: Message) =>
@@ -307,8 +321,9 @@ export const downloadChat = createAsyncThunk("chat/downloadChat", async (isForwa
   const {
     chat: { chatId, endUserContacts },
   } = thunkApi.getState() as { chat: ChatState };
+  const isForwardToEmailAddress = isForwardToEmail ? endUserContacts.mailAddress : null
   return chatId
-    ? ChatService.generateDownloadChatRequest(chatId, isForwardToEmail ? endUserContacts.mailAddress : null)
+    ? ChatService.generateDownloadChatRequest(chatId, isForwardToEmailAddress)
     : null;
 });
 export const getNameVisibility = createAsyncThunk('chat/getNameVisibility', async () => ChatService.getNameVisibility());
@@ -424,13 +439,13 @@ export const chatSlice = createSlice({
             break;
           case CHAT_EVENTS.CONTACT_INFORMATION:
             state.showContactForm = true;
-            state.contactMsgId = msg.id || '';
+            state.contactMsgId = msg.id ?? '';
             break;
           case CHAT_EVENTS.UNAVAILABLE_HOLIDAY:
           case CHAT_EVENTS.UNAVAILABLE_CSAS:
           case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION:
             state.showUnavailableContactForm = true;
-            state.contactMsgId = msg.id || '';
+            state.contactMsgId = msg.id ?? '';
             state.contactContentMessage = msg.content ?? '';
             break;    
           case CHAT_EVENTS.ANSWERED:
@@ -482,17 +497,17 @@ export const chatSlice = createSlice({
       });
     });
     builder.addCase(getNameVisibility.fulfilled, (state, action) => {
-      state.nameVisibility = action.payload === 'true' ? true : false;
+      state.nameVisibility = action.payload === 'true';
     });
     builder.addCase(getTitleVisibility.fulfilled, (state, action) => {
-      state.titleVisibility = action.payload === 'true' ? true : false;
+      state.titleVisibility = action.payload === 'true';
     });
     builder.addCase(getEmergencyNotice.fulfilled, (state, action) => {
       state.emergencyNotice = {
         start: action.payload.emergencyNoticeStartISO,
         end: action.payload.emergencyNoticeEndISO,
         text: action.payload.emergencyNoticeText,
-        isVisible: action.payload.isEmergencyNoticeVisible === "true" ? true : false,
+        isVisible: action.payload.isEmergencyNoticeVisible === "true",
       };
     });
     builder.addCase(endChat.fulfilled, (state) => {

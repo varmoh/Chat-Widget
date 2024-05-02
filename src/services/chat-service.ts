@@ -111,11 +111,11 @@ class ChatService {
     return http.get(RUUTER_ENDPOINTS.BUROKRATT_ONLINE_STATUS);
   }
 
-  async getNameVisibility(): Promise<String> {
+  async getNameVisibility(): Promise<string> {
     return http.get(RUUTER_ENDPOINTS.GET_CSA_NAME_VISIBILITY);
   }
 
-  getTitleVisibility(): Promise<String> {
+  getTitleVisibility(): Promise<string> {
     return http.get(RUUTER_ENDPOINTS.GET_CSA_TITLE_VISIBILITY);
   }
 

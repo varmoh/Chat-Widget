@@ -9,8 +9,8 @@ const http = axios.create({
   withCredentials: true,
 });
 
-http.interceptors.response.use((response) => {
-  if (response.status !== 200) return Promise.reject(response);
+http.interceptors.response.use((response: any) => {
+  if (response.status !== 200) return Promise.reject(new Error(`Error: ${response}`));
   const ruuterResponse = response.data as RuuterResponse;
   if (ruuterResponse.response) return ruuterResponse.response;
   return response;

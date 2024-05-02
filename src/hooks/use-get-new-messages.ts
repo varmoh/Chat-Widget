@@ -5,12 +5,10 @@ import useChatSelector from './use-chat-selector';
 import { Message } from '../model/message-model';
 import { addMessagesToDisplay, handleStateChangingEventMessages } from '../slices/chat-slice';
 import { isDisplayableMessages, isStateChangingEventMessage } from '../utils/state-management-utils';
-import useAuthenticationSelector from './use-authentication-selector';
 import chatService from '../services/chat-service';
 
 const useGetNewMessages = (): void => {
   const { lastReadMessageTimestamp, isChatEnded, chatId } = useChatSelector();
-  const { jwtCookie } = useAuthenticationSelector();
   const dispatch = useAppDispatch();
   const [sseUrl, setSseUrl] = useState('');
   const [lastReadMessageTimestampValue, setLastReadMessageTimestampValue] = useState('');

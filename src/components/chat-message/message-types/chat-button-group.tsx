@@ -1,5 +1,5 @@
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Message } from '../../../model/message-model';
 import { AUTHOR_ROLES, CHAT_MODES } from '../../../constants';
 import { useAppDispatch } from '../../../store';

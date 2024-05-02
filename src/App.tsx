@@ -27,9 +27,8 @@ import useNewMessageNotification from "./hooks/use-new-message-notification";
 import useAuthentication from "./hooks/use-authentication";
 import useGetNewMessages from "./hooks/use-get-new-messages";
 import useGetChat from "./hooks/use-get-chat";
-import { burokrattOnlineStatusRequest } from "./slices/widget-slice";
+import { burokrattOnlineStatusRequest, getWidgetConfig } from "./slices/widget-slice";
 import useWidgetSelector from "./hooks/use-widget-selector";
-import { getWidgetConfig } from "./slices/widget-slice";
 import useGetWidgetConfig from "./hooks/use-get-widget-config";
 import useGetEmergencyNotice from "./hooks/use-get-emergency-notice";
 import { customJwtExtend } from "./slices/authentication-slice";
@@ -124,7 +123,7 @@ const App: FC = () => {
       localStorage.setItem("sessions", `${parseInt(sessions) + 1}`);
     }
 
-    window.onunload = function (_) {
+    window.onbeforeunload = function (_) {
       const newSessionsCount = localStorage.getItem("sessions");
       if (newSessionsCount !== null) {
         localStorage.setItem("sessions", `${parseInt(newSessionsCount) - 1}`);

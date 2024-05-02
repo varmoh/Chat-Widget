@@ -26,13 +26,10 @@ export default function ConfirmationModal(): JSX.Element {
   if (!isConfirmationModelOpen) return <></>;
 
   function handleClick(option: CHAT_EVENTS) {
-    if (option === CHAT_EVENTS.CLIENT_LEFT_WITH_ACCEPTED) {
-      setNps({
-        ...nps,
-        showNps: true,
-        feedback: option,
-      });
-    } else if (option === CHAT_EVENTS.CLIENT_LEFT_WITH_NO_RESOLUTION) {
+    if (
+      option === CHAT_EVENTS.CLIENT_LEFT_WITH_ACCEPTED ||
+      CHAT_EVENTS.CLIENT_LEFT_WITH_NO_RESOLUTION
+    ) {
       setNps({
         ...nps,
         showNps: true,
@@ -43,9 +40,8 @@ export default function ConfirmationModal(): JSX.Element {
 
   return (
     <div className={styles.container}>
-      <div
+      <dialog
         className={styles.content}
-        role="dialog"
         aria-modal="true"
         aria-labelledby={t("widget.action.close-confirmation")}
       >
@@ -85,7 +81,7 @@ export default function ConfirmationModal(): JSX.Element {
             <ConfirmationModalDownload />
           </>
         )}
-      </div>
+      </dialog>
     </div>
   );
 }

@@ -19,7 +19,7 @@ const ClientMessage = (props: { message: Message }): JSX.Element => {
     message: { content },
   } = props;
 
-  if (!!props.message?.file) {
+  if (props.message?.file) {
     return (
       <motion.div
         animate={rightAnimation.animate}

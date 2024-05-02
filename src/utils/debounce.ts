@@ -5,7 +5,7 @@ export default function debounce(
   timeout: number = CHAT_INPUT_DEBOUNCE_TIMEOUT,
   immed: boolean = false,
 ) {
-  let timer: number | undefined | any = undefined;
+  let timer: any = undefined;
   return function (this: any, ...args: any[]) {
     if (timer === undefined && immed) {
       func.apply(this, args);

@@ -4,7 +4,7 @@ import { EndUserContacts } from "../slices/chat-slice";
 
 export const parseButtons = (message: Message): MessageButton[] => {
   try {
-    return JSON.parse(decodeURIComponent(message?.buttons || '[]')) as MessageButton[];
+    return JSON.parse(decodeURIComponent(message?.buttons ?? '[]')) as MessageButton[];
   } catch(e) {
     console.error(e);
     return [];
