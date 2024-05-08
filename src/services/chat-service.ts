@@ -1,29 +1,34 @@
-import { UserContacts } from './../model/user-contacts-model';
-import http from './http-service';
-import { Attachment, Message } from '../model/message-model';
-import { Chat } from '../model/chat-model';
-import { RUUTER_ENDPOINTS } from '../constants';
-import { EndUserTechnicalData } from '../model/chat-ini-model';
-import { EmergencyNoticeResponse } from '../model/emergency-notice-response-model';
-import { EstimatedWaiting } from '../slices/chat-slice';
+import { UserContacts } from "./../model/user-contacts-model";
+import http from "./http-service";
+import { Attachment, Message } from "../model/message-model";
+import { Chat } from "../model/chat-model";
+import { RUUTER_ENDPOINTS } from "../constants";
+import { EndUserTechnicalData } from "../model/chat-ini-model";
+import { EmergencyNoticeResponse } from "../model/emergency-notice-response-model";
+import { EstimatedWaiting } from "../slices/chat-slice";
 
 interface Document {
   _id: string;
 }
 
 interface Response {
-  config: Record<any,any>,
+  config: Record<any, any>;
   data: {
-    response: Record<any,any>
-  },
-  headers: Record<any,any>,
-  request: Record<any,any>,
-  status: number,
-  statusText: string,
+    response: Record<any, any>;
+  };
+  headers: Record<any, any>;
+  request: Record<any, any>;
+  status: number;
+  statusText: string;
 }
 
 class ChatService {
-  init(message: Message, endUserTechnicalData: EndUserTechnicalData, holidays: string[], holidayNames: string): Promise<Chat> {
+  init(
+    message: Message,
+    endUserTechnicalData: EndUserTechnicalData,
+    holidays: string[],
+    holidayNames: string
+  ): Promise<Chat> {
     return http.post(RUUTER_ENDPOINTS.INIT_CHAT, { message, endUserTechnicalData, holidays, holidayNames });
   }
 
@@ -32,11 +37,11 @@ class ChatService {
   }
 
   sendNewMessage(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, {message, holidays, holidayNames});
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, { message, holidays, holidayNames });
   }
 
   sendNewSilentMessage(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, {message, holidays, holidayNames, silent: true});
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, { message, holidays, holidayNames, silent: true });
   }
 
   sendMessagePreview({ chatId, content }: Message): Promise<void> {
@@ -52,7 +57,7 @@ class ChatService {
   }
 
   endChat(message: Message, status: string | null): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.END_CHAT, {message: message, status: status});
+    return http.post(RUUTER_ENDPOINTS.END_CHAT, { message: message, status: status });
   }
 
   getGreeting(): Promise<{ eng: string; est: string; isActive: boolean }> {
@@ -64,7 +69,7 @@ class ChatService {
   }
 
   getNewMessages(timeRangeBegin: string): Promise<Message[]> {
-    return http.get(RUUTER_ENDPOINTS.GET_NEW_MESSAGES, {params: {timeRangeBegin: timeRangeBegin}});
+    return http.get(RUUTER_ENDPOINTS.GET_NEW_MESSAGES, { params: { timeRangeBegin: timeRangeBegin } });
   }
 
   get(): Promise<EmergencyNoticeResponse> {
@@ -79,7 +84,7 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.SEND_FEEDBACK_MESSAGE, { chatId, feedbackText: userFeedback });
   }
 
-  getEstimatedWaitingTime(chatId: string): Promise<EstimatedWaiting> { 
+  getEstimatedWaitingTime(chatId: string): Promise<EstimatedWaiting> {
     return http.post(RUUTER_ENDPOINTS.GET_WAITING_TIME, { chatId });
   }
 
@@ -96,14 +101,14 @@ class ChatService {
   }
 
   generateDownloadChatRequest(chatId: string, email: string | null): Promise<string> {
-    return http.post(RUUTER_ENDPOINTS.DOWNLOAD_CHAT, { chatId, email })
+    return http.post(RUUTER_ENDPOINTS.DOWNLOAD_CHAT, { chatId, email });
   }
 
   sendAttachment(attachment: Attachment): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.SEND_ATTACHMENT, attachment)
+    return http.post(RUUTER_ENDPOINTS.SEND_ATTACHMENT, attachment);
   }
 
-  sendUserContacts({chatId, endUserEmail, endUserPhone}: UserContacts): Promise<void>{
+  sendUserContacts({ chatId, endUserEmail, endUserPhone }: UserContacts): Promise<void> {
     return http.post(RUUTER_ENDPOINTS.SEND_CONTACT_INFO);
   }
 

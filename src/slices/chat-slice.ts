@@ -1,7 +1,7 @@
-import { UserContacts } from './../model/user-contacts-model';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Attachment, Message, } from '../model/message-model';
-import ChatService from '../services/chat-service';
+import { UserContacts } from "./../model/user-contacts-model";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Attachment, Message } from "../model/message-model";
+import ChatService from "../services/chat-service";
 import {
   AUTHOR_ROLES,
   CHAT_EVENTS,
@@ -11,17 +11,17 @@ import {
   LOCAL_STORAGE_CHAT_DIMENSIONS_KEY,
   TERMINATE_STATUS,
   CHAT_MODES,
-} from '../constants';
-import { Chat } from '../model/chat-model';
+} from "../constants";
+import { Chat } from "../model/chat-model";
 import {
   clearStateVariablesFromLocalStorage,
   findMatchingMessageFromMessageList,
   getInitialChatDimensions,
 } from "../utils/state-management-utils";
-import { getFromLocalStorage, setToLocalStorage } from '../utils/local-storage-utils';
-import getHolidays from '../utils/holidays';
-import { getChatModeBasedOnLastMessage } from '../utils/chat-utils';
-import { isChatAboutToBeTerminated, wasPageReloaded } from '../utils/browser-utils';
+import { getFromLocalStorage, setToLocalStorage } from "../utils/local-storage-utils";
+import getHolidays from "../utils/holidays";
+import { getChatModeBasedOnLastMessage } from "../utils/chat-utils";
+import { isChatAboutToBeTerminated, wasPageReloaded } from "../utils/browser-utils";
 
 export interface EstimatedWaiting {
   positionInUnassignedChats: string;
@@ -32,7 +32,7 @@ export interface EndUserContacts {
   idCode: string;
   mailAddress: string;
   phoneNr: string;
-  comment: string; 
+  comment: string;
 }
 
 export interface ChatState {
@@ -52,8 +52,8 @@ export interface ChatState {
   errorMessage: string;
   estimatedWaiting: EstimatedWaiting;
   idleChat: {
-    isIdle: boolean,
-    lastActive: string,
+    isIdle: boolean;
+    lastActive: string;
   };
   loading: boolean;
   showContactForm: boolean;
@@ -78,54 +78,54 @@ export interface ChatState {
     end: string;
     text: string;
     isVisible: boolean;
-  } | null
+  } | null;
   contactForm: {
     data: UserContacts;
     state: {
-      isLoading: boolean,
-      isSubmitted: boolean,
-      isFailed: boolean,
-    }
-  },
-  chatMode: CHAT_MODES,
-  nameVisibility: boolean,
-  titleVisibility: boolean,
+      isLoading: boolean;
+      isSubmitted: boolean;
+      isFailed: boolean;
+    };
+  };
+  chatMode: CHAT_MODES;
+  nameVisibility: boolean;
+  titleVisibility: boolean;
 }
 
 const initialEstimatedTime = {
-  positionInUnassignedChats: '',
-  durationInSeconds: '',
-}
+  positionInUnassignedChats: "",
+  durationInSeconds: "",
+};
 
 const initialState: ChatState = {
   chatId: null,
   isChatOpen: false,
   chatStatus: null,
   chatDimensions: getInitialChatDimensions(),
-  customerSupportId: '',
+  customerSupportId: "",
   lastReadMessageTimestamp: null,
   messages: [],
   messageQueue: [],
   newMessagesAmount: 0,
   eventMessagesToHandle: [],
-  errorMessage: '',
+  errorMessage: "",
   showContactForm: false,
   showUnavailableContactForm: false,
-  contactContentMessage: '',
+  contactContentMessage: "",
   isChatRedirected: false,
   estimatedWaiting: initialEstimatedTime,
   idleChat: {
     isIdle: false,
-    lastActive: '',
+    lastActive: "",
   },
   loading: false,
   endUserContacts: {
-    idCode: '',
-    mailAddress: '',
-    phoneNr: '',
-    comment: '',
+    idCode: "",
+    mailAddress: "",
+    phoneNr: "",
+    comment: "",
   },
-  contactMsgId: '',
+  contactMsgId: "",
   feedback: {
     isFeedbackConfirmationShown: false,
     isFeedbackMessageGiven: false,
@@ -148,23 +148,27 @@ const initialState: ChatState = {
       isLoading: false,
       isSubmitted: false,
       isFailed: false,
-    }
+    },
   },
   chatMode: CHAT_MODES.FREE,
   nameVisibility: false,
   titleVisibility: false,
 };
 
-export const initChat = createAsyncThunk('chat/init', async (message: Message) =>  {
-  const {holidays, holidayNames} = getHolidays();
-  return ChatService.init(message, {
-    endUserUrl: window.location.href.toString(),
-    endUserOs: navigator.userAgent.toString()
-  },holidays, holidayNames);
- }
-);
+export const initChat = createAsyncThunk("chat/init", async (message: Message) => {
+  const { holidays, holidayNames } = getHolidays();
+  return ChatService.init(
+    message,
+    {
+      endUserUrl: window.location.href.toString(),
+      endUserOs: navigator.userAgent.toString(),
+    },
+    holidays,
+    holidayNames
+  );
+});
 
-export const getChat = createAsyncThunk('chat/getChat', async (_args, thunkApi) => {
+export const getChat = createAsyncThunk("chat/getChat", async (_args, thunkApi) => {
   const {
     chat: { chatId },
   } = thunkApi.getState() as { chat: ChatState };
@@ -172,87 +176,96 @@ export const getChat = createAsyncThunk('chat/getChat', async (_args, thunkApi) 
   return null;
 });
 
-export const getChatMessages = createAsyncThunk('chat/getChatMessages', async (args, thunkApi) => {
+export const getChatMessages = createAsyncThunk("chat/getChatMessages", async (args, thunkApi) => {
   const {
     chat: { chatId },
   } = thunkApi.getState() as { chat: ChatState };
   return chatId ? ChatService.getMessages() : null;
 });
 
-export const getNewMessages = createAsyncThunk('chat/getNewMessages', async (args: {timeRangeBegin: string}, _) => {
+export const getNewMessages = createAsyncThunk("chat/getNewMessages", async (args: { timeRangeBegin: string }, _) => {
   return ChatService.getNewMessages(args.timeRangeBegin);
 });
 
-export const sendChatNpmRating = createAsyncThunk('chat/sendChatNpmRating', (args: { NpmRating: number }, thunkApi) => {
+export const sendChatNpmRating = createAsyncThunk("chat/sendChatNpmRating", (args: { NpmRating: number }, thunkApi) => {
   const {
     chat: { chatId },
-  } = (thunkApi.getState() as { chat: ChatState }) || '';
+  } = (thunkApi.getState() as { chat: ChatState }) || "";
   if (chatId === null) return;
   ChatService.sendNpmRating({ chatId, npmRating: args.NpmRating });
 });
 
-export const sendFeedbackMessage = createAsyncThunk('chat/sendFeedbackMessage', (args: { userInput: string }, thunkApi) => {
-  const {
-    chat: { chatId },
-  } = (thunkApi.getState() as { chat: ChatState }) || '';
-  if (chatId === null) return;
-  ChatService.sendFeedbackMessage({ chatId, userFeedback: args.userInput });
-});
-
-export const endChat = createAsyncThunk('chat/endChat', async (args: { event: CHAT_EVENTS | null, isUpperCase: boolean}, thunkApi) => {
-  const {
-    chat: { chatStatus, chatId },
-  } = thunkApi.getState() as { chat: ChatState };
-  thunkApi.dispatch(resetState());
-
-  const endEvent = args.isUpperCase ? args.event?.toUpperCase() : args.event ?? '';
-  let chatServiceStatus = null;
-  if (endEvent === CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED) {
-    chatServiceStatus = "IDLE";
+export const sendFeedbackMessage = createAsyncThunk(
+  "chat/sendFeedbackMessage",
+  (args: { userInput: string }, thunkApi) => {
+    const {
+      chat: { chatId },
+    } = (thunkApi.getState() as { chat: ChatState }) || "";
+    if (chatId === null) return;
+    ChatService.sendFeedbackMessage({ chatId, userFeedback: args.userInput });
   }
+);
 
-  return chatStatus === CHAT_STATUS.ENDED
-    ? null
-    : ChatService.endChat(
-        {
-          chatId,
-          authorTimestamp: new Date().toISOString(),
-          authorRole: AUTHOR_ROLES.END_USER,
-          event: endEvent,
-        },
-        chatServiceStatus
-      );
-});
+export const endChat = createAsyncThunk(
+  "chat/endChat",
+  async (args: { event: CHAT_EVENTS | null; isUpperCase: boolean }, thunkApi) => {
+    const {
+      chat: { chatStatus, chatId },
+    } = thunkApi.getState() as { chat: ChatState };
+    thunkApi.dispatch(resetState());
 
-export const addChatToTerminationQueue = createAsyncThunk('chat/addChatToTerminationQueue', async (args, thunkApi) => {  
+    const endEvent = args.isUpperCase ? args.event?.toUpperCase() : args.event ?? "";
+    let chatServiceStatus = null;
+    if (endEvent === CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED) {
+      chatServiceStatus = "IDLE";
+    }
+
+    return chatStatus === CHAT_STATUS.ENDED
+      ? null
+      : ChatService.endChat(
+          {
+            chatId,
+            authorTimestamp: new Date().toISOString(),
+            authorRole: AUTHOR_ROLES.END_USER,
+            event: endEvent,
+          },
+          chatServiceStatus ?? "ENDED"
+        );
+  }
+);
+
+export const addChatToTerminationQueue = createAsyncThunk("chat/addChatToTerminationQueue", async (args, thunkApi) => {
   const { chat } = thunkApi.getState() as { chat: ChatState };
 
-  sessionStorage.setItem('terminationTime', Date.now().toString());
-  localStorage.setItem('previousChatId', chat.chatId ?? '');
-  
+  sessionStorage.setItem("terminationTime", Date.now().toString());
+  localStorage.setItem("previousChatId", chat.chatId ?? "");
+
   thunkApi.dispatch(resetState());
 
-  if(chat.chatId) {
+  if (chat.chatId) {
     return ChatService.addChatToTerminationQueue(chat.chatId);
   }
 });
 
-export const removeChatFromTerminationQueue = createAsyncThunk('chat/removeChatFromTerminationQueue', async (args, thunkApi) => {
-  if(!wasPageReloaded() || !isChatAboutToBeTerminated()) {
-    return null;
-  }
+export const removeChatFromTerminationQueue = createAsyncThunk(
+  "chat/removeChatFromTerminationQueue",
+  async (args, thunkApi) => {
+    if (!wasPageReloaded() || !isChatAboutToBeTerminated()) {
+      return null;
+    }
 
-  const chatId = localStorage.getItem('previousChatId');
-  setToLocalStorage(SESSION_STORAGE_CHAT_ID_KEY, chatId);
-  sessionStorage.removeItem('terminationTime');
-  
-  if(chatId) {
-    thunkApi.dispatch(resetStateWithValue(chatId));
-    return ChatService.removeChatFromTerminationQueue(chatId);
-  }
-});
+    const chatId = localStorage.getItem("previousChatId");
+    setToLocalStorage(SESSION_STORAGE_CHAT_ID_KEY, chatId);
+    sessionStorage.removeItem("terminationTime");
 
-export const resetChatState = createAsyncThunk('', async (args: { event: CHAT_EVENTS | null}, thunkApi) => {
+    if (chatId) {
+      thunkApi.dispatch(resetStateWithValue(chatId));
+      return ChatService.removeChatFromTerminationQueue(chatId);
+    }
+  }
+);
+
+export const resetChatState = createAsyncThunk("", async (args: { event: CHAT_EVENTS | null }, thunkApi) => {
   const {
     chat: { chatStatus, chatId },
   } = thunkApi.getState() as { chat: ChatState };
@@ -273,64 +286,76 @@ export const resetChatState = createAsyncThunk('', async (args: { event: CHAT_EV
           authorRole: AUTHOR_ROLES.END_USER,
           event: resetEvent,
         },
-        chatServiceStatus
+        chatServiceStatus ?? "ENDED"
       );
 });
 
-export const sendMessageWithRating = createAsyncThunk('chat/sendMessageWithRating', async (message: Message) =>
-  ChatService.sendMessageWithRating(message),
+export const sendMessageWithRating = createAsyncThunk("chat/sendMessageWithRating", async (message: Message) =>
+  ChatService.sendMessageWithRating(message)
 );
 
-export const sendMessageWithNewEvent = createAsyncThunk('chat/sendMessageWithNewEvent', (message: Message) =>
-  ChatService.sendMessageWithNewEvent(message),
+export const sendMessageWithNewEvent = createAsyncThunk("chat/sendMessageWithNewEvent", (message: Message) =>
+  ChatService.sendMessageWithNewEvent(message)
 );
 
-export const sendUserContacts = createAsyncThunk('chat/sendUserContacts', (args: UserContacts) => {
+export const sendUserContacts = createAsyncThunk("chat/sendUserContacts", (args: UserContacts) => {
   ChatService.sendUserContacts(args);
-})
+});
 
-export const getGreeting = createAsyncThunk('chat/getGreeting', async () => ChatService.getGreeting());
+export const getGreeting = createAsyncThunk("chat/getGreeting", async () => ChatService.getGreeting());
 
-export const getEmergencyNotice = createAsyncThunk('chat/getEmergencyNotice', async () => ChatService.getEmergencyNotice());
+export const getEmergencyNotice = createAsyncThunk("chat/getEmergencyNotice", async () =>
+  ChatService.getEmergencyNotice()
+);
 
-export const sendNewMessage = createAsyncThunk('chat/sendNewMessage', (message: Message) => {
-  const {holidays, holidayNames} = getHolidays();
+export const sendNewMessage = createAsyncThunk("chat/sendNewMessage", (message: Message) => {
+  const { holidays, holidayNames } = getHolidays();
   return ChatService.sendNewMessage(message, holidays, holidayNames);
 });
 
-export const sendNewSilentMessage = createAsyncThunk('chat/sendNewSilentMessage', (message: Message) => {
-  const {holidays, holidayNames} = getHolidays();
+export const sendNewSilentMessage = createAsyncThunk("chat/sendNewSilentMessage", (message: Message) => {
+  const { holidays, holidayNames } = getHolidays();
   return ChatService.sendNewSilentMessage(message, holidays, holidayNames);
 });
 
-export const sendMessagePreview = createAsyncThunk('chat/postMessagePreview', (message: Message) => ChatService.sendMessagePreview(message));
+export const sendMessagePreview = createAsyncThunk("chat/postMessagePreview", (message: Message) =>
+  ChatService.sendMessagePreview(message)
+);
 
-export const getEstimatedWaitingTime = createAsyncThunk('chat/getEstimatedWaitingTime', async (_args, thunkApi) => {
-  const { chat: { chatId } } = (thunkApi.getState() as { chat: ChatState }) || '';
-  
-  return chatId 
-    ? ChatService.getEstimatedWaitingTime(chatId)
-    : initialEstimatedTime;
+export const getEstimatedWaitingTime = createAsyncThunk("chat/getEstimatedWaitingTime", async (_args, thunkApi) => {
+  const {
+    chat: { chatId },
+  } = (thunkApi.getState() as { chat: ChatState }) || "";
+
+  return chatId ? ChatService.getEstimatedWaitingTime(chatId) : initialEstimatedTime;
 });
 
-export const removeChatForwardingValue = createAsyncThunk('chat/removeChatForwardingValue', async () => ChatService.removeChatForwardingValue());
+export const removeChatForwardingValue = createAsyncThunk("chat/removeChatForwardingValue", async () =>
+  ChatService.removeChatForwardingValue()
+);
 
-export const generateForwardingRequest = createAsyncThunk('chat/generateForwardingRequest', async () => ChatService.generateForwardingRequest());
-export const sendAttachment = createAsyncThunk('chat/sendAttachment', async (attachment: Attachment) => ChatService.sendAttachment(attachment));
+export const generateForwardingRequest = createAsyncThunk("chat/generateForwardingRequest", async () =>
+  ChatService.generateForwardingRequest()
+);
+export const sendAttachment = createAsyncThunk("chat/sendAttachment", async (attachment: Attachment) =>
+  ChatService.sendAttachment(attachment)
+);
 export const downloadChat = createAsyncThunk("chat/downloadChat", async (isForwardToEmail: boolean, thunkApi) => {
   const {
     chat: { chatId, endUserContacts },
   } = thunkApi.getState() as { chat: ChatState };
-  const isForwardToEmailAddress = isForwardToEmail ? endUserContacts.mailAddress : null
-  return chatId
-    ? ChatService.generateDownloadChatRequest(chatId, isForwardToEmailAddress)
-    : null;
+  const isForwardToEmailAddress = isForwardToEmail ? endUserContacts.mailAddress : null;
+  return chatId ? ChatService.generateDownloadChatRequest(chatId, isForwardToEmailAddress) : null;
 });
-export const getNameVisibility = createAsyncThunk('chat/getNameVisibility', async () => ChatService.getNameVisibility());
-export const getTitleVisibility = createAsyncThunk('chat/getTitleVisibility', async () => ChatService.getTitleVisibility());
+export const getNameVisibility = createAsyncThunk("chat/getNameVisibility", async () =>
+  ChatService.getNameVisibility()
+);
+export const getTitleVisibility = createAsyncThunk("chat/getTitleVisibility", async () =>
+  ChatService.getTitleVisibility()
+);
 
 export const chatSlice = createSlice({
-  name: 'chat',
+  name: "chat",
   initialState,
   reducers: {
     resetState: () => initialState,
@@ -384,8 +409,8 @@ export const chatSlice = createSlice({
       state.feedback.isFeedbackConfirmationShown = action.payload;
     },
     setEstimatedWaitingTimeToZero: (state) => {
-      state.estimatedWaiting.durationInSeconds = '';
-      state.estimatedWaiting.positionInUnassignedChats = '';
+      state.estimatedWaiting.durationInSeconds = "";
+      state.estimatedWaiting.positionInUnassignedChats = "";
     },
     setIdleChat: (state, action) => {
       state.idleChat = {
@@ -419,7 +444,7 @@ export const chatSlice = createSlice({
         return { ...existingMessage, ...matchingMessage };
       });
 
-      if((newMessagesList.length + receivedMessages.length) === state.messages.length){
+      if (newMessagesList.length + receivedMessages.length === state.messages.length) {
         return;
       }
 
@@ -427,7 +452,7 @@ export const chatSlice = createSlice({
       state.lastReadMessageTimestamp = new Date().toISOString();
       state.newMessagesAmount += receivedMessages.length;
       state.messages.push(...receivedMessages);
-      setToLocalStorage('newMessagesAmount', state.newMessagesAmount);
+      setToLocalStorage("newMessagesAmount", state.newMessagesAmount);
 
       state.chatMode = getChatModeBasedOnLastMessage(state.messages);
     },
@@ -439,22 +464,22 @@ export const chatSlice = createSlice({
             break;
           case CHAT_EVENTS.CONTACT_INFORMATION:
             state.showContactForm = true;
-            state.contactMsgId = msg.id ?? '';
+            state.contactMsgId = msg.id ?? "";
             break;
           case CHAT_EVENTS.UNAVAILABLE_HOLIDAY:
           case CHAT_EVENTS.UNAVAILABLE_CSAS:
           case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION:
             state.showUnavailableContactForm = true;
-            state.contactMsgId = msg.id ?? '';
-            state.contactContentMessage = msg.content ?? '';
-            break;    
+            state.contactMsgId = msg.id ?? "";
+            state.contactContentMessage = msg.content ?? "";
+            break;
           case CHAT_EVENTS.ANSWERED:
           case CHAT_EVENTS.TERMINATED:
           case TERMINATE_STATUS.ACCEPTED:
           case TERMINATE_STATUS.CLIENT_LEFT_FOR_UNKNOWN_REASONS:
           case TERMINATE_STATUS.HATE_SPEECH:
-          case TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED: 
-          case TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION: 
+          case TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED:
+          case TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION:
           case TERMINATE_STATUS.OTHER:
           case TERMINATE_STATUS.RESPONSE_SENT_TO_CLIENT_EMAIL:
             clearStateVariablesFromLocalStorage();
@@ -490,17 +515,17 @@ export const chatSlice = createSlice({
     builder.addCase(getGreeting.fulfilled, (state, action) => {
       if (!action.payload.isActive) return;
       state.messages.push({
-        content: action.payload.est.replaceAll(/\\n/g, '\n'),
+        content: action.payload.est.replaceAll(/\\n/g, "\n"),
         chatId: null,
-        event: 'greeting',
+        event: "greeting",
         authorTimestamp: new Date().toISOString(),
       });
     });
     builder.addCase(getNameVisibility.fulfilled, (state, action) => {
-      state.nameVisibility = action.payload === 'true';
+      state.nameVisibility = action.payload === "true";
     });
     builder.addCase(getTitleVisibility.fulfilled, (state, action) => {
-      state.titleVisibility = action.payload === 'true';
+      state.titleVisibility = action.payload === "true";
     });
     builder.addCase(getEmergencyNotice.fulfilled, (state, action) => {
       state.emergencyNotice = {
@@ -515,7 +540,7 @@ export const chatSlice = createSlice({
       state.feedback.isFeedbackMessageGiven = false;
       state.feedback.isFeedbackRatingGiven = false;
       clearStateVariablesFromLocalStorage();
-      localStorage.removeItem('previousChatId');
+      localStorage.removeItem("previousChatId");
     });
     builder.addCase(addChatToTerminationQueue.fulfilled, (state) => {
       state.chatStatus = CHAT_STATUS.ENDED;
@@ -532,7 +557,7 @@ export const chatSlice = createSlice({
     builder.addCase(getEstimatedWaitingTime.fulfilled, (state, action) => {
       state.estimatedWaiting = action.payload;
       state.messages.push({
-        chatId: 'estimatedWaiting',
+        chatId: "estimatedWaiting",
         authorTimestamp: new Date().toISOString(),
       });
     });
@@ -557,16 +582,16 @@ export const chatSlice = createSlice({
 
     builder.addCase(sendUserContacts.pending, (state) => {
       state.contactForm.state.isLoading = true;
-    })
+    });
     builder.addCase(sendUserContacts.fulfilled, (state, action) => {
       state.contactForm.state.isLoading = false;
       state.contactForm.state.isSubmitted = true;
-    })
+    });
     builder.addCase(sendUserContacts.rejected, (state, action) => {
       state.contactForm.state.isLoading = false;
       state.contactForm.state.isFailed = true;
       state.contactForm.state.isSubmitted = false;
-    })
+    });
   },
 });
 

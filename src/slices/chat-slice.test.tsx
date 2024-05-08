@@ -6,7 +6,6 @@ import reducer, {
   getChat,
   getChatMessages,
   getEstimatedWaitingTime,
-  getGreeting,
   initChat,
   queueMessage,
   resetNewMessagesAmount,

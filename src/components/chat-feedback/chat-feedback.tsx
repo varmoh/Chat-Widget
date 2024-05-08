@@ -20,7 +20,7 @@ const ChatFeedback = (): JSX.Element => {
   const handleFeedback = (feedbackRating: string | null) => {
     if (feedbackRating === null) return;
     setSelectedFeedbackButtonValue(feedbackRating);
-    dispatch(sendChatNpmRating({ NpmRating: parseInt(feedbackRating, 10) }));
+    dispatch(sendChatNpmRating({ NpmRating: parseInt(feedbackRating ?? "1", 10) }));
     dispatch(setFeedbackRatingGiven(true));
   };
   return (

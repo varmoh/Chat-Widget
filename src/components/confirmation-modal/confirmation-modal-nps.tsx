@@ -1,12 +1,7 @@
 import { useState } from "react";
 import Button, { ButtonColor } from "../button/button";
 import { useAppDispatch } from "../../store";
-import {
-  endChat,
-  sendChatNpmRating,
-  setFeedbackRatingGiven,
-  sendFeedbackMessage,
-} from "../../slices/chat-slice";
+import { endChat, sendChatNpmRating, setFeedbackRatingGiven, sendFeedbackMessage } from "../../slices/chat-slice";
 import styles from "./confirmation-modal.module.scss";
 import { useTranslation } from "react-i18next";
 import { CHAT_EVENTS, StyledButtonType } from "../../constants";
@@ -26,19 +21,19 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
   const dispatch = useAppDispatch();
   const endChatParams = {
     event: npsFeedback.feedback,
-    isUpperCase: true
+    isUpperCase: true,
   };
-  const [selectedFeedbackButtonValue, setSelectedFeedbackButtonValue] =
-    useState<string>("");
+  const [selectedFeedbackButtonValue, setSelectedFeedbackButtonValue] = useState<string>("");
 
   const [feedbackText, setFeedbackText] = useState<string>("");
 
   const handleFeedback = (feedbackRating: string | null) => {
+    console.log(feedbackRating);
     if (feedbackRating === null) return;
     setSelectedFeedbackButtonValue(feedbackRating);
     dispatch(
       sendChatNpmRating({
-        NpmRating: parseInt(selectedFeedbackButtonValue, 10),
+        NpmRating: parseInt(feedbackRating ?? "", 10),
       })
     );
     dispatch(setFeedbackRatingGiven(true));
@@ -64,9 +59,7 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
             </StyledButton>
           ))}
         </div>
-        <p className="feedback-paragraph-secondary below">
-          {t("feedback.lowerText")}
-        </p>
+        <p className="feedback-paragraph-secondary below">{t("feedback.lowerText")}</p>
         <input
           className="feedbackInput"
           aria-label={t("keypad.input.label")}

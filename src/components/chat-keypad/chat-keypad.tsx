@@ -1,10 +1,4 @@
-import React, {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -34,11 +28,7 @@ import {
   MESSAGE_QUE_MAX_LENGTH,
   StyledButtonType,
 } from "../../constants";
-import {
-  Message,
-  Attachment,
-  AttachmentTypes,
-} from "../../model/message-model";
+import { Message, Attachment, AttachmentTypes } from "../../model/message-model";
 import StyledButton from "../styled-components/styled-button";
 import Close from "../../static/icons/close.svg";
 import formatBytes from "../../utils/format-bytes";
@@ -51,8 +41,7 @@ const ChatKeyPad = (): JSX.Element => {
   const [userInputFile, setUserInputFile] = useState<Attachment>();
   const [errorMessage, setErrorMessage] = useState("");
   const [isKeypadDisabled, setIsKeypadDisabled] = useState(false);
-  const { feedback, chatId, loading, messageQueue, chatStatus } =
-    useChatSelector();
+  const { feedback, chatId, loading, messageQueue, chatStatus } = useChatSelector();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const hiddenFileInputRef = useRef<HTMLInputElement | null>(null);
@@ -118,7 +107,7 @@ const ChatKeyPad = (): JSX.Element => {
   const addNewMessageToState = (): void => {
     if (!isInputValid()) return;
     const message: Message = {
-      chatId,
+      chatId: chatId ?? "",
       content: encodeURIComponent(userInput),
       file: userInputFile,
       authorTimestamp: new Date().toISOString(),
@@ -189,8 +178,7 @@ const ChatKeyPad = (): JSX.Element => {
           }}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
-              if (chatStatus === CHAT_STATUS.ENDED && !!chatId)
-                handleTextFeedback();
+              if (chatStatus === CHAT_STATUS.ENDED && !!chatId) handleTextFeedback();
               else {
                 event.preventDefault();
                 addNewMessageToState();
@@ -199,18 +187,10 @@ const ChatKeyPad = (): JSX.Element => {
           }}
           onKeyUp={handleKeyUp}
         />
-        <input
-          type="file"
-          ref={hiddenFileInputRef}
-          onChange={handleFileChange}
-          style={{ display: "none" }}
-        />
+        <input type="file" ref={hiddenFileInputRef} onChange={handleFileChange} style={{ display: "none" }} />
 
         {chatStatus === CHAT_STATUS.ENDED && !!chatId ? (
-          <FeedbackButtonStyle
-            onClick={() => handleTextFeedback()}
-            styleType={StyledButtonType.GRAY}
-          >
+          <FeedbackButtonStyle onClick={() => handleTextFeedback()} styleType={StyledButtonType.GRAY}>
             {t("chat.feedback.button.label")}
           </FeedbackButtonStyle>
         ) : (
@@ -263,9 +243,7 @@ const ChatKeyPad = (): JSX.Element => {
     }
 
     if (file.size > MESSAGE_FILE_SIZE_LIMIT) {
-      setErrorMessage(
-        `Max allowed file size is ${formatBytes(MESSAGE_FILE_SIZE_LIMIT)}`
-      );
+      setErrorMessage(`Max allowed file size is ${formatBytes(MESSAGE_FILE_SIZE_LIMIT)}`);
       return null;
     } else {
       return await convertBase64(file);
