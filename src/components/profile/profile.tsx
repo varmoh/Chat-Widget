@@ -30,21 +30,15 @@ export const Profile = (): JSX.Element => {
   };
 
   useEffect(() => {
-    setTimeout(
-      () => setDelayFinished(true),
-      widgetConfig.bubbleMessageSeconds * 1000
-    );
+    setTimeout(() => setDelayFinished(true), widgetConfig.bubbleMessageSeconds * 1000);
   }, []);
 
   useReloadChatEndEffect();
 
   const getActiveProfileClass = () => {
-    if (delayFinished && widgetConfig.animation === "jump")
-      return styles.profile__jump;
-    if (delayFinished && widgetConfig.animation === "wiggle")
-      return styles.profile__wiggle;
-    if (delayFinished && widgetConfig.animation === "shockwave")
-      return styles.profile__shockwave;
+    if (delayFinished && widgetConfig.animation === "jump") return styles.profile__jump;
+    if (delayFinished && widgetConfig.animation === "wiggle") return styles.profile__wiggle;
+    if (delayFinished && widgetConfig.animation === "shockwave") return styles.profile__shockwave;
   };
 
   return (
@@ -64,19 +58,11 @@ export const Profile = (): JSX.Element => {
         onClick={openChat}
         tabIndex={0}
       >
-        <img
-          src={Buerokratt}
-          alt="Buerokratt logo"
-          width={45}
-          style={{ filter: "brightness(0) invert(1)", imageRendering: "auto" }}
-          loading="eager"
-        />
+        <img src={Buerokratt} alt="Buerokratt logo" width={45} className={styles.logo} loading="eager" />
       </motion.button>
       {widgetConfig.showMessage && (
         <div
-          className={`${styles.profile__greeting_message} ${
-            delayFinished && styles.profile__greeting_message__active
-          }`}
+          className={`${styles.profile__greeting_message} ${delayFinished && styles.profile__greeting_message__active}`}
         >
           {widgetConfig.bubbleMessageText}
         </div>
