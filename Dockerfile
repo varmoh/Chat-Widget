@@ -2,7 +2,7 @@ ARG node_version=node:lts
 ARG nginx_version=nginx:1.25.4-alpine
 
 
-FROM $node_version as image
+FROM $node_version AS image
 WORKDIR /usr/app
 COPY ./package*.json ./
 

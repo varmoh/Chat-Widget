@@ -41,6 +41,7 @@ import { Message } from "../../model/message-model";
 import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavailable-end-user-contacts";
 import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
 import useQueueCounter from "../../hooks/use-queue-counter";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -60,6 +61,7 @@ const Chat = (): JSX.Element => {
   const [showFeedbackResult, setShowFeedbackResult] = useState(false);
   const { t } = useTranslation();
   const { isAuthenticated } = useAuthenticationSelector();
+  const { height, width } = useWindowDimensions();
   const {
     isChatEnded,
     chatId,
@@ -74,45 +76,30 @@ const Chat = (): JSX.Element => {
   } = useChatSelector();
 
   const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector((state) => state.widget);
-  
+
   const queueCount = useQueueCounter();
-    
+
   useEffect(() => {
-    if (
-      feedback.isFeedbackRatingGiven &&
-      feedback.isFeedbackMessageGiven &&
-      !feedback.isFeedbackConfirmationShown
-    ) {
+    if (feedback.isFeedbackRatingGiven && feedback.isFeedbackMessageGiven && !feedback.isFeedbackConfirmationShown) {
       setShowFeedbackResult(true);
       setTimeout(async () => {
         dispatch(setIsFeedbackConfirmationShown(true));
         setShowFeedbackResult(false);
       }, FEEDBACK_CONFIRMATION_TIMEOUT);
     }
-  }, [
-    dispatch,
-    feedback.isFeedbackConfirmationShown,
-    feedback.isFeedbackMessageGiven,
-    feedback.isFeedbackRatingGiven,
-  ]);
+  }, [dispatch, feedback.isFeedbackConfirmationShown, feedback.isFeedbackMessageGiven, feedback.isFeedbackRatingGiven]);
 
   useEffect(() => {
     if (
       !chatId &&
       !feedback.isFeedbackConfirmationShown &&
-      (!messages.length ||
-        !messages.map((m) => m.event).includes(CHAT_EVENTS.GREETING))
+      (!messages.length || !messages.map((m) => m.event).includes(CHAT_EVENTS.GREETING))
     ) {
       dispatch(getGreeting());
     }
   }, [dispatch, chatId, feedback.isFeedbackConfirmationShown, messages]);
 
-  const handleChatResize: ResizeCallback = (
-    event,
-    direction,
-    elementRef,
-    delta
-  ) => {
+  const handleChatResize: ResizeCallback = (event, direction, elementRef, delta) => {
     const newDimensions = {
       width: chatDimensions.width + delta.width,
       height: chatDimensions.height + delta.height,
@@ -135,9 +122,7 @@ const Chat = (): JSX.Element => {
           if (differenceInSeconds >= IDLE_CHAT_INTERVAL) {
             dispatch(setIdleChat({ isIdle: true }));
             if (showConfirmationModal) {
-              dispatch(
-                endChat({ event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS, isUpperCase: true})
-              );
+              dispatch(endChat({ event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS, isUpperCase: true }));
             }
           }
         }, IDLE_CHAT_INTERVAL * 1000);
@@ -146,50 +131,37 @@ const Chat = (): JSX.Element => {
         };
       }
     } else if (feedback.isFeedbackConfirmationShown) {
-        dispatch(resetChatState({ event: null }));
-      }
-  }, [
-    idleChat.isIdle,
-    messages,
-    showConfirmationModal,
-    isChatEnded,
-    feedback.isFeedbackConfirmationShown,
-  ]);
+      dispatch(resetChatState({ event: null }));
+    }
+  }, [idleChat.isIdle, messages, showConfirmationModal, isChatEnded, feedback.isFeedbackConfirmationShown]);
 
   useLayoutEffect(() => {
     if (isChatEnded === false) {
       if (messages.length > 0) {
-          const interval = setInterval(() => {
-            let lastActive;
+        const interval = setInterval(() => {
+          let lastActive;
 
-            if (idleChat.lastActive === "") {
-              lastActive = messages[messages.length - 1].authorTimestamp;
-            } else {
-              lastActive = idleChat.lastActive;
-            }
-            const differenceInSeconds = getIdleTime(lastActive);
-            if (
-              differenceInSeconds >=
-              IDLE_CHAT_INTERVAL + IDLE_CHAT_CHOICES_INTERVAL
-            ) {
-              dispatch(
-                endChat({
-                  event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
-                  isUpperCase: true,
-                })
-              );
-            }
-          }, (IDLE_CHAT_CHOICES_INTERVAL) * 1000);
-          return () => {
-            clearInterval(interval);
-          };
+          if (idleChat.lastActive === "") {
+            lastActive = messages[messages.length - 1].authorTimestamp;
+          } else {
+            lastActive = idleChat.lastActive;
+          }
+          const differenceInSeconds = getIdleTime(lastActive);
+          if (differenceInSeconds >= IDLE_CHAT_INTERVAL + IDLE_CHAT_CHOICES_INTERVAL) {
+            dispatch(
+              endChat({
+                event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
+                isUpperCase: true,
+              })
+            );
+          }
+        }, IDLE_CHAT_CHOICES_INTERVAL * 1000);
+        return () => {
+          clearInterval(interval);
+        };
       }
     }
-  }, [
-    idleChat.isIdle,
-    showConfirmationModal,
-    feedback.isFeedbackConfirmationShown,
-  ]);
+  }, [idleChat.isIdle, showConfirmationModal, feedback.isFeedbackConfirmationShown]);
 
   useReloadChatEndEffect();
 
@@ -220,13 +192,13 @@ const Chat = (): JSX.Element => {
         size={chatDimensions}
         minWidth={CHAT_WINDOW_WIDTH}
         minHeight={CHAT_WINDOW_HEIGHT}
+        maxHeight={height - 50}
+        maxWidth={width - 50}
         enable={RESIZABLE_HANDLES}
         onResizeStop={handleChatResize}
       >
         <motion.div
-          className={`${styles.chat} ${
-            isAuthenticated ? styles.authenticated : ""
-          }`}
+          className={`${styles.chat} ${isAuthenticated ? styles.authenticated : ""}`}
           animate={{ y: 0 }}
           style={{ y: 400 }}
         >
@@ -234,22 +206,15 @@ const Chat = (): JSX.Element => {
             isDetailSelected={showWidgetDetails}
             detailHandler={() => setShowWidgetDetails(!showWidgetDetails)}
           />
-          {messageQueue.length >= 5 && (
-            <WarningNotification warningMessage={t("chat.error-message")} />
-          )}
-          {
-            queueCount > 0 && (
+          {messageQueue.length >= 5 && <WarningNotification warningMessage={t("chat.error-message")} />}
+          {queueCount > 0 && (
             <WarningNotification warningMessage={t("notifications.queue-number", { number: queueCount })} />
           )}
           {burokrattOnlineStatus !== true && <OnlineStatusNotification />}
           {showWidgetDetails && <WidgetDetails />}
           {!showWidgetDetails && showContactForm && <EndUserContacts />}
-          {!showWidgetDetails && showUnavailableContactForm && (
-            <UnavailableEndUserContacts />
-          )}
-          {!showWidgetDetails &&
-            !showContactForm &&
-            !showUnavailableContactForm && <ChatContent />}
+          {!showWidgetDetails && showUnavailableContactForm && <UnavailableEndUserContacts />}
+          {!showWidgetDetails && !showContactForm && !showUnavailableContactForm && <ChatContent />}
           {idleChat.isIdle && <IdleChatNotification />}
           {showFeedbackResult ? (
             <ChatFeedbackConfirmation />
