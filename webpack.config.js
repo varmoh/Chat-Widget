@@ -1,18 +1,18 @@
 /* eslint-disable */
-const webpack = require('webpack');
-const path = require('path');
+const webpack = require("webpack");
+const path = require("path");
 
 module.exports = {
-  mode: 'production',
-  entry: path.resolve(__dirname, 'src/index.tsx'),
+  mode: "production",
+  entry: path.resolve(__dirname, "src/index.tsx"),
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'widget_bundle.js',
-    library: '$',
-    libraryTarget: 'umd',
+    path: path.resolve(__dirname, "dist"),
+    filename: "widget_bundle.js",
+    library: "$",
+    libraryTarget: "umd",
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: [".tsx", ".ts", ".js"],
   },
   module: {
     rules: [
@@ -20,34 +20,34 @@ module.exports = {
         test: /\.m?js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
             cacheDirectory: true,
-            presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
-            plugins: ['@babel/plugin-transform-runtime'],
+            presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"],
+            plugins: ["@babel/plugin-transform-runtime"],
           },
         },
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: ["style-loader", "css-loader"],
       },
       {
         test: /\.svg/,
-        use: 'svg-url-loader',
+        use: "svg-url-loader",
       },
       {
         test: /\.mp3/,
-        use: 'file-loader',
+        use: "file-loader",
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
-        use: 'file-loader',
+        use: "file-loader",
       },
       {
         test: /\.tsx?$/,
         use: {
-          loader: 'ts-loader',
+          loader: "ts-loader",
           options: {
             compilerOptions: {
               noEmit: false,
@@ -59,11 +59,11 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         use: [
-          'style-loader',
-          'css-loader',
-          'resolve-url-loader',
+          "style-loader",
+          "css-loader",
+          "resolve-url-loader",
           {
-            loader: 'sass-loader',
+            loader: "sass-loader",
             options: {
               sourceMap: true,
             },
@@ -72,7 +72,7 @@ module.exports = {
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
-        loader: 'url-loader',
+        loader: "url-loader",
         options: {
           limit: 100000,
         },
@@ -81,7 +81,10 @@ module.exports = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-      React: 'react',
+      React: "react",
+    }),
+    new webpack.ProvidePlugin({
+      process: "process/browser",
     }),
   ],
 };
