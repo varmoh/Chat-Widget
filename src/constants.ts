@@ -133,3 +133,7 @@ export enum RATING_TYPES {
   LIKED = 'liked',
   DISLIKED = 'disliked',
 }
+
+export const isHiddenFeatureEnabled = 
+  process.env.REACT_APP_ENABLE_HIDDEN_FEATURES?.toLowerCase().trim() == 'true' ||
+  process.env.REACT_APP_ENABLE_HIDDEN_FEATURES?.toLowerCase().trim() == '1';

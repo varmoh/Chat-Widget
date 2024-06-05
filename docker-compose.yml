@@ -4,6 +4,8 @@ services:
     container_name: widget
     build:
       context: .
+    environment:
+      - REACT_APP_ENABLE_HIDDEN_FEATURES=TRUE
     ports:
       - 3000:443
     networks:

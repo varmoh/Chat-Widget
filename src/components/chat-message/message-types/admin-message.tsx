@@ -8,6 +8,7 @@ import {
   CHAT_EVENTS,
   MAXIMUM_MESSAGE_TEXT_LENGTH_FOR_ONE_ROW,
   RATING_TYPES,
+  isHiddenFeatureEnabled,
 } from "../../../constants";
 import Linkifier from "./linkifier";
 import Thumbs from "../../../static/icons/thumbs.svg";
@@ -95,7 +96,7 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
             {![CHAT_EVENTS.GREETING, CHAT_EVENTS.EMERGENCY_NOTICE].includes(
               message.event as CHAT_EVENTS
             ) &&
-              !hasButtons && (
+              !hasButtons && isHiddenFeatureEnabled && (
                 <div>
                   <button
                     type="button"

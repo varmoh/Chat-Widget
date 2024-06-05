@@ -27,6 +27,7 @@ import {
   MESSAGE_MAX_CHAR_LIMIT,
   MESSAGE_QUE_MAX_LENGTH,
   StyledButtonType,
+  isHiddenFeatureEnabled,
 } from "../../constants";
 import { Message, Attachment, AttachmentTypes } from "../../model/message-model";
 import StyledButton from "../styled-components/styled-button";
@@ -162,6 +163,7 @@ const ChatKeyPad = (): JSX.Element => {
   );
 
   const keypadClasses = classNames(styles.keypad);
+  
   return (
     <div>
       <KeypadErrorMessage>{errorMessage}</KeypadErrorMessage>
@@ -206,35 +208,43 @@ const ChatKeyPad = (): JSX.Element => {
               <img src={Send} alt="Send message icon" />
             </button>
 
-            {userInputFile ? (
-              <button
-                onKeyDown={() => null}
-                onClick={handleUploadClear}
-                className={styles.button_cancelUpload}
-                title={t("keypad.button.label")}
-                aria-label={t("keypad.button.label")}
-                tabIndex={0}
-              >
-                <img src={Close} alt="Close icon" />
-              </button>
-            ) : (
-              <button
-                onKeyDown={() => null}
-                onClick={handleUploadClick}
-                className={styles.button}
-                title={t("keypad.button.label")}
-                aria-label={t("keypad.button.label")}
-                tabIndex={0}
-              >
-                <img src={File} alt="Send file icon" />
-              </button>
-            )}
+            {isHiddenFeatureEnabled && renderSendFileButton()}
           </>
         )}
       </div>
       <ChatKeypadCharCounter userInput={userInput} />
     </div>
   );
+
+  function renderSendFileButton() {
+    if(userInputFile) {
+      return (
+        <button
+          onKeyDown={() => null}
+          onClick={handleUploadClear}
+          className={styles.button_cancelUpload}
+          title={t("keypad.button.label")}
+          aria-label={t("keypad.button.label")}
+          tabIndex={0}
+        >
+          <img src={Close} alt="Close icon" />
+        </button>
+      );
+    }
+
+    return (
+      <button
+        onKeyDown={() => null}
+        onClick={handleUploadClick}
+        className={styles.button}
+        title={t("keypad.button.label")}
+        aria-label={t("keypad.button.label")}
+        tabIndex={0}
+      >
+        <img src={File} alt="Send file icon" />
+      </button>
+    )
+  }
 
   async function handleFileRead(file: File): Promise<string | null> {
     if (!Object.values(AttachmentTypes).some((v) => v === file.type)) {
