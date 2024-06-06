@@ -49,7 +49,8 @@ declare global {
         BEGIN: number;
         END: number;
         DAYS: number[];
-      };
+      },
+      ENABLE_HIDDEN_FEATURES: string;
     };
   }
 }

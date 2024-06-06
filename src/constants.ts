@@ -135,5 +135,7 @@ export enum RATING_TYPES {
 }
 
 export const isHiddenFeatureEnabled = 
-  process.env.REACT_APP_ENABLE_HIDDEN_FEATURES?.toLowerCase().trim() == 'true' ||
-  process.env.REACT_APP_ENABLE_HIDDEN_FEATURES?.toLowerCase().trim() == '1';
+  window._env_.ENABLE_HIDDEN_FEATURES?.toLowerCase().trim() == 'true' ||
+  window._env_.ENABLE_HIDDEN_FEATURES?.toLowerCase().trim() == '1';
+
+

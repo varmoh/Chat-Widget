@@ -81,10 +81,7 @@ module.exports = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-      React: "react",
-    }),
-    new webpack.ProvidePlugin({
-      process: "process/browser",
+      React: 'react',
     }),
   ],
 };
