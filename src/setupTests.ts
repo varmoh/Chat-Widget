@@ -19,6 +19,7 @@ window._env_ = {
     END: 17,
     DAYS: [1, 2, 3, 4, 5],
   },
+  ENABLE_HIDDEN_FEATURES: 'TRUE',
 };
 
 beforeAll(() => {

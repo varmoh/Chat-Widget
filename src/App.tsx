@@ -50,6 +50,7 @@ declare global {
         END: number;
         DAYS: number[];
       };
+      ENABLE_HIDDEN_FEATURES: string;
     };
   }
 }

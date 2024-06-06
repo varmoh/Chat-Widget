@@ -50,6 +50,7 @@ Snippet can be embedded to any site using the following html:
       END: 17,
       DAYS: [1, 2, 4, 5],
     },
+    ENABLE_HIDDEN_FEATURES: 'FALSE',
     other variables...
   };
 </script>
@@ -66,6 +67,7 @@ Snippet can be embedded to any site using the following html:
   - `END`: End of office hours. If current time is after this hour (24H), the widget will not be displayed
   - `DAYS`: List of days in numbers, where 1=monday, 2=tuesday, 3=wednesday... If current day is in the list of days, the widget will be displayed according to
     BEGIN and END times.
+- `ENABLE_HIDDEN_FEATURES`: set it to `'TRUE'` will show experimental features, `'FALSE'` will hide them
 
 ## Licence
 
