@@ -137,5 +137,3 @@ export enum RATING_TYPES {
 export const isHiddenFeatureEnabled = 
   window._env_.ENABLE_HIDDEN_FEATURES?.toLowerCase().trim() == 'true' ||
   window._env_.ENABLE_HIDDEN_FEATURES?.toLowerCase().trim() == '1';
-
-

@@ -50,7 +50,7 @@ Snippet can be embedded to any site using the following html:
       END: 17,
       DAYS: [1, 2, 4, 5],
     },
-    ENABLE_HIDDEN_FEATURES: 'false',
+    ENABLE_HIDDEN_FEATURES: 'FALSE',
     other variables...
   };
 </script>
