@@ -12,7 +12,9 @@ interface HolidaysData {
 }
 
 function getHolidays(): HolidaysData {
-  const holidaysList: Holiday[] = new Holidays(CURRENT_COUNTRY)
+  const holidaysList: Holiday[] = new Holidays(CURRENT_COUNTRY, {
+    types: ["public"],
+  })
     .getHolidays()
     .map((obj: any) => {
       const formattedDate: string = obj.date.split(" ")[0];
@@ -23,9 +25,7 @@ function getHolidays(): HolidaysData {
     });
 
   const holidays: string[] = holidaysList.map((obj: Holiday) => obj.date);
-  const holidayNames: string = holidaysList
-    .map((obj: Holiday) => `${obj.date}-${obj.name}`)
-    .join(",");
+  const holidayNames: string = holidaysList.map((obj: Holiday) => `${obj.date}-${obj.name}`).join(",");
 
   return {
     holidays,
