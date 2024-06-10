@@ -44,11 +44,12 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
     return parseButtons(message).length > 0;
   }, [message.buttons]);
 
-  const csaName = (
+  const csaName = useMemo(() => (
     (message.authorFirstName ?? "") +
     " " +
     (message.authorLastName ?? "")
-  ).trim();
+  ).trim(),
+  [message.authorFirstName, message.authorLastName]);
 
   return (
     <motion.div
@@ -61,12 +62,10 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
           <div className={styles.name}>{csaName}</div>
         )}
         {titleVisibility &&
-          message.authorRole &&
+          message.csaTitle &&
           message.event != CHAT_EVENTS.GREETING && (
-            <div className={styles.name}>
-              {message.csaTitle ?? message.authorRole}
-            </div>
-          )}
+            <div className={styles.name}>{message.csaTitle}</div>
+        )}
         <div className={styles.main}>
           <div className={styles.icon}>
             {message.event === CHAT_EVENTS.EMERGENCY_NOTICE ? (
