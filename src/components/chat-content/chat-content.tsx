@@ -5,7 +5,6 @@ import ChatMessage from '../chat-message/chat-message';
 import useChatSelector from '../../hooks/use-chat-selector';
 import styles from './chat-content.module.scss';
 import WaitingTimeNotification from '../waiting-time-notification/waiting-time-notification';
-import useNameAndTitleVisibility from '../../hooks/use-name-title-visibility';
 import 'overlayscrollbars/css/OverlayScrollbars.css';
 import './os-custom-theme.scss';
 
@@ -19,8 +18,6 @@ const ChatContent = (): JSX.Element => {
       instance?.scroll({ y: '100%' }, 200);
     }
   }, [messages]);
-
-  useNameAndTitleVisibility();
 
   return (
     <AnimatePresence initial={false}>
