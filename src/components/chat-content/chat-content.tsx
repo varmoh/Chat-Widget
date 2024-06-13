@@ -32,14 +32,19 @@ const ChatContent = (): JSX.Element => {
             scrollbars: { visibility: 'auto', autoHide: 'leave' },
           }}
         >
-          {messages.map((message) => 
-            message.chatId === 'estimatedWaiting' 
-            ? <WaitingTimeNotification key={message.authorTimestamp} />
-            : <ChatMessage 
+          {messages.map((message) => {
+            if(message.id === "estimatedWaiting" && message.content === "hidden")
+              return <></>;
+            if(message.id === "estimatedWaiting")
+              return <WaitingTimeNotification key={message.authorTimestamp} />;
+
+            return (
+              <ChatMessage 
                 message={message}
                 key={`${message.authorTimestamp}-${message.created}-${message.id}`}
               />
-          )}
+            );
+          })}
         </OverlayScrollbarsComponent>
       </div>
     </AnimatePresence>

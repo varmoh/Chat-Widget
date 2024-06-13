@@ -488,6 +488,12 @@ export const chatSlice = createSlice({
         }
       });
     },
+    removeEstimatedWaitingMessage: (state) => {
+      const estimatedMsgIndex = state.messages.findIndex(msg => msg.id === "estimatedWaiting");
+      if(estimatedMsgIndex === -1)
+        return;
+      state.messages[estimatedMsgIndex].content = 'hidden';
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(initChat.pending, (state) => {
@@ -555,7 +561,13 @@ export const chatSlice = createSlice({
     });
     builder.addCase(getEstimatedWaitingTime.fulfilled, (state, action) => {
       state.estimatedWaiting = action.payload;
+
+      const estimatedMsg = state.messages.find((msg) => msg.id === "estimatedWaiting");
+      if(estimatedMsg) 
+        return;
+
       state.messages.push({
+        id: "estimatedWaiting",
         chatId: "estimatedWaiting",
         authorTimestamp: new Date().toISOString(),
       });
@@ -619,6 +631,7 @@ export const {
   addMessagesToDisplay,
   handleStateChangingEventMessages,
   resetStateWithValue,
+  removeEstimatedWaitingMessage,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
