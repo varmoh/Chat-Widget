@@ -3,15 +3,15 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { getNameVisibility, getTitleVisibility } from "../slices/chat-slice";
 
 const useNameAndTitleVisibility = () => {
-  const customerSupportId = useAppSelector(state => state.chat.customerSupportId);
   const dispatch = useAppDispatch();
+  const chatId = useAppSelector(state => state.chat.chatId);
 
   useEffect(() => {
-    if (!customerSupportId) {
+    if(chatId) {
       dispatch(getNameVisibility());
       dispatch(getTitleVisibility());
     }
-  }, [customerSupportId]);
+  }, [chatId]);
 }
 
 export default useNameAndTitleVisibility;

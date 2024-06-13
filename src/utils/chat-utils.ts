@@ -74,3 +74,18 @@ export const getContactCommentNewMessage = (
     preview: "",
   };
 }
+
+export const filterDuplicatMessages = (messages: Message[]|any[]): Message[]|any[] => {
+  const seen = new Set();
+  const result = [];
+
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const duplicate = seen.has(messages[i].id);
+    seen.add(messages[i].id);
+    if(!duplicate || !messages[i].id) {
+      result.unshift(messages[i]);
+    }
+  }
+
+  return result;
+}

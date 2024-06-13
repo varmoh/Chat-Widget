@@ -20,7 +20,7 @@ import {
 } from "../utils/state-management-utils";
 import { getFromLocalStorage, setToLocalStorage } from "../utils/local-storage-utils";
 import getHolidays from "../utils/holidays";
-import { getChatModeBasedOnLastMessage } from "../utils/chat-utils";
+import { filterDuplicatMessages, getChatModeBasedOnLastMessage } from "../utils/chat-utils";
 import { isChatAboutToBeTerminated, wasPageReloaded } from "../utils/browser-utils";
 
 export interface EstimatedWaiting {
@@ -366,7 +366,7 @@ export const chatSlice = createSlice({
       state.chatId = action.payload;
     },
     addMessage: (state, action: PayloadAction<Message>) => {
-      state.messages.push(action.payload);
+      state.messages = filterDuplicatMessages([...state.messages, action.payload]);
     },
     setIsChatOpen: (state, action: PayloadAction<boolean>) => {
       state.chatId = getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY);
@@ -448,10 +448,9 @@ export const chatSlice = createSlice({
         return;
       }
 
-      state.messages = newMessagesList;
       state.lastReadMessageTimestamp = new Date().toISOString();
       state.newMessagesAmount += receivedMessages.length;
-      state.messages.push(...receivedMessages);
+      state.messages = filterDuplicatMessages([...newMessagesList, ...receivedMessages]);
       setToLocalStorage("newMessagesAmount", state.newMessagesAmount);
 
       state.chatMode = getChatModeBasedOnLastMessage(state.messages);
@@ -508,7 +507,7 @@ export const chatSlice = createSlice({
     builder.addCase(getChatMessages.fulfilled, (state, action) => {
       if (!action.payload) return;
       state.lastReadMessageTimestamp = new Date().toISOString();
-      state.messages = action.payload;
+      state.messages = filterDuplicatMessages(action.payload);
 
       state.chatMode = getChatModeBasedOnLastMessage(state.messages);
     });

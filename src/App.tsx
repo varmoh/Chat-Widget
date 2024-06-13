@@ -16,8 +16,6 @@ import {
   getChat,
   getChatMessages,
   getEmergencyNotice,
-  getNameVisibility,
-  getTitleVisibility,
   resetState,
   setChatId,
   setIsChatOpen,
@@ -33,6 +31,7 @@ import useGetWidgetConfig from "./hooks/use-get-widget-config";
 import useGetEmergencyNotice from "./hooks/use-get-emergency-notice";
 import { customJwtExtend } from "./slices/authentication-slice";
 import { getFromLocalStorage } from "./utils/local-storage-utils";
+import useNameAndTitleVisibility from "./hooks/use-name-title-visibility";
 
 declare global {
   interface Window {
@@ -154,14 +153,14 @@ const App: FC = () => {
 
   useEffect(() => {
     if (chatId && !messages.length) {
-      dispatch(getNameVisibility());
-      dispatch(getTitleVisibility());
       dispatch(getChat());
       dispatch(getChatMessages());
     }
     if (emergencyNotice === null) dispatch(getEmergencyNotice());
     if (!widgetConfig.isLoaded) dispatch(getWidgetConfig());
   }, [chatId, dispatch, messages, widgetConfig]);
+
+  useNameAndTitleVisibility();
 
   if (burokrattOnlineStatus !== true) return <></>;
   if (displayWidget && widgetConfig.isLoaded)
