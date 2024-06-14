@@ -4,7 +4,9 @@ import { EndUserContacts } from "../slices/chat-slice";
 
 export const parseButtons = (message: Message): MessageButton[] => {
   try {
-    return JSON.parse(decodeURIComponent(message?.buttons ?? '[]')) as MessageButton[];
+    if(!message?.buttons || message.buttons === '')
+      return [];
+    return JSON.parse(decodeURIComponent(message.buttons)) as MessageButton[];
   } catch(e) {
     console.error(e);
     return [];
@@ -73,4 +75,19 @@ export const getContactCommentNewMessage = (
     event: "",
     preview: "",
   };
+}
+
+export const filterDuplicatMessages = (messages: Message[]|any[]): Message[]|any[] => {
+  const seen = new Set();
+  const result = [];
+
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const duplicate = seen.has(messages[i].id);
+    seen.add(messages[i].id);
+    if(!duplicate || !messages[i].id) {
+      result.unshift(messages[i]);
+    }
+  }
+
+  return result;
 }

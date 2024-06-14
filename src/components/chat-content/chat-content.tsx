@@ -5,7 +5,6 @@ import ChatMessage from '../chat-message/chat-message';
 import useChatSelector from '../../hooks/use-chat-selector';
 import styles from './chat-content.module.scss';
 import WaitingTimeNotification from '../waiting-time-notification/waiting-time-notification';
-import useNameAndTitleVisibility from '../../hooks/use-name-title-visibility';
 import 'overlayscrollbars/css/OverlayScrollbars.css';
 import './os-custom-theme.scss';
 
@@ -20,8 +19,6 @@ const ChatContent = (): JSX.Element => {
     }
   }, [messages]);
 
-  useNameAndTitleVisibility();
-
   return (
     <AnimatePresence initial={false}>
       <div className={styles.content}>
@@ -35,14 +32,19 @@ const ChatContent = (): JSX.Element => {
             scrollbars: { visibility: 'auto', autoHide: 'leave' },
           }}
         >
-          {messages.map((message) => 
-            message.chatId === 'estimatedWaiting' 
-            ? <WaitingTimeNotification key={message.authorTimestamp} />
-            : <ChatMessage 
+          {messages.map((message) => {
+            if(message.id === "estimatedWaiting" && message.content === "hidden")
+              return <></>;
+            if(message.id === "estimatedWaiting")
+              return <WaitingTimeNotification key={message.authorTimestamp} />;
+
+            return (
+              <ChatMessage 
                 message={message}
                 key={`${message.authorTimestamp}-${message.created}-${message.id}`}
               />
-          )}
+            );
+          })}
         </OverlayScrollbarsComponent>
       </div>
     </AnimatePresence>
