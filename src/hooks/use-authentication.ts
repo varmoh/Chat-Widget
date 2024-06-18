@@ -1,12 +1,20 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from '../store';
-import { loginWithTaraJwt, setIsAuthenticated } from '../slices/authentication-slice';
+import { getUserinfo, loginWithTaraJwt, setIsAuthenticated } from '../slices/authentication-slice';
 import useAuthenticationSelector from './use-authentication-selector';
 import { redirectIfComeBackFromTim } from '../utils/auth-utils';
+import authenticationService from '../services/authentication-service';
 
 const useAuthentication = (): void => {
   const dispatch = useAppDispatch();
   const { isAuthenticated, fetchingUserInfo, loggedInWithTaraJwt } = useAuthenticationSelector();
+  
+  useEffect(() => {
+    const cookieFound = authenticationService.hasCookie();
+    if (cookieFound) {
+      dispatch(getUserinfo());
+    }
+  }, []);
 
   useEffect(() => {
    redirectIfComeBackFromTim(() => {
@@ -14,8 +22,7 @@ const useAuthentication = (): void => {
    });
     
     if (!isAuthenticated || loggedInWithTaraJwt) {
-      // To be done: TO be uncommented later when end user authentication is ready
-      // dispatch(getUserinfo());
+      dispatch(getUserinfo());
     }
   }, [isAuthenticated, loggedInWithTaraJwt]);
 

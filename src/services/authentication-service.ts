@@ -15,6 +15,11 @@ class AuthenticationService {
     const response = await http.get(RUUTER_ENDPOINTS.CUSTOM_JWT_EXTEND);
     return { jwtCookie: `${response}` };
   }
+
+  hasCookie(): boolean {
+    const name = 'clientCustomJwtCookie';
+    return document.cookie.split(';').some((c) => c.trim().startsWith(`${name}=`));
+  }
 }
 
 export default new AuthenticationService();
