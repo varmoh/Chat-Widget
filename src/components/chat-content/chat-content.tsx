@@ -7,6 +7,7 @@ import styles from './chat-content.module.scss';
 import WaitingTimeNotification from '../waiting-time-notification/waiting-time-notification';
 import 'overlayscrollbars/css/OverlayScrollbars.css';
 import './os-custom-theme.scss';
+import LoadingMessage from '../chat-message/message-types/loading-message';
 
 const ChatContent = (): JSX.Element => {
   const OSref = useRef<OverlayScrollbarsComponent>(null);
@@ -45,6 +46,7 @@ const ChatContent = (): JSX.Element => {
               />
             );
           })}
+          <LoadingMessage/>
         </OverlayScrollbarsComponent>
       </div>
     </AnimatePresence>
