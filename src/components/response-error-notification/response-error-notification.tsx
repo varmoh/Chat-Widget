@@ -10,7 +10,6 @@ const ResponseErrorNotification = () => {
   const dispatch = useAppDispatch();
   const { responseErrorMessage } = useChatSelector();
 
-  console.log("responseErrorMessage", responseErrorMessage);
   return (
     <div className={styles.container}>
       <dialog className={styles.content} aria-modal="true" aria-labelledby={t("notifications.idle-chat-notification")}>
