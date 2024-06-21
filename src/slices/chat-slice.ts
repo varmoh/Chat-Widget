@@ -521,10 +521,14 @@ export const chatSlice = createSlice({
       state.chatStatus = CHAT_STATUS.OPEN;
       state.showLoadingMessage = false;
     });
-    builder.addCase(initChat.rejected, (state) => {
+    builder.addCase(initChat.rejected, (state, action) => {
       state.showLoadingMessage = false;
       state.showResponseError = true;
-      state.responseErrorMessage = "widget.error.botError";
+      if (action.error.message?.includes("code 420")) {
+        state.responseErrorMessage = "widget.error.botError";
+      } else {
+        state.responseErrorMessage = "widget.error.technicalProblems";
+      }
     });
     builder.addCase(sendNewMessage.pending, (state) => {
       if (state.customerSupportId === "chatbot") {
@@ -534,10 +538,10 @@ export const chatSlice = createSlice({
     builder.addCase(sendNewMessage.fulfilled, (state) => {
       state.showLoadingMessage = false;
     });
-    builder.addCase(sendNewMessage.rejected, (state) => {
+    builder.addCase(sendNewMessage.rejected, (state, action) => {
       state.showLoadingMessage = false;
       state.showResponseError = true;
-      if (state.customerSupportId === "chatbot") {
+      if (action.error.message?.includes("code 420")) {
         state.responseErrorMessage = "widget.error.botError";
       } else {
         state.responseErrorMessage = "widget.error.technicalProblems";
