@@ -544,7 +544,7 @@ export const chatSlice = createSlice({
       if (action.error.message?.includes("code 420")) {
         state.responseErrorMessage = "widget.error.botError";
       } else {
-        state.responseErrorMessage = "widget.error.technicalProblems";
+        state.responseErrorMessage = "widget.error.technicalProblems"; 
       }
     });
     builder.addCase(getChat.fulfilled, (state, action) => {
