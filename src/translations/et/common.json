@@ -86,6 +86,6 @@
   "widget.time.minute": "minut",
   "widget.action.restartChat": "Alustage uut vestlust",
   "widget.action.continueChat": "Jätka praegust vestlust",
-  "widget.error.botError": "Vabandame, lakkas bot tehniliste probleemide tõttu töötamast",
+  "widget.error.botError": "Vabandame, vestlus katkes tehniliste probleemide tõttu.",
   "widget.error.technicalProblems": "Vabandame, tekkisid tehnilised probleemid"
 }
