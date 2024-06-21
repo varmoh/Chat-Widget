@@ -83,5 +83,9 @@
   "widget.form.success": "Aitäh pöördumast, teiega võetakse esimesel võimalusel ühendust",
   "widget.form.error": "Saatmisel esines viga",
   "widget.time.minutes": "minutit",
-  "widget.time.minute": "minut"
+  "widget.time.minute": "minut",
+  "widget.action.restartChat": "Alustage uut vestlust",
+  "widget.action.continueChat": "Jätka praegust vestlust",
+  "widget.error.botError": "Vabandame, vestlus katkes tehniliste probleemide tõttu.",
+  "widget.error.technicalProblems": "Vabandame, tekkisid tehnilised probleemid"
 }
