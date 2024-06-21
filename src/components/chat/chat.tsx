@@ -42,6 +42,7 @@ import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavail
 import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
 import useQueueCounter from "../../hooks/use-queue-counter";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
+import ResponseErrorNotification from "../response-error-notification/response-error-notification";
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -73,6 +74,7 @@ const Chat = (): JSX.Element => {
     messages,
     chatDimensions,
     chatMode,
+    showResponseError,
   } = useChatSelector();
 
   const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector((state) => state.widget);
@@ -216,6 +218,7 @@ const Chat = (): JSX.Element => {
           {!showWidgetDetails && showUnavailableContactForm && <UnavailableEndUserContacts />}
           {!showWidgetDetails && !showContactForm && !showUnavailableContactForm && <ChatContent />}
           {idleChat.isIdle && <IdleChatNotification />}
+          {showResponseError && <ResponseErrorNotification />}
           {showFeedbackResult ? (
             <ChatFeedbackConfirmation />
           ) : (

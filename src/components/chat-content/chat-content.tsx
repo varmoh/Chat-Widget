@@ -11,7 +11,7 @@ import LoadingMessage from '../chat-message/message-types/loading-message';
 
 const ChatContent = (): JSX.Element => {
   const OSref = useRef<OverlayScrollbarsComponent>(null);
-  const { messages } = useChatSelector();
+  const { messages, showLoadingMessage } = useChatSelector();
 
   useEffect(() => {
     if (OSref.current) {
@@ -46,7 +46,7 @@ const ChatContent = (): JSX.Element => {
               />
             );
           })}
-          <LoadingMessage/>
+          {showLoadingMessage && <LoadingMessage/>}
         </OverlayScrollbarsComponent>
       </div>
     </AnimatePresence>

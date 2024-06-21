@@ -5,36 +5,36 @@ import { CHAT_STATUS, CHAT_WINDOW_WIDTH, CHAT_WINDOW_HEIGHT, CHAT_MODES } from '
 
 export const initialChatState: ChatState = {
   endUserContacts: {
-    idCode: '',
-    mailAddress: '',
-    phoneNr: '',
-    comment: '',
+    idCode: "",
+    mailAddress: "",
+    phoneNr: "",
+    comment: "",
   },
-  errorMessage: '',
+  errorMessage: "",
   chatId: null,
   chatDimensions: {
     width: CHAT_WINDOW_WIDTH,
-    height: CHAT_WINDOW_HEIGHT
+    height: CHAT_WINDOW_HEIGHT,
   },
-  customerSupportId: '1',
+  customerSupportId: "1",
   isChatOpen: false,
   showContactForm: false,
   showUnavailableContactForm: false,
-  contactContentMessage: '',
+  contactContentMessage: "",
   isChatRedirected: false,
   messages: [],
   messageQueue: [],
   eventMessagesToHandle: [],
   chatStatus: null,
   lastReadMessageTimestamp: null,
-  contactMsgId: '',
+  contactMsgId: "",
   estimatedWaiting: {
-    positionInUnassignedChats: '',
-    durationInSeconds: '',
+    positionInUnassignedChats: "",
+    durationInSeconds: "",
   },
   idleChat: {
     isIdle: false,
-    lastActive: '',
+    lastActive: "",
   },
   loading: false,
   newMessagesAmount: 0,
@@ -60,11 +60,14 @@ export const initialChatState: ChatState = {
       isLoading: false,
       isSubmitted: false,
       isFailed: false,
-    }
+    },
   },
   chatMode: CHAT_MODES.FREE,
   nameVisibility: false,
   titleVisibility: false,
+  showLoadingMessage: false,
+  showResponseError: false,
+  responseErrorMessage: "",
 };
 
 export const initialAuthState: AuthenticationState = {
