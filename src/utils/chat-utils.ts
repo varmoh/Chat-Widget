@@ -12,6 +12,7 @@ export const parseButtons = (message: Message): MessageButton[] => {
     return [];
   }
 }
+
 export const parseOptions = (message: Message): string[] => {
   try {
     if(!message?.options || message.options === '')
