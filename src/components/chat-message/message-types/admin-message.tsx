@@ -21,6 +21,7 @@ import ChatButtonGroup from "./chat-button-group";
 import ChatOptionGroup from "./chat-option-group";
 import { parseButtons, parseOptions } from "../../../utils/chat-utils";
 import useChatSelector from "../../../hooks/use-chat-selector";
+import { useTranslation } from "react-i18next";
 
 const leftAnimation = {
   animate: { opacity: 1, x: 0 },
@@ -29,6 +30,7 @@ const leftAnimation = {
 };
 
 const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { nameVisibility, titleVisibility } = useChatSelector();
 
@@ -86,6 +88,7 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
             }`}
           >
             <Linkifier message={decodeURIComponent(message.content ?? "")} />
+            {hasOptions && !message.content && t('widget.action.select')}
           </div>
           <div
             className={classNames(

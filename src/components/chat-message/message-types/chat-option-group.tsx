@@ -36,7 +36,7 @@ const ChatOptionGroup = ({ message }: { message: Message }): JSX.Element => {
     }
   };
 
-  const enabled = messages[messages.length - 1] === message && chatMode === CHAT_MODES.FLOW;
+  const enabled = messages[messages.length - 1]?.id === message?.id;
 
   return (
     <div className={styles.buttonsRow}>
