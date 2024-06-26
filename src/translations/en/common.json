@@ -84,5 +84,9 @@
   "widget.form.success": "Thank you, you will be contacted as soon as possible.",
   "widget.form.error": "An error occurred!",
   "widget.time.minutes": "minutes",
-  "widget.time.minute": "minute"
+  "widget.time.minute": "minute",
+  "widget.action.restartChat": "Start a new chat",
+  "widget.action.continueChat": "Continue current chat",
+  "widget.error.botError": "Sorry, the bot stopped working due to technical issues",
+  "widget.error.technicalProblems": "Sorry, there were technical problems"
 }

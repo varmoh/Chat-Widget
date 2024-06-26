@@ -90,6 +90,9 @@ export interface ChatState {
   chatMode: CHAT_MODES;
   nameVisibility: boolean;
   titleVisibility: boolean;
+  showLoadingMessage: boolean;
+  showResponseError: boolean;
+  responseErrorMessage: string;
 }
 
 const initialEstimatedTime = {
@@ -153,6 +156,9 @@ const initialState: ChatState = {
   chatMode: CHAT_MODES.FREE,
   nameVisibility: false,
   titleVisibility: false,
+  showLoadingMessage: false,
+  showResponseError: false,
+  responseErrorMessage: "",
 };
 
 export const initChat = createAsyncThunk("chat/init", async (message: Message) => {
@@ -402,6 +408,15 @@ export const chatSlice = createSlice({
     resetNewMessagesAmount: (state) => {
       state.newMessagesAmount = 0;
     },
+    setResponseErrorMessage: (state, action: PayloadAction<string>) => {
+      state.responseErrorMessage = action.payload;
+    },
+    setShowErrorMessage: (state, action: PayloadAction<boolean>) => {
+      state.showResponseError = action.payload;
+      if (!action.payload) {
+        state.responseErrorMessage = "";
+      }
+    },
     updateMessage: (state, action: PayloadAction<Message>) => {
       state.messages = state.messages.map((message) => (message.id === action.payload.id ? action.payload : message));
     },
@@ -489,21 +504,48 @@ export const chatSlice = createSlice({
       });
     },
     removeEstimatedWaitingMessage: (state) => {
-      const estimatedMsgIndex = state.messages.findIndex(msg => msg.id === "estimatedWaiting");
-      if(estimatedMsgIndex === -1)
-        return;
-      state.messages[estimatedMsgIndex].content = 'hidden';
+      const estimatedMsgIndex = state.messages.findIndex((msg) => msg.id === "estimatedWaiting");
+      if (estimatedMsgIndex === -1) return;
+      state.messages[estimatedMsgIndex].content = "hidden";
     },
   },
   extraReducers: (builder) => {
     builder.addCase(initChat.pending, (state) => {
       state.lastReadMessageTimestamp = new Date().toISOString();
       state.loading = true;
+      state.showLoadingMessage = true;
     });
     builder.addCase(initChat.fulfilled, (state, action) => {
       state.chatId = action.payload.id;
       state.loading = false;
       state.chatStatus = CHAT_STATUS.OPEN;
+      state.showLoadingMessage = false;
+    });
+    builder.addCase(initChat.rejected, (state, action) => {
+      state.showLoadingMessage = false;
+      state.showResponseError = true;
+      if (action.error.message?.includes("code 420")) {
+        state.responseErrorMessage = "widget.error.botError";
+      } else {
+        state.responseErrorMessage = "widget.error.technicalProblems";
+      }
+    });
+    builder.addCase(sendNewMessage.pending, (state) => {
+      if (state.customerSupportId === "chatbot") {
+        state.showLoadingMessage = true;
+      }
+    });
+    builder.addCase(sendNewMessage.fulfilled, (state) => {
+      state.showLoadingMessage = false;
+    });
+    builder.addCase(sendNewMessage.rejected, (state, action) => {
+      state.showLoadingMessage = false;
+      state.showResponseError = true;
+      if (action.error.message?.includes("code 420")) {
+        state.responseErrorMessage = "widget.error.botError";
+      } else {
+        state.responseErrorMessage = "widget.error.technicalProblems";
+      }
     });
     builder.addCase(getChat.fulfilled, (state, action) => {
       if (!action.payload) return;
@@ -563,8 +605,7 @@ export const chatSlice = createSlice({
       state.estimatedWaiting = action.payload;
 
       const estimatedMsg = state.messages.find((msg) => msg.id === "estimatedWaiting");
-      if(estimatedMsg) 
-        return;
+      if (estimatedMsg) return;
 
       state.messages.push({
         id: "estimatedWaiting",
@@ -621,6 +662,8 @@ export const {
   resetNewMessagesAmount,
   setPhoneNumber,
   setIsFeedbackConfirmationShown,
+  setShowErrorMessage,
+  setResponseErrorMessage,
   setEmailAdress,
   setContactFormComment,
   setShowContactForm,
