@@ -13,6 +13,17 @@ export const parseButtons = (message: Message): MessageButton[] => {
   }
 }
 
+export const parseOptions = (message: Message): string[] => {
+  try {
+    if(!message?.options || message.options === '')
+      return [];
+    return JSON.parse(decodeURIComponent(message.options)) as string[];
+  } catch(e) {
+    console.error(e);
+    return [];
+  }
+}
+
 export const getChatModeBasedOnLastMessage = (messages: Message[]): CHAT_MODES => {
   let lastMsgButtonsCount = 0;
 

@@ -11,6 +11,7 @@ export interface Message {
     id?: string;
     content?: string;
     buttons?: string;
+    options?: string;
     file?: Attachment;
     event?: string;
     rating?: string;

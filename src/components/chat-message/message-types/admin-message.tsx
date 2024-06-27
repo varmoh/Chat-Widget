@@ -18,8 +18,10 @@ import {
 } from "../../../slices/chat-slice";
 import { useAppDispatch } from "../../../store";
 import ChatButtonGroup from "./chat-button-group";
-import { parseButtons } from "../../../utils/chat-utils";
+import ChatOptionGroup from "./chat-option-group";
+import { parseButtons, parseOptions } from "../../../utils/chat-utils";
 import useChatSelector from "../../../hooks/use-chat-selector";
+import { useTranslation } from "react-i18next";
 
 const leftAnimation = {
   animate: { opacity: 1, x: 0 },
@@ -28,6 +30,7 @@ const leftAnimation = {
 };
 
 const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { nameVisibility, titleVisibility } = useChatSelector();
 
@@ -43,6 +46,10 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
   const hasButtons = useMemo(() => {
     return parseButtons(message).length > 0;
   }, [message.buttons]);
+
+  const hasOptions = useMemo(() => {
+    return parseOptions(message).length > 0;
+  }, [message.options]);
 
   const csaName = useMemo(() => (
     (message.authorFirstName ?? "") +
@@ -81,6 +88,7 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
             }`}
           >
             <Linkifier message={decodeURIComponent(message.content ?? "")} />
+            {hasOptions && !message.content && t('widget.action.select')}
           </div>
           <div
             className={classNames(
@@ -95,7 +103,8 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
             {![CHAT_EVENTS.GREETING, CHAT_EVENTS.EMERGENCY_NOTICE].includes(
               message.event as CHAT_EVENTS
             ) &&
-              !hasButtons && isHiddenFeatureEnabled && (
+              !hasButtons && !hasOptions &&
+              isHiddenFeatureEnabled && (
                 <div>
                   <button
                     type="button"
@@ -132,6 +141,7 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
           </div>
         </div>
         {hasButtons && <ChatButtonGroup message={message} />}
+        {hasOptions && <ChatOptionGroup message={message} />}
       </div>
     </motion.div>
   );
