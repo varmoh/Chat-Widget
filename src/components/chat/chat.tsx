@@ -40,7 +40,6 @@ import getIdleTime from "../../utils/getIdleTime";
 import { Message } from "../../model/message-model";
 import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavailable-end-user-contacts";
 import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
-import useQueueCounter from "../../hooks/use-queue-counter";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import ResponseErrorNotification from "../response-error-notification/response-error-notification";
 
@@ -78,8 +77,6 @@ const Chat = (): JSX.Element => {
   } = useChatSelector();
 
   const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector((state) => state.widget);
-
-  const queueCount = useQueueCounter();
 
   useEffect(() => {
     if (feedback.isFeedbackRatingGiven && feedback.isFeedbackMessageGiven && !feedback.isFeedbackConfirmationShown) {
@@ -209,9 +206,6 @@ const Chat = (): JSX.Element => {
             detailHandler={() => setShowWidgetDetails(!showWidgetDetails)}
           />
           {messageQueue.length >= 5 && <WarningNotification warningMessage={t("chat.error-message")} />}
-          {queueCount > 0 && (
-            <WarningNotification warningMessage={t("notifications.queue-number", { number: queueCount })} />
-          )}
           {burokrattOnlineStatus !== true && <OnlineStatusNotification />}
           {showWidgetDetails && <WidgetDetails />}
           {!showWidgetDetails && showContactForm && <EndUserContacts />}
