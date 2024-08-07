@@ -44,6 +44,8 @@ const ChatMessage = (props: { message: Message }): JSX.Element => {
       return <EventMessage content={<AuthenticationMessage />} />;
     case CHAT_EVENTS.REDIRECTED:
       return <EventMessage content={t("notifications.chat-redirected")} />;
+    case CHAT_EVENTS.TAKEN_OVER:
+      return <EventMessage content={t("notifications.human-took-over")} />;
     case CHAT_EVENTS.ANSWERED:
     case CHAT_EVENTS.TERMINATED:
       return <EventMessage content={endChatMessage} />;

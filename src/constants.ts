@@ -65,6 +65,7 @@ export enum CHAT_EVENTS {
   REQUESTED_CHAT_FORWARD_ACCEPTED = 'requested-chat-forward-accepted',
   REQUESTED_CHAT_FORWARD_REJECTED = 'requested-chat-forward-rejected',
   REDIRECTED = 'redirected',
+  TAKEN_OVER = 'taken-over',
   CONTACT_INFORMATION = 'contact-information',
   CONTACT_INFORMATION_FULFILLED = 'contact-information-fulfilled',
   CONTACT_INFORMATION_REJECTED = 'contact-information-rejected',

@@ -21,6 +21,7 @@
   "notifications.offline": "Teenus pole hetkel saadaval!",
   "notifications.idle-chat-notification": "Kas soovite vestlust jätkata?",
   "notifications.ask-contact-information": "Kas soovite jätta enda kontaktandmed, et klienditeenindaja saaks ise ühendust võtta?",
+  "notifications.human-took-over": "Inimene võttis vestluse üle",
   "keypad.input.placeholder": "Kirjutage oma sõnum...",
   "keypad.input.feedbackPlaceholder": "Sisestage oma tagasiside...",
   "keypad.button.label": "Saada",
