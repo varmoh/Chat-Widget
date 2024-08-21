@@ -14,7 +14,7 @@ import {
   sendMessagePreview,
   endChat,
   setContactFormComment,
-  sendNewMessage,
+  sendNewSilentMessage,
 } from "../../slices/chat-slice";
 import { Message } from "../../model/message-model";
 import StyledButton from "../styled-components/styled-button";
@@ -81,7 +81,7 @@ const UnavailableEndUserContacts = (): JSX.Element => {
           contactMsgId,
           t
         );
-        dispatch(sendNewMessage(commentMsg));
+        dispatch(sendNewSilentMessage(commentMsg));
       }
 
       dispatch(
