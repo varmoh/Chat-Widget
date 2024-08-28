@@ -42,6 +42,7 @@ import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavail
 import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import ResponseErrorNotification from "../response-error-notification/response-error-notification";
+import useTabActive from '../../hooks/useTabActive';
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -56,7 +57,6 @@ const RESIZABLE_HANDLES = {
 
 const Chat = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const [submittingMessageRead, setSubmittingMessageRead] = useState(false);
   const [showWidgetDetails, setShowWidgetDetails] = useState(false);
   const [showFeedbackResult, setShowFeedbackResult] = useState(false);
   const { t } = useTranslation();
@@ -75,6 +75,8 @@ const Chat = (): JSX.Element => {
     chatMode,
     showResponseError,
   } = useChatSelector();
+
+  const isTabActive = useTabActive();
 
   const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector((state) => state.widget);
 
@@ -164,26 +166,22 @@ const Chat = (): JSX.Element => {
 
   useReloadChatEndEffect();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (
-      !submittingMessageRead &&
+      isTabActive &&
       messages.length > 0 &&
+      !messages[messages.length - 1].event &&
       messages[messages.length - 1].authorRole === AUTHOR_ROLES.BACKOFFICE_USER
     ) {
-      setSubmittingMessageRead(true);
       const message: Message = {
         chatId,
-        content: CHAT_EVENTS.MESSAGE_READ,
         authorRole: AUTHOR_ROLES.END_USER,
         authorTimestamp: new Date().toISOString(),
         event: CHAT_EVENTS.MESSAGE_READ,
-        preview: "",
       };
-      dispatch(sendNewMessage(message)).then((_) => {
-        setSubmittingMessageRead(false);
-      });
+      dispatch(sendNewMessage(message));
     }
-  }, [dispatch, messages]);
+  }, [isTabActive]);
 
   return (
     <div className={styles.chatWrapper}>
