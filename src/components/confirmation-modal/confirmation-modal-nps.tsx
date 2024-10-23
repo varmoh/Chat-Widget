@@ -46,7 +46,7 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
             organization: window._env_.ORGANIZATION_NAME,
           })}
         </p>
-        <div className="feedback-box-input">
+        <div className="feedback-box-input" style={{ alignSelf: "center" }}>
           {Array.from(Array(11).keys()).map((val: number) => (
             <StyledButton
               className="feedback-btn"
