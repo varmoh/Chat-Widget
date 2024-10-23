@@ -77,7 +77,7 @@
   "widget.action.download-chat": "Download conversation",
   "widget.action.forward-chat": "Forward to an email",
   "widget.action.forward-email": "Your email address",
-  "widget.action.select": "Choose one of the following options",
+  "widget.action.select": "Choose one of the following options:",
   "widget.form.phone": "Your phone number",
   "widget.form.email": "Your email address",
   "widget.form.message": "Type your question here",
@@ -89,5 +89,6 @@
   "widget.action.restartChat": "Start a new chat",
   "widget.action.continueChat": "Continue current chat",
   "widget.error.botError": "Sorry, the bot stopped working due to technical issues",
-  "widget.error.technicalProblems": "Sorry, there were technical problems"
+  "widget.error.technicalProblems": "Sorry, there were technical problems",
+  "widget.error.empty": "Empty message"
 }

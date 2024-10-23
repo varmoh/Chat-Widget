@@ -10,7 +10,6 @@ import {
   RATING_TYPES,
   isHiddenFeatureEnabled,
 } from "../../../constants";
-import Linkifier from "./linkifier";
 import Thumbs from "../../../static/icons/thumbs.svg";
 import {
   sendMessageWithRating,
@@ -22,6 +21,7 @@ import ChatOptionGroup from "./chat-option-group";
 import { parseButtons, parseOptions } from "../../../utils/chat-utils";
 import useChatSelector from "../../../hooks/use-chat-selector";
 import { useTranslation } from "react-i18next";
+import Markdownify from "./Markdownify";
 
 const leftAnimation = {
   animate: { opacity: 1, x: 0 },
@@ -87,8 +87,12 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
               styles.emergency_content
             }`}
           >
-            <Linkifier message={decodeURIComponent(message.content ?? "")} />
-            {hasOptions && !message.content && t('widget.action.select')}
+            <Markdownify message={message.content ?? ""} />
+            {!message.content && (
+              hasOptions || hasButtons 
+              ? t('widget.action.select') 
+              : <i>{t('widget.error.empty')}</i>
+            )}
           </div>
           <div
             className={classNames(

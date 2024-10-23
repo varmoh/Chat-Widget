@@ -8,12 +8,14 @@ import EventMessage from "./message-types/event-message";
 import AuthenticationMessage from "./message-types/authentication-message";
 import PermissionMessage from "./message-types/permission-message";
 import RedirectMessage from "./message-types/redirect-message";
+import { parseButtons } from "../../utils/chat-utils";
 
-const ChatMessage = (props: { message: Message }): JSX.Element => {
+const ChatMessage = (props: { message: Message, previousMessage?: Message }): JSX.Element => {
   const { t } = useTranslation();
   const {
     message,
     message: { authorRole, event },
+    previousMessage,
   } = props;
 
   const endChatMessage = useMemo(
@@ -25,6 +27,12 @@ const ChatMessage = (props: { message: Message }): JSX.Element => {
     ),
     []
   );
+
+  if(authorRole === AUTHOR_ROLES.END_USER && previousMessage && previousMessage.authorRole !== AUTHOR_ROLES.END_USER && previousMessage?.buttons) {
+    const selectedButton = parseButtons(previousMessage).find(x => x.payload === message.content);
+    if(selectedButton)
+      return <ClientMessage content={selectedButton.title} />
+  }
 
   switch (event) {
     case CHAT_EVENTS.MESSAGE_READ:

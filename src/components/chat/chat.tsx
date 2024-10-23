@@ -43,6 +43,7 @@ import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import ResponseErrorNotification from "../response-error-notification/response-error-notification";
 import useTabActive from '../../hooks/useTabActive';
+import { use } from "i18next";
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -77,6 +78,8 @@ const Chat = (): JSX.Element => {
   } = useChatSelector();
 
   const isTabActive = useTabActive();
+
+  const [isFocused, setIsFocused] = useState(true);
 
   const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector((state) => state.widget);
 
@@ -169,6 +172,7 @@ const Chat = (): JSX.Element => {
   useEffect(() => {
     if (
       isTabActive &&
+      isFocused &&
       messages.length > 0 &&
       !messages[messages.length - 1].event &&
       messages[messages.length - 1].authorRole === AUTHOR_ROLES.BACKOFFICE_USER
@@ -181,7 +185,14 @@ const Chat = (): JSX.Element => {
       };
       dispatch(sendNewMessage(message));
     }
-  }, [isTabActive]);
+  }, [isTabActive, isFocused, messages]);
+
+  window.onfocus = function () {
+    setIsFocused(true);
+  };
+  window.onblur = function () {
+    setIsFocused(false);
+  };
 
   return (
     <div className={styles.chatWrapper}>

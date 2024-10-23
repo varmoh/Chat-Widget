@@ -27,6 +27,10 @@
   border-radius: 8px;
   font-size: 14px;
   line-height: 1.5;
+
+  b, strong {
+    font-family: $font-chat-bold;
+  }
 }
 
 .authenticated {
@@ -35,7 +39,10 @@
 
 @media screen and (max-width: 480px) {
   .chat {
-    height: auto;
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
     width: 100%;
   }
 }
