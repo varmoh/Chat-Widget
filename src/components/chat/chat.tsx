@@ -94,10 +94,6 @@ const Chat = (): JSX.Element => {
   }, [dispatch, feedback.isFeedbackConfirmationShown, feedback.isFeedbackMessageGiven, feedback.isFeedbackRatingGiven]);
 
   useEffect(() => {
-    window.parent.postMessage({ isOpened: true }, window._env_.IFRAME_TARGET_OIRGIN);
-  }, []);
-
-  useEffect(() => {
     if (
       !chatId &&
       !feedback.isFeedbackConfirmationShown &&

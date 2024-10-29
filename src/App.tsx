@@ -79,6 +79,10 @@ const App: FC = () => {
     OFFICE_HOURS_INTERVAL_TIMEOUT
   );
 
+  useEffect(() => {
+    window.parent.postMessage({ isOpened: isChatOpen }, window._env_.IFRAME_TARGET_OIRGIN);
+  }, [isChatOpen]);
+
   useGetWidgetConfig();
   useGetEmergencyNotice();
   useAuthentication();
