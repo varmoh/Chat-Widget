@@ -33,6 +33,10 @@ export const Profile = (): JSX.Element => {
     setTimeout(() => setDelayFinished(true), widgetConfig.bubbleMessageSeconds * 1000);
   }, []);
 
+  useEffect(() => {
+    window.parent.postMessage({ isOpened: false }, window._env_.IFRAME_TARGET_OIRGIN);
+  }, []);
+
   useReloadChatEndEffect();
 
   const getActiveProfileClass = () => {

@@ -42,7 +42,7 @@ import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavail
 import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import ResponseErrorNotification from "../response-error-notification/response-error-notification";
-import useTabActive from '../../hooks/useTabActive';
+import useTabActive from "../../hooks/useTabActive";
 import { use } from "i18next";
 
 const RESIZABLE_HANDLES = {
@@ -92,6 +92,10 @@ const Chat = (): JSX.Element => {
       }, FEEDBACK_CONFIRMATION_TIMEOUT);
     }
   }, [dispatch, feedback.isFeedbackConfirmationShown, feedback.isFeedbackMessageGiven, feedback.isFeedbackRatingGiven]);
+
+  useEffect(() => {
+    window.parent.postMessage({ isOpened: true }, window._env_.IFRAME_TARGET_OIRGIN);
+  }, []);
 
   useEffect(() => {
     if (
