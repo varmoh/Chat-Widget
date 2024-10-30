@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import Linkifier from './linkifier';
+import Linkifier from './Markdownify';
 
 describe('Linkifier', () => {
   it('should render message link between strings', () => {

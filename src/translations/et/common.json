@@ -77,7 +77,7 @@
   "widget.action.download-chat": "Lae vestlus alla",
   "widget.action.forward-chat": "Edasta vestlus e-posti",
   "widget.action.forward-email": "Teie e-posti aadress",
-  "widget.action.select": "Valige üks järgmistest valikutest",
+  "widget.action.select": "Valige üks järgmistest valikutest:",
   "widget.form.phone": "Teie telefon",
   "widget.form.email": "Teie e-posti aadress",
   "widget.form.message": "Täpsustage siin oma küsimust",
@@ -89,5 +89,6 @@
   "widget.action.restartChat": "Alustage uut vestlust",
   "widget.action.continueChat": "Jätka praegust vestlust",
   "widget.error.botError": "Vabandame, vestlus katkes tehniliste probleemide tõttu.",
-  "widget.error.technicalProblems": "Vabandame, tekkisid tehnilised probleemid"
+  "widget.error.technicalProblems": "Vabandame, tekkisid tehnilised probleemid",
+  "widget.error.empty": "Tühi sõnum"
 }

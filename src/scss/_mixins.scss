@@ -12,6 +12,7 @@
 
 @mixin text-m-bold {
   @include text-m;
+  font-family: typography.$font-chat-bold;
   font-weight: 700;
 }
 
@@ -25,6 +26,7 @@
 
 @mixin text-s-bold {
   @include text-s;
+  font-family: typography.$font-chat-bold;
   font-weight: 700;
 }
 
@@ -39,6 +41,7 @@
 
 @mixin text-xs-bold {
   @include text-xs;
+  font-family: typography.$font-chat-bold;
   font-weight: 700;
 }
 

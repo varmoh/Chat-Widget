@@ -25,6 +25,9 @@
     border-bottom: 1px solid $color-primary;
     border-radius: 0;
     padding-bottom: 5px;
+    height: 1.5em;
+    resize: none;
+    overflow: hidden;
     color: inherit;
     font: inherit;
     &::placeholder {

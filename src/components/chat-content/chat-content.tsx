@@ -33,7 +33,7 @@ const ChatContent = (): JSX.Element => {
             scrollbars: { visibility: 'auto', autoHide: 'leave' },
           }}
         >
-          {messages.map((message) => {
+          {messages.map((message, index) => {
             if(message.id === "estimatedWaiting" && message.content === "hidden")
               return <></>;
             if(message.id === "estimatedWaiting")
@@ -43,6 +43,7 @@ const ChatContent = (): JSX.Element => {
               <ChatMessage 
                 message={message}
                 key={`${message.authorTimestamp}-${message.created}-${message.id}`}
+                previousMessage={index > 0 ? messages[index - 1] : undefined}
               />
             );
           })}

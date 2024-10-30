@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { Message } from "../../../model/message-model";
 import styles from "../chat-message.module.scss";
 import PersonIcon from "../../../static/icons/person.svg";
-import Linkifier from "./linkifier";
+import Markdownify from "./Markdownify";
 import formatBytes from "../../../utils/format-bytes";
 import File from "../../../static/icons/file.svg";
 
@@ -14,10 +14,8 @@ const rightAnimation = {
   transition: { duration: 0.25, delay: 0.25 },
 };
 
-const ClientMessage = (props: { message: Message }): JSX.Element => {
-  const {
-    message: { content },
-  } = props;
+const ClientMessage = (props: { message?: Message, content?: string }): JSX.Element => {
+  const content = props.message?.content || props.content;
 
   if (props.message?.file) {
     return (
@@ -53,7 +51,7 @@ const ClientMessage = (props: { message: Message }): JSX.Element => {
           <img src={PersonIcon} alt="Person icon" />
         </div>
         <div className={styles.content}>
-          <Linkifier message={decodeURIComponent(content ?? "")} />
+          <Markdownify message={content ?? ""} />
         </div>
       </div>
     </motion.div>

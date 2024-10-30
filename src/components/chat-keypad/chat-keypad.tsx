@@ -109,7 +109,7 @@ const ChatKeyPad = (): JSX.Element => {
     if (!isInputValid()) return;
     const message: Message = {
       chatId: chatId ?? "",
-      content: encodeURIComponent(userInput),
+      content: userInput,
       file: userInputFile,
       authorTimestamp: new Date().toISOString(),
       authorRole: AUTHOR_ROLES.END_USER,
@@ -168,7 +168,7 @@ const ChatKeyPad = (): JSX.Element => {
     <div>
       <KeypadErrorMessage>{errorMessage}</KeypadErrorMessage>
       <div className={`${keypadClasses}`}>
-        <input
+        <textarea
           disabled={userInputFile ? true : isKeypadDisabled}
           aria-label={t("keypad.input.label")}
           className={`${styles.input}`}

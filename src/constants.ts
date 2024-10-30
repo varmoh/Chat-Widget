@@ -74,6 +74,7 @@ export enum CHAT_EVENTS {
   MESSAGE_READ = 'message-read',
   UNAVAILABLE_ORGANIZATION = 'unavailable_organization',
   UNAVAILABLE_CSAS = 'unavailable_csas',
+  UNAVAILABLE_CSAS_ASK_CONTACTS = 'unavailable_csas_ask_contacts',
   UNAVAILABLE_HOLIDAY = 'unavailable_holiday'
 }
 
