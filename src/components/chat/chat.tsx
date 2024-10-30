@@ -42,7 +42,7 @@ import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavail
 import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import ResponseErrorNotification from "../response-error-notification/response-error-notification";
-import useTabActive from '../../hooks/useTabActive';
+import useTabActive from "../../hooks/useTabActive";
 import { use } from "i18next";
 
 const RESIZABLE_HANDLES = {

@@ -50,6 +50,7 @@ declare global {
         DAYS: number[];
       };
       ENABLE_HIDDEN_FEATURES: string;
+      IFRAME_TARGET_OIRGIN: string;
     };
   }
 }
@@ -61,33 +62,26 @@ const App: FC = () => {
   const [displayWidget, setDisplayWidget] = useState(
     !!getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()
   );
-  const [onlineCheckInterval, setOnlineCheckInterval] = useState(
-    ONLINE_CHECK_INTERVAL
-  );
+  const [onlineCheckInterval, setOnlineCheckInterval] = useState(ONLINE_CHECK_INTERVAL);
   const { burokrattOnlineStatus } = useAppSelector((state) => state.widget);
   const { chatStatus } = useAppSelector((state) => state.chat);
 
   useLayoutEffect(() => {
-    if (burokrattOnlineStatus === null)
-      dispatch(burokrattOnlineStatusRequest());
-    else if (burokrattOnlineStatus === false)
-      setOnlineCheckInterval(ONLINE_CHECK_INTERVAL);
-    else if (chatStatus === CHAT_STATUS.OPEN)
-      setOnlineCheckInterval(ONLINE_CHECK_INTERVAL_ACTIVE_CHAT);
+    if (burokrattOnlineStatus === null) dispatch(burokrattOnlineStatusRequest());
+    else if (burokrattOnlineStatus === false) setOnlineCheckInterval(ONLINE_CHECK_INTERVAL);
+    else if (chatStatus === CHAT_STATUS.OPEN) setOnlineCheckInterval(ONLINE_CHECK_INTERVAL_ACTIVE_CHAT);
   }, [chatStatus, burokrattOnlineStatus]);
 
-  useInterval(
-    () => dispatch(burokrattOnlineStatusRequest()),
-    onlineCheckInterval
-  );
+  useInterval(() => dispatch(burokrattOnlineStatusRequest()), onlineCheckInterval);
 
   useInterval(
-    () =>
-      setDisplayWidget(
-        !!getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()
-      ),
+    () => setDisplayWidget(!!getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()),
     OFFICE_HOURS_INTERVAL_TIMEOUT
   );
+
+  useEffect(() => {
+    window.parent.postMessage({ isOpened: isChatOpen }, window._env_.IFRAME_TARGET_OIRGIN);
+  }, [isChatOpen]);
 
   useGetWidgetConfig();
   useGetEmergencyNotice();
@@ -99,7 +93,7 @@ const App: FC = () => {
   useEffect(() => {
     const storageHandler = () => {
       const storedData = getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY);
-      const previousChatId = getFromLocalStorage('previousChatId');
+      const previousChatId = getFromLocalStorage("previousChatId");
       if (storedData === null && previousChatId === null) {
         setChatId("");
         dispatch(setChatId(""));
@@ -142,9 +136,7 @@ const App: FC = () => {
   }, [messages]);
 
   useEffect(() => {
-    const sessionStorageChatId = getFromLocalStorage(
-      SESSION_STORAGE_CHAT_ID_KEY
-    );
+    const sessionStorageChatId = getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY);
     if (sessionStorageChatId) {
       dispatch(setChatId(sessionStorageChatId));
       dispatch(setIsChatOpen(true));
@@ -163,8 +155,7 @@ const App: FC = () => {
   useNameAndTitleVisibility();
 
   if (burokrattOnlineStatus !== true) return <></>;
-  if (displayWidget && widgetConfig.isLoaded)
-    return isChatOpen ? <Chat /> : <Profile />;
+  if (displayWidget && widgetConfig.isLoaded) return isChatOpen ? <Chat /> : <Profile />;
   return <></>;
 };
 
