@@ -6,8 +6,8 @@ interface MarkdownifyProps {
 }
 const Markdownify: React.FC<MarkdownifyProps> = ({ message }) => (
   <div>
-    <Markdown options={{ enforceAtxHeadings: true }}>
-      { message ?? '' }
+    <Markdown target="_blank" options={{ enforceAtxHeadings: true }}>
+      {message ?? ""}
     </Markdown>
   </div>
 );
