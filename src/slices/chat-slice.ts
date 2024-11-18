@@ -67,7 +67,7 @@ export interface ChatState {
   loading: boolean;
   showContactForm: boolean;
   showUnavailableContactForm: boolean;
-  askForContactsIfNoCsa: boolean;
+  askForContacts: boolean;
   contactMsgId: string;
   contactContentMessage: string;
   isChatRedirected: boolean;
@@ -124,7 +124,7 @@ const initialState: ChatState = {
   errorMessage: "",
   showContactForm: false,
   showUnavailableContactForm: false,
-  askForContactsIfNoCsa: true,
+  askForContacts: true,
   contactContentMessage: "",
   isChatRedirected: false,
   estimatedWaiting: initialEstimatedTime,
@@ -576,16 +576,18 @@ export const chatSlice = createSlice({
             state.showContactForm = true;
             state.contactMsgId = msg.id ?? "";
             break;
-          case CHAT_EVENTS.UNAVAILABLE_HOLIDAY:
+          case CHAT_EVENTS.UNAVAILABLE_HOLIDAY_ASK_CONTACTS:
           case CHAT_EVENTS.UNAVAILABLE_CSAS_ASK_CONTACTS:
-          case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION:
-            state.askForContactsIfNoCsa = true;
+          case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION_ASK_CONTACTS:
+            state.askForContacts = true;
             state.showUnavailableContactForm = true;
             state.contactMsgId = msg.id ?? "";
             state.contactContentMessage = msg.content ?? "";
             break;
+          case CHAT_EVENTS.UNAVAILABLE_HOLIDAY:
           case CHAT_EVENTS.UNAVAILABLE_CSAS:
-            state.askForContactsIfNoCsa = false;
+          case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION:
+            state.askForContacts = false;
             state.showUnavailableContactForm = true;
             state.contactMsgId = msg.id ?? "";
             state.contactContentMessage = msg.content ?? "";

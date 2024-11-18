@@ -20,7 +20,7 @@ export const initialChatState: ChatState = {
   isChatOpen: false,
   showContactForm: false,
   showUnavailableContactForm: false,
-  askForContactsIfNoCsa: true,
+  askForContacts: true,
   contactContentMessage: "",
   isChatRedirected: false,
   messages: [],

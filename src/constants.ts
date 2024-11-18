@@ -73,9 +73,11 @@ export enum CHAT_EVENTS {
   CONTACT_INFORMATION_SKIPPED = 'contact-information-skipped',
   MESSAGE_READ = 'message-read',
   UNAVAILABLE_ORGANIZATION = 'unavailable_organization',
+  UNAVAILABLE_ORGANIZATION_ASK_CONTACTS = "unavailable_organization_ask_contacts",
   UNAVAILABLE_CSAS = 'unavailable_csas',
   UNAVAILABLE_CSAS_ASK_CONTACTS = 'unavailable_csas_ask_contacts',
-  UNAVAILABLE_HOLIDAY = 'unavailable_holiday'
+  UNAVAILABLE_HOLIDAY = 'unavailable_holiday',
+  UNAVAILABLE_HOLIDAY_ASK_CONTACTS = "unavailable_holiday_ask_contacts",
 }
 
 export enum TERMINATE_STATUS {
