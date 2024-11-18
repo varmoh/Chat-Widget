@@ -6,28 +6,14 @@ import StyledButton from '../styled-components/styled-button';
 import { StyledButtonType, TERMS_AND_CONDITIONS_LINK } from '../../constants';
 import EU_SF_logo_src from '../../static/icons/sf_logo_horizontal.jpg';
 import NEXT_GEN_FLAGS from '../../static/icons/NextGen_Rahastanud_EL_NextGeneration.jpg';
-import useChatSelector from '../../hooks/use-chat-selector';
-import useAuthenticationSelector from '../../hooks/use-authentication-selector';
-import { redirectToTim } from '../../utils/auth-utils';
 
 const WidgetDetails = (): JSX.Element => {
   const { t } = useTranslation();
-  const { chatId } = useChatSelector();
-  const { isAuthenticated } = useAuthenticationSelector();
 
   return (
     <WidgetDetailsStyles initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
       <div className="content">
         <div className="btn-group">
-          {chatId && !isAuthenticated && (
-            <AuthenticateWithTaraStyles
-              className="authenticateWithTara"
-              onClick={redirectToTim}
-              styleType={StyledButtonType.GRAY}
-            >
-              {t('authenticate.with-tara')}
-            </AuthenticateWithTaraStyles>
-          )}
           <TermsAndConditionsStyles
             className="termsAndConditions"
             onClick={() => window.open(TERMS_AND_CONDITIONS_LINK, '_blank')}
@@ -49,11 +35,6 @@ const WidgetDetails = (): JSX.Element => {
     </WidgetDetailsStyles>
   );
 };
-
-const AuthenticateWithTaraStyles = styled(StyledButton)`
-  display: flex;
-  align-items: center;
-`;
 
 const TermsAndConditionsStyles = styled(StyledButton)`
   display: flex;
