@@ -2,13 +2,14 @@ import { useTranslation } from "react-i18next";
 import Button from "../button/button";
 import styles from "./response-error-notification.module.scss";
 import { useAppDispatch } from "../../store";
-import { setShowErrorMessage, resetState } from "../../slices/chat-slice";
+import { setShowErrorMessage, resetState, endChat } from "../../slices/chat-slice";
 import useChatSelector from "../../hooks/use-chat-selector";
+import { CHAT_EVENTS } from "../../constants";
 
 const ResponseErrorNotification = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { responseErrorMessage } = useChatSelector();
+  const { chatId, responseErrorMessage } = useChatSelector();
 
   return (
     <div className={styles.container}>
@@ -20,6 +21,14 @@ const ResponseErrorNotification = () => {
           <Button
             title={t("widget.action.restartChat")}
             onClick={() => {
+              if (chatId) {
+               dispatch(
+                 endChat({
+                   event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
+                   isUpperCase: true,
+                 })
+               );
+              }
               dispatch(resetState());
             }}
           >

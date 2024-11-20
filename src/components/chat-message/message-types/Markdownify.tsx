@@ -6,7 +6,7 @@ interface MarkdownifyProps {
 }
 const Markdownify: React.FC<MarkdownifyProps> = ({ message }) => (
   <div>
-    <Markdown target="_blank" options={{ enforceAtxHeadings: true, overrides: { a: { props: { target: "_blank" } } } }}>
+    <Markdown options={{ enforceAtxHeadings: true, overrides: { a: { props: { target: "_blank" } } } }}>
       {message ?? ""}
     </Markdown>
   </div>
