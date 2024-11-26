@@ -69,9 +69,8 @@ export const widgetSlice = createSlice({
     builder.addCase(getWidgetConfig.fulfilled, (state, action) => {
       state.widgetConfig.isLoaded = true;
       state.widgetConfig.proactiveSeconds = action.payload?.widgetProactiveSeconds ?? CHAT_BUBBLE_PROACTIVE_SECONDS;
-      state.widgetConfig.showMessage = action.payload?.isWidgetActive ?? CHAT_SHOW_BUBBLE_MESSAGE;
-      state.widgetConfig.bubbleMessageSeconds =
-        action.payload?.widgetDisplayBubbleMessageSeconds ?? CHAT_BUBBLE_MESSAGE_DELAY_SECONDS;
+      state.widgetConfig.showMessage = action.payload?.isWidgetActive === 'true';
+      state.widgetConfig.bubbleMessageSeconds = action.payload?.widgetDisplayBubbleMessageSeconds ?? CHAT_BUBBLE_MESSAGE_DELAY_SECONDS;
       state.widgetConfig.bubbleMessageText = action.payload?.widgetBubbleMessageText ?? "";
       state.widgetConfig.color = action.payload?.widgetColor ?? CHAT_BUBBLE_COLOR;
       state.widgetConfig.animation = action.payload?.widgetAnimation ?? CHAT_BUBBLE_ANIMATION;
