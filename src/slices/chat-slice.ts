@@ -377,7 +377,7 @@ export const sendNewSilentMessage = createAsyncThunk(
 
 export const sendMessagePreview = createAsyncThunk(
   "chat/postMessagePreview",
-  (message: Message) => ChatService.sendMessagePreview(message)
+  (message: Message) => {} // ChatService.sendMessagePreview(message) Preview commented Out as requested by clients in task -1024-
 );
 
 export const getEstimatedWaitingTime = createAsyncThunk(
