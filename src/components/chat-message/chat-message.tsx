@@ -65,6 +65,8 @@ const ChatMessage = (props: { message: Message, previousMessage?: Message }): JS
       return <EventMessage content={t("redirect.ask-permission-accepted")} />;
     case CHAT_EVENTS.REQUESTED_CHAT_FORWARD_REJECTED:
       return <EventMessage content={t("redirect.ask-permission-rejected")} />;
+    case CHAT_EVENTS.ASK_TO_FORWARD_TO_CSA:
+      return <EventMessage content={t("notifications.ask-to-forward-to-csa")} />;   
     case CHAT_EVENTS.CONTACT_INFORMATION_FULFILLED:
       return <ClientMessage message={message} />;
     default:

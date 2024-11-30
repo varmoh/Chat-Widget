@@ -67,8 +67,10 @@ export interface ChatState {
   loading: boolean;
   showContactForm: boolean;
   showUnavailableContactForm: boolean;
+  showAskToForwardToCsaForm: boolean;
   askForContacts: boolean;
   contactMsgId: string;
+  forwardToCsaMessage: string;
   contactContentMessage: string;
   isChatRedirected: boolean;
   feedback: {
@@ -124,7 +126,9 @@ const initialState: ChatState = {
   errorMessage: "",
   showContactForm: false,
   showUnavailableContactForm: false,
+  showAskToForwardToCsaForm: false,
   askForContacts: true,
+  forwardToCsaMessage: "",
   contactContentMessage: "",
   isChatRedirected: false,
   estimatedWaiting: initialEstimatedTime,
@@ -591,6 +595,10 @@ export const chatSlice = createSlice({
             state.showUnavailableContactForm = true;
             state.contactMsgId = msg.id ?? "";
             state.contactContentMessage = msg.content ?? "";
+            break;
+          case CHAT_EVENTS.ASK_TO_FORWARD_TO_CSA:  
+            state.showAskToForwardToCsaForm = true;
+            state.forwardToCsaMessage = msg.content ?? "";
             break;
           case CHAT_EVENTS.ANSWERED:
           case CHAT_EVENTS.TERMINATED:

@@ -1,0 +1,38 @@
+@use '/src/scss';
+
+.container {
+  background: rgba(0, 60, 255, 0.8);
+  // border-radius: 8px;
+  height: 100%;
+
+  position: relative;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  align-self: flex-end;
+  gap: 2px;
+}
+
+.form_header {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.form_footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  gap: 0.5rem;
+}
+
+.form_body {
+  background-color: aqua;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  // margin-top: 5rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
