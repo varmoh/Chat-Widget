@@ -20,6 +20,7 @@
   "notifications.ask-contact-information": "Would you like to leave your contact information, so customer support can get back to you?",
   "notifications.human-took-over": "A human took the conversation over",
   "notifications.ask-to-forward-to-csa": "Asked to forward the conversation to a customer service agent",
+  "notifications.forwarded-to-backoffice": "Conversation forwarded to back office",
   "keypad.input.placeholder": "Enter your message...",
   "keypad.input.feedbackPlaceholder": "Enter your feedback...",
   "keypad.button.label": "Send",

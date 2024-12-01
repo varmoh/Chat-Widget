@@ -21,6 +21,7 @@ export const initialChatState: ChatState = {
   showContactForm: false,
   showUnavailableContactForm: false,
   showAskToForwardToCsaForm: false,
+  forwardToCsaMessageId: "",
   askForContacts: true,
   forwardToCsaMessage: "",
   contactContentMessage: "",

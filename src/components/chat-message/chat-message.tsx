@@ -66,7 +66,9 @@ const ChatMessage = (props: { message: Message, previousMessage?: Message }): JS
     case CHAT_EVENTS.REQUESTED_CHAT_FORWARD_REJECTED:
       return <EventMessage content={t("redirect.ask-permission-rejected")} />;
     case CHAT_EVENTS.ASK_TO_FORWARD_TO_CSA:
-      return <EventMessage content={t("notifications.ask-to-forward-to-csa")} />;   
+      return <EventMessage content={t("notifications.ask-to-forward-to-csa")} />;
+    case CHAT_EVENTS.FORWARDED_TO_BACKOFFICE:
+      return <EventMessage content={t("notifications.forwarded-to-backoffice")} />;
     case CHAT_EVENTS.CONTACT_INFORMATION_FULFILLED:
       return <ClientMessage message={message} />;
     default:
