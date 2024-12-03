@@ -44,6 +44,7 @@ import useWindowDimensions from "../../hooks/useWindowDimensions";
 import ResponseErrorNotification from "../response-error-notification/response-error-notification";
 import useTabActive from "../../hooks/useTabActive";
 import { use } from "i18next";
+import AskForwardToCsa from "../ask-forward-to-csa-modal/ask-forward-to-csa-modal";
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -70,6 +71,7 @@ const Chat = (): JSX.Element => {
     idleChat,
     showContactForm,
     showUnavailableContactForm,
+    showAskToForwardToCsaForm,
     feedback,
     messages,
     chatDimensions,
@@ -219,7 +221,8 @@ const Chat = (): JSX.Element => {
           {showWidgetDetails && <WidgetDetails />}
           {!showWidgetDetails && showContactForm && <EndUserContacts />}
           {!showWidgetDetails && showUnavailableContactForm && <UnavailableEndUserContacts />}
-          {!showWidgetDetails && !showContactForm && !showUnavailableContactForm && <ChatContent />}
+          {!showWidgetDetails && !showContactForm && !showUnavailableContactForm && showAskToForwardToCsaForm && <AskForwardToCsa />}
+          {!showWidgetDetails && !showContactForm && !showUnavailableContactForm && !showAskToForwardToCsaForm && <ChatContent />}
           {idleChat.isIdle && <IdleChatNotification />}
           {showResponseError && <ResponseErrorNotification />}
           {showFeedbackResult ? (

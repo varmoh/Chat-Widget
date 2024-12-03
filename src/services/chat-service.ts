@@ -48,6 +48,10 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.POST_MESSAGE_PREVIEW, { chatId, content });
   }
 
+  redirectToBackoffice(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
+    return http.post(RUUTER_ENDPOINTS.REDIRECT_TO_BACKOFFICE, { message, holidays, holidayNames });
+  }
+
   getMessages(): Promise<Message[]> {
     return http.get(RUUTER_ENDPOINTS.GET_MESSAGES_BY_CHAT_ID);
   }
