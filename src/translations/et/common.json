@@ -24,6 +24,7 @@
   "notifications.human-took-over": "Klienditeenindaja võttis vestluse üle",
   "notifications.ask_to_forward_to_csa": "Paluti vestlus klienditeenindajale üle kanda",
   "notifications.forwarded_to_backoffice": "Vestlus suunatakse tagasi kontorisse",
+  "notifications.waiting_validation": "Vastust koostatakse",
   "keypad.input.placeholder": "Kirjutage oma sõnum...",
   "keypad.input.feedbackPlaceholder": "Sisestage oma tagasiside...",
   "keypad.button.label": "Saada",

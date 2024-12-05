@@ -80,6 +80,7 @@ export enum CHAT_EVENTS {
   UNAVAILABLE_CSAS_ASK_CONTACTS = "unavailable_csas_ask_contacts",
   UNAVAILABLE_HOLIDAY = "unavailable_holiday",
   UNAVAILABLE_HOLIDAY_ASK_CONTACTS = "unavailable_holiday_ask_contacts",
+  WAITING_VALIDATION = "waiting_validation",
 }
 
 export enum TERMINATE_STATUS {

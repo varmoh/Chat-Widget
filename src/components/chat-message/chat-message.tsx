@@ -71,6 +71,9 @@ const ChatMessage = (props: { message: Message, previousMessage?: Message }): JS
       return <EventMessage content={t("notifications.forwarded_to_backoffice")} />;
     case CHAT_EVENTS.CONTACT_INFORMATION_FULFILLED:
       return <ClientMessage message={message} />;
+    case CHAT_EVENTS.WAITING_VALIDATION:
+      const waitingValidationMessage = { ...message, content: `_${t("notifications.waiting_validation")}_` };
+      return <AdminMessage message={waitingValidationMessage} />; 
     default:
       if (authorRole === AUTHOR_ROLES.END_USER) {
         return <ClientMessage message={message} />;
