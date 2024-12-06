@@ -590,6 +590,11 @@ export const chatSlice = createSlice({
             state.forwardToCsaMessageId = msg.id ?? "";
             state.forwardToCsaMessage = msg.content ?? "";
             break;
+          case CHAT_EVENTS.APPROVED_VALIDATION:
+            state.messages = state.messages.map((message) =>
+              message.id === msg.id ? { ...message, content: msg.content, event: CHAT_EVENTS.APPROVED_VALIDATION } : message
+            );
+            break;
           case CHAT_EVENTS.ANSWERED:
           case CHAT_EVENTS.TERMINATED:
           case TERMINATE_STATUS.ACCEPTED:

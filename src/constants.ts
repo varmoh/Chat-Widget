@@ -81,6 +81,7 @@ export enum CHAT_EVENTS {
   UNAVAILABLE_HOLIDAY = "unavailable_holiday",
   UNAVAILABLE_HOLIDAY_ASK_CONTACTS = "unavailable_holiday_ask_contacts",
   WAITING_VALIDATION = "waiting_validation",
+  APPROVED_VALIDATION = 'approved_validation'
 }
 
 export enum TERMINATE_STATUS {
