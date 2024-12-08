@@ -69,6 +69,8 @@ const ChatMessage = (props: { message: Message, previousMessage?: Message }): JS
       return <EventMessage content={t("notifications.ask_to_forward_to_csa")} />;
     case CHAT_EVENTS.FORWARDED_TO_BACKOFFICE:
       return <EventMessage content={t("notifications.forwarded_to_backoffice")} />;
+    case CHAT_EVENTS.CONTINUE_CHATTING_WITH_BOT:
+      return <EventMessage content={t("notifications.continue_chatting_with_bot")} />;
     case CHAT_EVENTS.CONTACT_INFORMATION_FULFILLED:
       return <ClientMessage message={message} />;
     case CHAT_EVENTS.WAITING_VALIDATION:
