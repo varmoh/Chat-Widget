@@ -391,7 +391,7 @@ export const redirectToBackoffice = createAsyncThunk(
 
 export const sendMessagePreview = createAsyncThunk(
   "chat/postMessagePreview",
-  (message: Message) => {} // ChatService.sendMessagePreview(message) Preview commented Out as requested by clients in task -1024-
+  (message: Message) => ChatService.sendMessagePreview(message)
 );
 
 export const getEstimatedWaitingTime = createAsyncThunk(
