@@ -5,7 +5,7 @@ import { useAppDispatch } from "../../store";
 import { AUTHOR_ROLES, CHAT_EVENTS, StyledButtonType } from "../../constants";
 import StyledButton from "../styled-components/styled-button";
 import styles from "./ask-forward-to-csa-modal.module.scss";
-import { setShowAskToForwardToCsaForm, redirectToBackoffice } from "../../slices/chat-slice";
+import { setShowAskToForwardToCsaForm, redirectToBackoffice, sendMessageWithNewEvent } from "../../slices/chat-slice";
 import { Message } from "../../model/message-model";
 
 const AskForwardToCsaModal = (): JSX.Element => {
@@ -35,6 +35,16 @@ const AskForwardToCsaModal = (): JSX.Element => {
           {t("widget.action.yes")}
         </StyledButton>
         <StyledButton styleType={StyledButtonType.GRAY} onClick={() => {
+          const newMsg: Message = {
+            id: forwardToCsaMessageId,
+            chatId,
+            content: "",
+            preview: "",
+            authorRole: AUTHOR_ROLES.END_USER,
+            authorTimestamp: new Date().toISOString(),
+            event: CHAT_EVENTS.CONTINUE_CHATTING_WITH_BOT,
+          };
+          dispatch(sendMessageWithNewEvent(newMsg));
           dispatch(setShowAskToForwardToCsaForm(false));
         }}>
           {t("widget.action.no")}

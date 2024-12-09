@@ -63,6 +63,7 @@ export enum CHAT_EVENTS {
   ASK_PERMISSION_IGNORED = "ask-permission-ignored",
   ASK_TO_FORWARD_TO_CSA = "ask_to_forward_to_csa",
   FORWARDED_TO_BACKOFFICE = "forwarded_to_backoffice",
+  CONTINUE_CHATTING_WITH_BOT = "continue_chatting_with_bot",
   REQUESTED_CHAT_FORWARD = "requested-chat-forward",
   REQUESTED_CHAT_FORWARD_ACCEPTED = "requested-chat-forward-accepted",
   REQUESTED_CHAT_FORWARD_REJECTED = "requested-chat-forward-rejected",
@@ -80,6 +81,8 @@ export enum CHAT_EVENTS {
   UNAVAILABLE_CSAS_ASK_CONTACTS = "unavailable_csas_ask_contacts",
   UNAVAILABLE_HOLIDAY = "unavailable_holiday",
   UNAVAILABLE_HOLIDAY_ASK_CONTACTS = "unavailable_holiday_ask_contacts",
+  WAITING_VALIDATION = "waiting_validation",
+  APPROVED_VALIDATION = "approved_validation",
 }
 
 export enum TERMINATE_STATUS {

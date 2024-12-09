@@ -391,7 +391,7 @@ export const redirectToBackoffice = createAsyncThunk(
 
 export const sendMessagePreview = createAsyncThunk(
   "chat/postMessagePreview",
-  (message: Message) => {} // ChatService.sendMessagePreview(message) Preview commented Out as requested by clients in task -1024-
+  (message: Message) => ChatService.sendMessagePreview(message)
 );
 
 export const getEstimatedWaitingTime = createAsyncThunk(
@@ -589,6 +589,11 @@ export const chatSlice = createSlice({
             state.showAskToForwardToCsaForm = true;
             state.forwardToCsaMessageId = msg.id ?? "";
             state.forwardToCsaMessage = msg.content ?? "";
+            break;
+          case CHAT_EVENTS.APPROVED_VALIDATION:
+            state.messages = state.messages.map((message) =>
+              message.id === msg.id ? { ...message, content: msg.content, event: CHAT_EVENTS.APPROVED_VALIDATION } : message
+            );
             break;
           case CHAT_EVENTS.ANSWERED:
           case CHAT_EVENTS.TERMINATED:
