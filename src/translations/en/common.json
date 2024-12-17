@@ -62,6 +62,7 @@
   "widget.contacts.contact.comment.placeholder": "Type your question here",
   "widget.contacts.contact.invalid.phone": "Please make sure the phone number is correct",
   "widget.contacts.contact.invalid.email": "Please make sure the email address is correct",
+  "widget.contacts.contact.invalid.comment": "Your input exceeds the maximum allowed length of 1000 characters",
   "widget.contacts.contact.invalid.fields": "Please fill in at least one field",
   "widget.terms-and-conditions": "read the terms of service",
   "widget.details-body": "In all popular web browsers, you can zoom in and out by holding down the Ctrl key (the Cmd key in OS X) and pressing either the \"+\" or \"-\" key. Another convenient way is to use the mouse: hold down the Ctrl key and at the same time move the mouse scroll wheel. You can return to normal size by pressing the Ctrl and 0 keys at the same time.",

@@ -65,6 +65,7 @@
   "widget.contacts.contact.skip.label": "Jäta vahele",
   "widget.contacts.contact.invalid.phone": "Palun veenduge telefoninumbri korrektsuses",
   "widget.contacts.contact.invalid.email": "Palun veenduge e-posti aadressi korrektsuses",
+  "widget.contacts.contact.invalid.comment": "Teie sisestus ületab lubatud maksimaalse pikkuse, mis on 1000 tähemärki",
   "widget.contacts.contact.invalid.fields": "Palun täitke vähemalt üks väli",
   "widget.terms-and-conditions": "Tutvuge teenuse tingimustega",
   "widget.details-body": "Kõikides populaarsetes veebilehitsejates on võimalik lehte suurendada ja vähendada, kui hoida all Ctrl-klahvi (macOS operatsioonisüsteemis Cmd-klahvi) ja samal ajal vajutada kas “+”- või “-“-klahvi. Teine mugav võimalus on kasutada hiirt: hoides all Ctrl-klahvi ja samal ajal liigutades hiire kerimisrulli. Tagasi normaalsuurusesse saab, kui vajutada samaaegselt Ctrl- ja 0-klahvile.",
