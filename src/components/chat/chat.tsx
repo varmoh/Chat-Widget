@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { memo, useEffect, useLayoutEffect, useState } from "react";
+import { memo, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Resizable, ResizeCallback } from "re-resizable";
 import useChatSelector from "../../hooks/use-chat-selector";
@@ -84,6 +84,25 @@ const Chat = (): JSX.Element => {
   const [isFocused, setIsFocused] = useState(true);
 
   const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector((state) => state.widget);
+
+  const chatRef = useRef<HTMLDivElement>(null);
+
+  // Prevent chat from being cut off on iOS devices when on-screen keyboard is open
+  useEffect(() => {
+    const vv = window.visualViewport;
+    const currentRef = chatRef.current;
+
+    function setChatHeight() {
+      if (currentRef && vv && /iPhone|iPad|iPod/.test(window.navigator.userAgent)) {
+        currentRef.style.height = `${vv.height}px`;
+      }
+    }
+
+    vv?.addEventListener('resize', setChatHeight);
+    setChatHeight();
+
+    return () => vv?.removeEventListener('resize', setChatHeight);
+  }, []);
 
   useEffect(() => {
     if (feedback.isFeedbackRatingGiven && feedback.isFeedbackMessageGiven && !feedback.isFeedbackConfirmationShown) {
@@ -211,6 +230,7 @@ const Chat = (): JSX.Element => {
           className={`${styles.chat} ${isAuthenticated ? styles.authenticated : ""}`}
           animate={{ y: 0 }}
           style={{ y: 400 }}
+          ref={chatRef}
         >
           <ChatHeader
             isDetailSelected={showWidgetDetails}
