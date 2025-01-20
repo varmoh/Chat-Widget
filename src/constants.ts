@@ -40,6 +40,11 @@ export enum CHAT_MODES {
   FREE = 'free',
 }
 
+export enum CHAT_SESSIONS {
+  SESSION_ID_KEY = "tabId",
+  SESSION_STATE_KEY = "sessionTabs"
+}
+
 export enum CHAT_STATUS {
   ENDED = 'ENDED',
   OPEN = 'OPEN',

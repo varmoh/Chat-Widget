@@ -11,18 +11,17 @@ const useReloadChatEndEffect = () => {
 
   useEffect(() => {
     dispatch(removeChatFromTerminationQueue());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
       if (chatId && isRedirectPathEmpty() && isLastSession()) {
-        localStorage.setItem("sessions", "1");
         dispatch(addChatToTerminationQueue());
       }
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "F5" || (event.ctrlKey && event.key === "r")) {
+      if (event.key !== "F5" && (event.ctrlKey && event.key === "r")) {
         handleBeforeUnload();
       }
     };
@@ -34,7 +33,7 @@ const useReloadChatEndEffect = () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [chatId]);
+  }, [chatId, dispatch]);
 }
 
 export default useReloadChatEndEffect;

@@ -1,6 +1,8 @@
-export const isLastSession = () => {
-  const sessions = localStorage.getItem("sessions");
-  return sessions && parseInt(sessions) === 1;
+import {CHAT_SESSIONS} from "../constants";
+
+export const isLastSession = (): boolean => {
+  const currentState = JSON.parse(localStorage.getItem(CHAT_SESSIONS.SESSION_STATE_KEY) as string) || { ids: [], count: 0 };
+  return currentState.count <= 1;
 }
 
 export const wasPageReloaded = () => {

@@ -10,7 +10,7 @@ import {
   SESSION_STORAGE_CHAT_ID_KEY,
   CHAT_STATUS,
   ONLINE_CHECK_INTERVAL_ACTIVE_CHAT,
-  EXTEND_JWT_COOKIE_IN_MS,
+  EXTEND_JWT_COOKIE_IN_MS, CHAT_SESSIONS,
 } from "./constants";
 import {
   getChat,
@@ -32,6 +32,7 @@ import useGetEmergencyNotice from "./hooks/use-get-emergency-notice";
 import { customJwtExtend } from "./slices/authentication-slice";
 import { getFromLocalStorage } from "./utils/local-storage-utils";
 import useNameAndTitleVisibility from "./hooks/use-name-title-visibility";
+import {generateUEID} from "./utils/generators";
 
 declare global {
   interface Window {
@@ -110,20 +111,53 @@ const App: FC = () => {
   }, []);
 
   useEffect(() => {
-    const sessions = localStorage.getItem("sessions");
-    if (sessions == null) {
-      localStorage.setItem("sessions", "1");
-    } else {
-      localStorage.setItem("sessions", `${parseInt(sessions) + 1}`);
+    const delay = 1000;
+
+    const timeOutId = setTimeout(() => {
+      initializeSession();
+    }, delay);
+
+    return () => clearTimeout(timeOutId)
+
+  }, []);
+
+  const initializeSession = () => {
+    let tabId = sessionStorage.getItem("tabId");
+    if (!tabId) {
+      tabId = generateUEID();
+      sessionStorage.setItem("tabId", tabId);
     }
 
-    window.onbeforeunload = function (_) {
-      const newSessionsCount = localStorage.getItem("sessions");
-      if (newSessionsCount !== null) {
-        localStorage.setItem("sessions", `${parseInt(newSessionsCount) - 1}`);
-      }
+    let currentState = getCurrentSessionState();
+
+    if (!currentState.ids.includes(tabId)) {
+      currentState.ids.push(tabId);
+      currentState.count = currentState.ids.length;
+      localStorage.setItem(CHAT_SESSIONS.SESSION_STATE_KEY, JSON.stringify(currentState));
+    }
+
+    const handleTabClose = () => {
+      const currentAppState = JSON.parse(localStorage.getItem(CHAT_SESSIONS.SESSION_STATE_KEY) as string) || { ids: [], count: 0 };
+
+      const updatedIds = currentAppState.ids.filter((id: string) => id !== tabId);
+      const updatedState = {
+        ids: updatedIds,
+        count: updatedIds.length,
+      };
+
+      localStorage.setItem(CHAT_SESSIONS.SESSION_STATE_KEY, JSON.stringify(updatedState));
     };
-  }, []);
+
+    window.addEventListener("beforeunload", handleTabClose);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleTabClose);
+    };
+  };
+
+  const getCurrentSessionState = () => {
+    return JSON.parse(localStorage.getItem(CHAT_SESSIONS.SESSION_STATE_KEY) as string) || { ids: [], count: 0 };
+  }
 
   useLayoutEffect(() => {
     if (!displayWidget || !isChatOpen || !chatId) return;
