@@ -46,6 +46,7 @@ const ChatKeyPad = (): JSX.Element => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const hiddenFileInputRef = useRef<HTMLInputElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleUploadClick = () => {
     hiddenFileInputRef.current?.click();
@@ -67,6 +68,18 @@ const ChatKeyPad = (): JSX.Element => {
       base64: base64,
     });
   };
+
+  const adjustHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "1em";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustHeight();
+  }, []);
 
   const handleTextFeedback = () => {
     if (!feedback.isFeedbackRatingGiven) {
@@ -169,6 +182,7 @@ const ChatKeyPad = (): JSX.Element => {
       <KeypadErrorMessage>{errorMessage}</KeypadErrorMessage>
       <div className={`${keypadClasses}`}>
         <textarea
+          ref={textareaRef}
           disabled={userInputFile ? true : isKeypadDisabled}
           aria-label={t("keypad.input.label")}
           className={`${styles.input}`}
@@ -177,6 +191,7 @@ const ChatKeyPad = (): JSX.Element => {
           onChange={(e) => {
             setUserInput(e.target.value);
             setErrorMessage("");
+            adjustHeight();
           }}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
@@ -187,7 +202,10 @@ const ChatKeyPad = (): JSX.Element => {
               }
             }
           }}
-          onKeyUp={handleKeyUp}
+          onKeyUp={(e) => {
+            handleKeyUp();
+            adjustHeight();
+          }}
         />
         <input type="file" ref={hiddenFileInputRef} onChange={handleFileChange} style={{ display: "none" }} />
 
