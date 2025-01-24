@@ -126,7 +126,6 @@ export enum RUUTER_ENDPOINTS {
   REMOVE_CHAT_FORWARDING_VALUE = '/chats/forwards/remove',
   GENERATE_FORWARDING_REQUEST = '/chats/forwards/add',
   REDIRECT_TO_BACKOFFICE= '/chats/forwards/forward-to-backoffice',
-  BUROKRATT_ONLINE_STATUS = '/healthz',
   CUSTOM_JWT_EXTEND = '/auth/jwt/extend',
   CUSTOM_JWT_USERINFO = '/auth/jwt/userinfo',
   DOWNLOAD_CHAT = '/chats/download',

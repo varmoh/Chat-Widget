@@ -36,7 +36,9 @@ describe("Confirmation modal component", () => {
             color: CHAT_BUBBLE_COLOR,
             animation: CHAT_BUBBLE_ANIMATION,
             isLoaded: false,
+            isBurokrattActive: null,
           },
+          chatId: null,
         },
       },
     });

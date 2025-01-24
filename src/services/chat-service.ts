@@ -116,10 +116,6 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.SEND_CONTACT_INFO);
   }
 
-  burokrattOnlineStatus(): Promise<boolean> {
-    return http.get(RUUTER_ENDPOINTS.BUROKRATT_ONLINE_STATUS);
-  }
-
   async getNameVisibility(): Promise<string> {
     return http.get(RUUTER_ENDPOINTS.GET_CSA_NAME_VISIBILITY);
   }

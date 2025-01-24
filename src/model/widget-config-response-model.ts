@@ -5,4 +5,5 @@ export interface WidgetConfigResponse {
   widgetBubbleMessageText: string;
   widgetColor: string;
   widgetAnimation: string;
+  isBurokrattActive: string;
 }

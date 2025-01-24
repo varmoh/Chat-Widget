@@ -25,9 +25,8 @@ import useNewMessageNotification from "./hooks/use-new-message-notification";
 import useAuthentication from "./hooks/use-authentication";
 import useGetNewMessages from "./hooks/use-get-new-messages";
 import useGetChat from "./hooks/use-get-chat";
-import { burokrattOnlineStatusRequest, getWidgetConfig } from "./slices/widget-slice";
+import { getWidgetConfig } from "./slices/widget-slice";
 import useWidgetSelector from "./hooks/use-widget-selector";
-import useGetWidgetConfig from "./hooks/use-get-widget-config";
 import useGetEmergencyNotice from "./hooks/use-get-emergency-notice";
 import { customJwtExtend } from "./slices/authentication-slice";
 import { getFromLocalStorage } from "./utils/local-storage-utils";
@@ -68,12 +67,11 @@ const App: FC = () => {
   const { chatStatus } = useAppSelector((state) => state.chat);
 
   useLayoutEffect(() => {
-    if (burokrattOnlineStatus === null) dispatch(burokrattOnlineStatusRequest());
-    else if (burokrattOnlineStatus === false) setOnlineCheckInterval(ONLINE_CHECK_INTERVAL);
+    if (burokrattOnlineStatus === false) setOnlineCheckInterval(ONLINE_CHECK_INTERVAL);
     else if (chatStatus === CHAT_STATUS.OPEN) setOnlineCheckInterval(ONLINE_CHECK_INTERVAL_ACTIVE_CHAT);
   }, [chatStatus, burokrattOnlineStatus]);
 
-  useInterval(() => dispatch(burokrattOnlineStatusRequest()), onlineCheckInterval);
+  useInterval(() => dispatch(getWidgetConfig()), onlineCheckInterval);
 
   useInterval(
     () => setDisplayWidget(!!getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()),
@@ -84,7 +82,6 @@ const App: FC = () => {
     window.parent.postMessage({ isOpened: isChatOpen }, window._env_.IFRAME_TARGET_OIRGIN);
   }, [isChatOpen]);
 
-  useGetWidgetConfig();
   useGetEmergencyNotice();
   useAuthentication();
   useGetChat();

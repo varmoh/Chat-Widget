@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   CHAT_BUBBLE_PROACTIVE_SECONDS,
   CHAT_SHOW_BUBBLE_MESSAGE,
@@ -7,8 +7,8 @@ import {
   CHAT_BUBBLE_ANIMATION,
 } from "../constants";
 import WidgetService from "../services/widget-service";
-import chatService from '../services/chat-service';
 import { endChat } from "./chat-slice";
+import { RootState } from '../store';
 
 export interface WidgetState {
   showConfirmationModal: boolean;
@@ -21,7 +21,9 @@ export interface WidgetState {
     color: string;
     animation: string;
     isLoaded: boolean;
+    isBurokrattActive: boolean | null;
   };
+  chatId?: string | null;
 }
 
 const initialState: WidgetState = {
@@ -35,17 +37,24 @@ const initialState: WidgetState = {
     color: CHAT_BUBBLE_COLOR,
     animation: CHAT_BUBBLE_ANIMATION,
     isLoaded: false,
+    isBurokrattActive: null,
   },
+  chatId: null,
 };
 
-export const getWidgetConfig = createAsyncThunk("chat/getWidgetConfig", async () => WidgetService.getWidgetConfig());
-
-export const burokrattOnlineStatusRequest = createAsyncThunk('widget/burokrattOnlineStatus', async () => chatService.burokrattOnlineStatus());
+export const getWidgetConfig = createAsyncThunk("widget/getWidgetConfig", async (_, { getState, dispatch }) => {
+  const state = getState() as RootState;
+  dispatch(setChatId(state.chat.chatId));
+  return WidgetService.getWidgetConfig();
+});
 
 export const widgetSlice = createSlice({
   name: "widget",
   initialState,
   reducers: {
+    setChatId: (state, action: PayloadAction<string | null>) => {
+      state.chatId = action.payload;
+    },
     showConfirmationModal: (state) => {
       state.showConfirmationModal = true;
     },
@@ -57,14 +66,9 @@ export const widgetSlice = createSlice({
     builder.addCase(endChat.pending, (state) => {
       state.showConfirmationModal = false;
     });
-    builder.addCase(burokrattOnlineStatusRequest.fulfilled, (state) => {
-      state.burokrattOnlineStatus = true;
-    });
-    builder.addCase(burokrattOnlineStatusRequest.rejected, (state) => {
-      state.burokrattOnlineStatus = false;
-    });
     builder.addCase(getWidgetConfig.rejected, (state) => {
       state.widgetConfig.isLoaded = true;
+      state.burokrattOnlineStatus = false;
     });
     builder.addCase(getWidgetConfig.fulfilled, (state, action) => {
       state.widgetConfig.isLoaded = true;
@@ -74,10 +78,16 @@ export const widgetSlice = createSlice({
       state.widgetConfig.bubbleMessageText = action.payload?.widgetBubbleMessageText ?? "";
       state.widgetConfig.color = action.payload?.widgetColor ?? CHAT_BUBBLE_COLOR;
       state.widgetConfig.animation = action.payload?.widgetAnimation ?? CHAT_BUBBLE_ANIMATION;
+      state.widgetConfig.isBurokrattActive = action.payload?.isBurokrattActive === 'true';
+      if (state.chatId != null && state.widgetConfig.isBurokrattActive === false) {
+        state.burokrattOnlineStatus = true;
+      } else {
+        state.burokrattOnlineStatus = state.widgetConfig.isBurokrattActive;
+      }
     });
   },
 });
 
-export const { showConfirmationModal, closeConfirmationModal } = widgetSlice.actions;
+export const { setChatId, showConfirmationModal, closeConfirmationModal } = widgetSlice.actions;
 
 export default widgetSlice.reducer;
