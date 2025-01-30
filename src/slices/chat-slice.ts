@@ -278,7 +278,7 @@ export const endChat = createAsyncThunk(
 );
 
 export const addChatToTerminationQueue = createAsyncThunk(
-  "chat/addChatToTerminationQueue",
+  "addChatToTerminationQueue",
   async (args, thunkApi) => {
     const { chat } = thunkApi.getState() as { chat: ChatState };
 

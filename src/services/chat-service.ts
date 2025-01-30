@@ -6,6 +6,7 @@ import { RUUTER_ENDPOINTS } from "../constants";
 import { EndUserTechnicalData } from "../model/chat-ini-model";
 import { EmergencyNoticeResponse } from "../model/emergency-notice-response-model";
 import { EstimatedWaiting } from "../slices/chat-slice";
+import notificationHttp from "./notification-service";
 
 interface Document {
   _id: string;
@@ -125,7 +126,7 @@ class ChatService {
   }
 
   addChatToTerminationQueue(chatId: string): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.ADD_CHAT_TO_TERMINATION_QUEUE, { chatId });
+    return notificationHttp.post('add-chat-to-termination-queue', { chatId });
   }
 
   removeChatFromTerminationQueue(chatId: string): Promise<void> {
