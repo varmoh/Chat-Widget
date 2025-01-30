@@ -541,6 +541,8 @@ export const chatSlice = createSlice({
       let receivedMessages = action.payload || [];
       if (!receivedMessages.length) return;
 
+      let messageEdited = false;
+
       const newMessagesList = state.messages.map((existingMessage) => {
         const matchingMessage = findMatchingMessageFromMessageList(existingMessage, receivedMessages);
         if (!matchingMessage) return existingMessage;
@@ -548,12 +550,37 @@ export const chatSlice = createSlice({
         return { ...existingMessage, ...matchingMessage };
       });
 
-      if (newMessagesList.length + receivedMessages.length === state.messages.length) {
+      // Handle edited messages
+      receivedMessages.forEach((receivedMessage) => {
+        if (receivedMessage.originalBaseId) {
+          const indexToReplace = state.messages.findIndex(
+            (message) => message.id === receivedMessage.originalBaseId
+          );
+
+          if (indexToReplace !== -1) {
+            newMessagesList[indexToReplace] = {
+              ...state.messages[indexToReplace],
+              ...receivedMessage,
+            };
+
+            messageEdited = true;
+
+            receivedMessages = receivedMessages.filter(
+              (msg) => msg.id !== receivedMessage.id
+            );
+          }
+        }
+      });
+
+      if (
+        !messageEdited &&
+        newMessagesList.length + receivedMessages.length === state.messages.length
+      ) {
         return;
       }
 
       state.lastReadMessageTimestamp = new Date().toISOString();
-      state.newMessagesAmount += receivedMessages.length;
+      state.newMessagesAmount += receivedMessages.length;      
       state.messages = filterDuplicatMessages([...newMessagesList, ...receivedMessages]);
       setToLocalStorage("newMessagesAmount", state.newMessagesAmount);
 
