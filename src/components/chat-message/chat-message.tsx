@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Message } from "../../model/message-model";
-import { AUTHOR_ROLES, CHAT_EVENTS } from "../../constants";
+import {AUTHOR_ROLES, CHAT_EVENTS, TERMINATE_STATUS} from "../../constants";
 import AdminMessage from "./message-types/admin-message";
 import ClientMessage from "./message-types/client-message";
 import EventMessage from "./message-types/event-message";
@@ -35,6 +35,13 @@ const ChatMessage = (props: { message: Message, previousMessage?: Message }): JS
   }
 
   switch (event) {
+    case TERMINATE_STATUS.CLIENT_LEFT_WITH_ACCEPTED:
+    case TERMINATE_STATUS.CLIENT_LEFT_WITH_NO_RESOLUTION:
+    case TERMINATE_STATUS.CLIENT_LEFT_FOR_UNKNOWN_REASONS:
+    case TERMINATE_STATUS.ACCEPTED:
+    case TERMINATE_STATUS.HATE_SPEECH:
+    case TERMINATE_STATUS.OTHER:
+    case TERMINATE_STATUS.RESPONSE_SENT_TO_CLIENT_EMAIL:
     case CHAT_EVENTS.MESSAGE_READ:
     case CHAT_EVENTS.USER_AUTHENTICATED:
       return <></>;
