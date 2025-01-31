@@ -18,10 +18,19 @@ import {
   findMatchingMessageFromMessageList,
   getInitialChatDimensions,
 } from "../utils/state-management-utils";
-import { getFromLocalStorage, setToLocalStorage } from "../utils/local-storage-utils";
+import {
+  getFromLocalStorage,
+  setToLocalStorage,
+} from "../utils/local-storage-utils";
 import getHolidays from "../utils/holidays";
-import { filterDuplicatMessages, getChatModeBasedOnLastMessage } from "../utils/chat-utils";
-import { isChatAboutToBeTerminated, wasPageReloaded } from "../utils/browser-utils";
+import {
+  filterDuplicatMessages,
+  getChatModeBasedOnLastMessage,
+} from "../utils/chat-utils";
+import {
+  isChatAboutToBeTerminated,
+  wasPageReloaded,
+} from "../utils/browser-utils";
 
 export interface EstimatedWaiting {
   positionInUnassignedChats: string;
@@ -58,7 +67,11 @@ export interface ChatState {
   loading: boolean;
   showContactForm: boolean;
   showUnavailableContactForm: boolean;
+  showAskToForwardToCsaForm: boolean;
+  askForContacts: boolean;
   contactMsgId: string;
+  forwardToCsaMessage: string;
+  forwardToCsaMessageId: string;
   contactContentMessage: string;
   isChatRedirected: boolean;
   feedback: {
@@ -114,6 +127,10 @@ const initialState: ChatState = {
   errorMessage: "",
   showContactForm: false,
   showUnavailableContactForm: false,
+  showAskToForwardToCsaForm: false,
+  forwardToCsaMessageId: "",
+  askForContacts: true,
+  forwardToCsaMessage: "",
   contactContentMessage: "",
   isChatRedirected: false,
   estimatedWaiting: initialEstimatedTime,
@@ -161,45 +178,60 @@ const initialState: ChatState = {
   responseErrorMessage: "",
 };
 
-export const initChat = createAsyncThunk("chat/init", async (message: Message) => {
-  const { holidays, holidayNames } = getHolidays();
-  return ChatService.init(
-    message,
-    {
-      endUserUrl: window.location.href.toString(),
-      endUserOs: navigator.userAgent.toString(),
-    },
-    holidays,
-    holidayNames
-  );
-});
+export const initChat = createAsyncThunk(
+  "chat/init",
+  async (message: Message) => {
+    const { holidays, holidayNames } = getHolidays();
+    return ChatService.init(
+      message,
+      {
+        endUserUrl: window.location.href.toString(),
+        endUserOs: navigator.userAgent.toString(),
+      },
+      holidays,
+      holidayNames
+    );
+  }
+);
 
-export const getChat = createAsyncThunk("chat/getChat", async (_args, thunkApi) => {
-  const {
-    chat: { chatId },
-  } = thunkApi.getState() as { chat: ChatState };
-  if (chatId) return ChatService.getChatById();
-  return null;
-});
+export const getChat = createAsyncThunk(
+  "chat/getChat",
+  async (_args, thunkApi) => {
+    const {
+      chat: { chatId },
+    } = thunkApi.getState() as { chat: ChatState };
+    if (chatId) return ChatService.getChatById();
+    return null;
+  }
+);
 
-export const getChatMessages = createAsyncThunk("chat/getChatMessages", async (args, thunkApi) => {
-  const {
-    chat: { chatId },
-  } = thunkApi.getState() as { chat: ChatState };
-  return chatId ? ChatService.getMessages() : null;
-});
+export const getChatMessages = createAsyncThunk(
+  "chat/getChatMessages",
+  async (args, thunkApi) => {
+    const {
+      chat: { chatId },
+    } = thunkApi.getState() as { chat: ChatState };
+    return chatId ? ChatService.getMessages() : null;
+  }
+);
 
-export const getNewMessages = createAsyncThunk("chat/getNewMessages", async (args: { timeRangeBegin: string }, _) => {
-  return ChatService.getNewMessages(args.timeRangeBegin);
-});
+export const getNewMessages = createAsyncThunk(
+  "chat/getNewMessages",
+  async (args: { timeRangeBegin: string }, _) => {
+    return ChatService.getNewMessages(args.timeRangeBegin);
+  }
+);
 
-export const sendChatNpmRating = createAsyncThunk("chat/sendChatNpmRating", (args: { NpmRating: number }, thunkApi) => {
-  const {
-    chat: { chatId },
-  } = (thunkApi.getState() as { chat: ChatState }) || "";
-  if (chatId === null) return;
-  ChatService.sendNpmRating({ chatId, npmRating: args.NpmRating });
-});
+export const sendChatNpmRating = createAsyncThunk(
+  "chat/sendChatNpmRating",
+  (args: { NpmRating: number }, thunkApi) => {
+    const {
+      chat: { chatId },
+    } = (thunkApi.getState() as { chat: ChatState }) || "";
+    if (chatId === null) return;
+    ChatService.sendNpmRating({ chatId, npmRating: args.NpmRating });
+  }
+);
 
 export const sendFeedbackMessage = createAsyncThunk(
   "chat/sendFeedbackMessage",
@@ -214,13 +246,18 @@ export const sendFeedbackMessage = createAsyncThunk(
 
 export const endChat = createAsyncThunk(
   "chat/endChat",
-  async (args: { event: CHAT_EVENTS | null; isUpperCase: boolean }, thunkApi) => {
+  async (
+    args: { event: CHAT_EVENTS | null; isUpperCase: boolean },
+    thunkApi
+  ) => {
     const {
       chat: { chatStatus, chatId },
     } = thunkApi.getState() as { chat: ChatState };
     thunkApi.dispatch(resetState());
 
-    const endEvent = args.isUpperCase ? args.event?.toUpperCase() : args.event ?? "";
+    const endEvent = args.isUpperCase
+      ? args.event?.toUpperCase()
+      : args.event ?? "";
     let chatServiceStatus = null;
     if (endEvent === CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED) {
       chatServiceStatus = "IDLE";
@@ -240,18 +277,21 @@ export const endChat = createAsyncThunk(
   }
 );
 
-export const addChatToTerminationQueue = createAsyncThunk("chat/addChatToTerminationQueue", async (args, thunkApi) => {
-  const { chat } = thunkApi.getState() as { chat: ChatState };
+export const addChatToTerminationQueue = createAsyncThunk(
+  "addChatToTerminationQueue",
+  async (args, thunkApi) => {
+    const { chat } = thunkApi.getState() as { chat: ChatState };
 
-  sessionStorage.setItem("terminationTime", Date.now().toString());
-  localStorage.setItem("previousChatId", chat.chatId ?? "");
+    sessionStorage.setItem("terminationTime", Date.now().toString());
+    localStorage.setItem("previousChatId", chat.chatId ?? "");
 
-  thunkApi.dispatch(resetState());
+    thunkApi.dispatch(resetState());
 
-  if (chat.chatId) {
-    return ChatService.addChatToTerminationQueue(chat.chatId);
+    if (chat.chatId) {
+      return ChatService.addChatToTerminationQueue(chat.chatId);
+    }
   }
-});
+);
 
 export const removeChatFromTerminationQueue = createAsyncThunk(
   "chat/removeChatFromTerminationQueue",
@@ -271,93 +311,136 @@ export const removeChatFromTerminationQueue = createAsyncThunk(
   }
 );
 
-export const resetChatState = createAsyncThunk("", async (args: { event: CHAT_EVENTS | null }, thunkApi) => {
-  const {
-    chat: { chatStatus, chatId },
-  } = thunkApi.getState() as { chat: ChatState };
-  thunkApi.dispatch(resetState());
+export const resetChatState = createAsyncThunk(
+  "",
+  async (args: { event: CHAT_EVENTS | null }, thunkApi) => {
+    const {
+      chat: { chatStatus, chatId },
+    } = thunkApi.getState() as { chat: ChatState };
+    thunkApi.dispatch(resetState());
 
-  const resetEvent = args.event?.toUpperCase();
-  let chatServiceStatus = null;
-  if (resetEvent === CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED) {
-    chatServiceStatus = "IDLE";
+    const resetEvent = args.event?.toUpperCase();
+    let chatServiceStatus = null;
+    if (resetEvent === CHAT_EVENTS.UNAVAILABLE_CONTACT_INFORMATION_FULFILLED) {
+      chatServiceStatus = "IDLE";
+    }
+
+    return chatStatus === CHAT_STATUS.ENDED
+      ? null
+      : ChatService.endChat(
+          {
+            chatId,
+            authorTimestamp: new Date().toISOString(),
+            authorRole: AUTHOR_ROLES.END_USER,
+            event: resetEvent,
+          },
+          chatServiceStatus ?? "ENDED"
+        );
   }
-
-  return chatStatus === CHAT_STATUS.ENDED
-    ? null
-    : ChatService.endChat(
-        {
-          chatId,
-          authorTimestamp: new Date().toISOString(),
-          authorRole: AUTHOR_ROLES.END_USER,
-          event: resetEvent,
-        },
-        chatServiceStatus ?? "ENDED"
-      );
-});
-
-export const sendMessageWithRating = createAsyncThunk("chat/sendMessageWithRating", async (message: Message) =>
-  ChatService.sendMessageWithRating(message)
 );
 
-export const sendMessageWithNewEvent = createAsyncThunk("chat/sendMessageWithNewEvent", (message: Message) =>
-  ChatService.sendMessageWithNewEvent(message)
+export const sendMessageWithRating = createAsyncThunk(
+  "chat/sendMessageWithRating",
+  async (message: Message) => ChatService.sendMessageWithRating(message)
 );
 
-export const sendUserContacts = createAsyncThunk("chat/sendUserContacts", (args: UserContacts) => {
-  ChatService.sendUserContacts(args);
-});
-
-export const getGreeting = createAsyncThunk("chat/getGreeting", async () => ChatService.getGreeting());
-
-export const getEmergencyNotice = createAsyncThunk("chat/getEmergencyNotice", async () =>
-  ChatService.getEmergencyNotice()
+export const sendMessageWithNewEvent = createAsyncThunk(
+  "chat/sendMessageWithNewEvent",
+  (message: Message) => ChatService.sendMessageWithNewEvent(message)
 );
 
-export const sendNewMessage = createAsyncThunk("chat/sendNewMessage", (message: Message) => {
-  const { holidays, holidayNames } = getHolidays();
-  return ChatService.sendNewMessage(message, holidays, holidayNames);
-});
-
-export const sendNewSilentMessage = createAsyncThunk("chat/sendNewSilentMessage", (message: Message) => {
-  const { holidays, holidayNames } = getHolidays();
-  return ChatService.sendNewSilentMessage(message, holidays, holidayNames);
-});
-
-export const sendMessagePreview = createAsyncThunk("chat/postMessagePreview", (message: Message) =>
-  ChatService.sendMessagePreview(message)
+export const sendUserContacts = createAsyncThunk(
+  "chat/sendUserContacts",
+  (args: UserContacts) => {
+    ChatService.sendUserContacts(args);
+  }
 );
 
-export const getEstimatedWaitingTime = createAsyncThunk("chat/getEstimatedWaitingTime", async (_args, thunkApi) => {
-  const {
-    chat: { chatId },
-  } = (thunkApi.getState() as { chat: ChatState }) || "";
-
-  return chatId ? ChatService.getEstimatedWaitingTime(chatId) : initialEstimatedTime;
-});
-
-export const removeChatForwardingValue = createAsyncThunk("chat/removeChatForwardingValue", async () =>
-  ChatService.removeChatForwardingValue()
+export const getGreeting = createAsyncThunk("chat/getGreeting", async () =>
+  ChatService.getGreeting()
 );
 
-export const generateForwardingRequest = createAsyncThunk("chat/generateForwardingRequest", async () =>
-  ChatService.generateForwardingRequest()
+export const getEmergencyNotice = createAsyncThunk(
+  "chat/getEmergencyNotice",
+  async () => ChatService.getEmergencyNotice()
 );
-export const sendAttachment = createAsyncThunk("chat/sendAttachment", async (attachment: Attachment) =>
-  ChatService.sendAttachment(attachment)
+
+export const sendNewMessage = createAsyncThunk(
+  "chat/sendNewMessage",
+  (message: Message) => {
+    const { holidays, holidayNames } = getHolidays();
+    return ChatService.sendNewMessage(message, holidays, holidayNames);
+  }
 );
-export const downloadChat = createAsyncThunk("chat/downloadChat", async (isForwardToEmail: boolean, thunkApi) => {
-  const {
-    chat: { chatId, endUserContacts },
-  } = thunkApi.getState() as { chat: ChatState };
-  const isForwardToEmailAddress = isForwardToEmail ? endUserContacts.mailAddress : null;
-  return chatId ? ChatService.generateDownloadChatRequest(chatId, isForwardToEmailAddress) : null;
-});
-export const getNameVisibility = createAsyncThunk("chat/getNameVisibility", async () =>
-  ChatService.getNameVisibility()
+
+export const sendNewSilentMessage = createAsyncThunk(
+  "chat/sendNewSilentMessage",
+  (message: Message) => {
+    const { holidays, holidayNames } = getHolidays();
+    return ChatService.sendNewSilentMessage(message, holidays, holidayNames);
+  }
 );
-export const getTitleVisibility = createAsyncThunk("chat/getTitleVisibility", async () =>
-  ChatService.getTitleVisibility()
+
+export const redirectToBackoffice = createAsyncThunk(
+  "chat/forwards/forward-to-backoffice",
+  (message: Message) => {
+    const { holidays, holidayNames } = getHolidays();
+    return ChatService.redirectToBackoffice(message, holidays, holidayNames);
+  }
+);
+
+export const sendMessagePreview = createAsyncThunk(
+  "chat/postMessagePreview",
+  (message: Message) => ChatService.sendMessagePreview(message)
+);
+
+export const getEstimatedWaitingTime = createAsyncThunk(
+  "chat/getEstimatedWaitingTime",
+  async (_args, thunkApi) => {
+    const {
+      chat: { chatId },
+    } = (thunkApi.getState() as { chat: ChatState }) || "";
+
+    return chatId
+      ? ChatService.getEstimatedWaitingTime(chatId)
+      : initialEstimatedTime;
+  }
+);
+
+export const removeChatForwardingValue = createAsyncThunk(
+  "chat/removeChatForwardingValue",
+  async () => ChatService.removeChatForwardingValue()
+);
+
+export const generateForwardingRequest = createAsyncThunk(
+  "chat/generateForwardingRequest",
+  async () => ChatService.generateForwardingRequest()
+);
+export const sendAttachment = createAsyncThunk(
+  "chat/sendAttachment",
+  async (attachment: Attachment) => ChatService.sendAttachment(attachment)
+);
+export const downloadChat = createAsyncThunk(
+  "chat/downloadChat",
+  async (isForwardToEmail: boolean, thunkApi) => {
+    const {
+      chat: { chatId, endUserContacts },
+    } = thunkApi.getState() as { chat: ChatState };
+    const isForwardToEmailAddress = isForwardToEmail
+      ? endUserContacts.mailAddress
+      : null;
+    return chatId
+      ? ChatService.generateDownloadChatRequest(chatId, isForwardToEmailAddress)
+      : null;
+  }
+);
+export const getNameVisibility = createAsyncThunk(
+  "chat/getNameVisibility",
+  async () => ChatService.getNameVisibility()
+);
+export const getTitleVisibility = createAsyncThunk(
+  "chat/getTitleVisibility",
+  async () => ChatService.getTitleVisibility()
 );
 
 export const chatSlice = createSlice({
@@ -373,6 +456,9 @@ export const chatSlice = createSlice({
     },
     addMessage: (state, action: PayloadAction<Message>) => {
       state.messages = filterDuplicatMessages([...state.messages, action.payload]);
+    },
+    addMessageToTop: (state, action: PayloadAction<Message>) => {
+      state.messages = [action.payload, ...state.messages];
     },
     setIsChatOpen: (state, action: PayloadAction<boolean>) => {
       state.chatId = getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY);
@@ -401,6 +487,9 @@ export const chatSlice = createSlice({
     },
     setShowUnavailableContactForm: (state, action: PayloadAction<boolean>) => {
       state.showUnavailableContactForm = action.payload;
+    },
+    setShowAskToForwardToCsaForm: (state, action: PayloadAction<boolean>) => {
+      state.showAskToForwardToCsaForm = action.payload;
     },
     queueMessage: (state, action: PayloadAction<Message>) => {
       state.messageQueue.push(action.payload);
@@ -452,6 +541,8 @@ export const chatSlice = createSlice({
       let receivedMessages = action.payload || [];
       if (!receivedMessages.length) return;
 
+      let messageEdited = false;
+
       const newMessagesList = state.messages.map((existingMessage) => {
         const matchingMessage = findMatchingMessageFromMessageList(existingMessage, receivedMessages);
         if (!matchingMessage) return existingMessage;
@@ -459,12 +550,37 @@ export const chatSlice = createSlice({
         return { ...existingMessage, ...matchingMessage };
       });
 
-      if (newMessagesList.length + receivedMessages.length === state.messages.length) {
+      // Handle edited messages
+      receivedMessages.forEach((receivedMessage) => {
+        if (receivedMessage.originalBaseId) {
+          const indexToReplace = state.messages.findIndex(
+            (message) => message.id === receivedMessage.originalBaseId
+          );
+
+          if (indexToReplace !== -1) {
+            newMessagesList[indexToReplace] = {
+              ...state.messages[indexToReplace],
+              ...receivedMessage,
+            };
+
+            messageEdited = true;
+
+            receivedMessages = receivedMessages.filter(
+              (msg) => msg.id !== receivedMessage.id
+            );
+          }
+        }
+      });
+
+      if (
+        !messageEdited &&
+        newMessagesList.length + receivedMessages.length === state.messages.length
+      ) {
         return;
       }
 
       state.lastReadMessageTimestamp = new Date().toISOString();
-      state.newMessagesAmount += receivedMessages.length;
+      state.newMessagesAmount += receivedMessages.length;      
       state.messages = filterDuplicatMessages([...newMessagesList, ...receivedMessages]);
       setToLocalStorage("newMessagesAmount", state.newMessagesAmount);
 
@@ -480,12 +596,31 @@ export const chatSlice = createSlice({
             state.showContactForm = true;
             state.contactMsgId = msg.id ?? "";
             break;
-          case CHAT_EVENTS.UNAVAILABLE_HOLIDAY:
-          case CHAT_EVENTS.UNAVAILABLE_CSAS:
-          case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION:
+          case CHAT_EVENTS.UNAVAILABLE_HOLIDAY_ASK_CONTACTS:
+          case CHAT_EVENTS.UNAVAILABLE_CSAS_ASK_CONTACTS:
+          case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION_ASK_CONTACTS:
+            state.askForContacts = true;
             state.showUnavailableContactForm = true;
             state.contactMsgId = msg.id ?? "";
             state.contactContentMessage = msg.content ?? "";
+            break;
+          case CHAT_EVENTS.UNAVAILABLE_HOLIDAY:
+          case CHAT_EVENTS.UNAVAILABLE_CSAS:
+          case CHAT_EVENTS.UNAVAILABLE_ORGANIZATION:
+            state.askForContacts = false;
+            state.showUnavailableContactForm = true;
+            state.contactMsgId = msg.id ?? "";
+            state.contactContentMessage = msg.content ?? "";
+            break;
+          case CHAT_EVENTS.ASK_TO_FORWARD_TO_CSA:
+            state.showAskToForwardToCsaForm = true;
+            state.forwardToCsaMessageId = msg.id ?? "";
+            state.forwardToCsaMessage = msg.content ?? "";
+            break;
+          case CHAT_EVENTS.APPROVED_VALIDATION:
+            state.messages = state.messages.map((message) =>
+              message.id === msg.id ? { ...message, content: msg.content, event: CHAT_EVENTS.APPROVED_VALIDATION } : message
+            );
             break;
           case CHAT_EVENTS.ANSWERED:
           case CHAT_EVENTS.TERMINATED:
@@ -649,6 +784,7 @@ export const chatSlice = createSlice({
 
 export const {
   addMessage,
+  addMessageToTop,
   setChatId,
   setIsChatOpen,
   setChatDimensions,
@@ -668,6 +804,7 @@ export const {
   setContactFormComment,
   setShowContactForm,
   setShowUnavailableContactForm,
+  setShowAskToForwardToCsaForm,
   setEstimatedWaitingTimeToZero,
   setIdleChat,
   setChat,

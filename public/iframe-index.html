@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>Bürokratt</title>
+  </head>
+  <body>
+    <iframe
+      title="widget-iframe"
+      id="byk-widget-iframe"
+      width="0"
+      height="0"
+      src="http://localhost:3003"
+      scrolling="no"
+      style="position: fixed; right: 20px; bottom: 15px; border: 0"
+    ></iframe>
+    <script>
+      window.addEventListener(
+        "message",
+        (e) => {
+          const isOpened = e.data.isOpened;
+          if (isOpened != undefined) {
+            const iframe = window.document.getElementById("byk-widget-iframe");
+            iframe.width = isOpened ? "430" : "270";
+            iframe.height = isOpened ? "480" : "120";
+          }
+        },
+        false
+      );
+    </script>
+  </body>
+</html>

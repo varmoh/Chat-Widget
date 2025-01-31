@@ -7,26 +7,27 @@ export interface Attachment {
 }
 
 export interface Message {
-    chatId: string | null;
-    id?: string;
-    content?: string;
-    buttons?: string;
-    options?: string;
-    file?: Attachment;
-    event?: string;
-    rating?: string;
-    authorId?: string;
-    authorTimestamp: string;
-    authorFirstName?: string;
-    authorLastName?: string;
-    authorRole?: string;
-    created?: string;
-    preview?: string;
-    updated?: string;
-    csaTitle?: string;
-    data?: {
-        forwarding_validation?: string;
-    };
+  chatId: string | null;
+  id?: string;
+  content?: string;
+  buttons?: string;
+  options?: string;
+  file?: Attachment;
+  event?: string;
+  rating?: string;
+  authorId?: string;
+  authorTimestamp: string;
+  authorFirstName?: string;
+  authorLastName?: string;
+  authorRole?: string;
+  created?: string;
+  preview?: string;
+  updated?: string;
+  csaTitle?: string;
+  data?: {
+    forwarding_validation?: string;
+  };
+  originalBaseId?: string;
 }
 
 export enum AttachmentTypes {

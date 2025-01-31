@@ -22,6 +22,11 @@ function useMessageValidator() {
       return false;
     }
 
+    if (endUserContacts.comment.length > 1000) {
+      setInvalidMessage(t("widget.contacts.contact.invalid.comment"));
+      return false;
+    }
+
     setInvalidMessage("");
     return true;
   };

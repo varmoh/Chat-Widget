@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import { motion } from "framer-motion";
 import classNames from "classnames";
 import { Message } from "../../../model/message-model";
@@ -32,6 +32,8 @@ const leftAnimation = {
 const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const messageRef = useRef<HTMLDivElement>(null);
+  const [isTall, setIsTall] = useState(false);
   const { nameVisibility, titleVisibility } = useChatSelector();
 
   const setNewFeedbackRating = (newRating: string): void => {
@@ -42,6 +44,13 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
     dispatch(updateMessage(updatedMessage));
     dispatch(sendMessageWithRating(updatedMessage));
   };
+
+  useEffect(() => {
+    if (messageRef.current) {
+      const height = messageRef.current.offsetHeight;
+      setIsTall(height > 42);
+    }
+  }, [message]);
 
   const hasButtons = useMemo(() => {
     return parseButtons(message).length > 0;
@@ -63,8 +72,11 @@ const AdminMessage = ({ message }: { message: Message }): JSX.Element => {
       animate={leftAnimation.animate}
       initial={leftAnimation.initial}
       transition={leftAnimation.transition}
+      ref={messageRef}
     >
-      <div className={classNames(styles.message, styles.admin)}>
+      <div className={classNames(styles.message, styles.admin, styles.content, {
+        [styles.tall]: isTall
+      })}>
         {nameVisibility && csaName && message.event != CHAT_EVENTS.GREETING && (
           <div className={styles.name}>{csaName}</div>
         )}

@@ -12,7 +12,9 @@ const initialState: WidgetState = {
     color: CHAT_BUBBLE_COLOR,
     animation: CHAT_BUBBLE_ANIMATION,
     isLoaded: false,
+    isBurokrattActive: null,
   },
+  chatId: null,
 };
 
 describe('Widget slice', () => {

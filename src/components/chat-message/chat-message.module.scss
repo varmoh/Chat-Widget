@@ -13,7 +13,7 @@
   align-items: flex-start;
 
   .content {
-    padding: 0.4em 1em;
+    padding: 0.6em 1.2em;
     word-break: break-word;
     white-space: pre-wrap;
 
@@ -259,6 +259,18 @@
       color: white;
       background: url(../../static/icons/link-external-white.svg) no-repeat right center;
       padding-right: 18px;
+    }
+  }
+
+  &.client.tall {
+    .content {
+      border-radius: 27px 6px 27px 27px !important;
+    }
+  }
+
+  &.admin.tall {
+    .content {
+      border-radius: 6px 27px 27px 27px!important;
     }
   }
 }

@@ -10,7 +10,7 @@ import {
   SESSION_STORAGE_CHAT_ID_KEY,
   CHAT_STATUS,
   ONLINE_CHECK_INTERVAL_ACTIVE_CHAT,
-  EXTEND_JWT_COOKIE_IN_MS,
+  EXTEND_JWT_COOKIE_IN_MS, CHAT_SESSIONS,
 } from "./constants";
 import {
   getChat,
@@ -25,13 +25,13 @@ import useNewMessageNotification from "./hooks/use-new-message-notification";
 import useAuthentication from "./hooks/use-authentication";
 import useGetNewMessages from "./hooks/use-get-new-messages";
 import useGetChat from "./hooks/use-get-chat";
-import { burokrattOnlineStatusRequest, getWidgetConfig } from "./slices/widget-slice";
+import { getWidgetConfig } from "./slices/widget-slice";
 import useWidgetSelector from "./hooks/use-widget-selector";
-import useGetWidgetConfig from "./hooks/use-get-widget-config";
 import useGetEmergencyNotice from "./hooks/use-get-emergency-notice";
 import { customJwtExtend } from "./slices/authentication-slice";
 import { getFromLocalStorage } from "./utils/local-storage-utils";
 import useNameAndTitleVisibility from "./hooks/use-name-title-visibility";
+import {generateUEID} from "./utils/generators";
 
 declare global {
   interface Window {
@@ -50,6 +50,7 @@ declare global {
         DAYS: number[];
       };
       ENABLE_HIDDEN_FEATURES: string;
+      IFRAME_TARGET_OIRGIN: string;
     };
   }
 }
@@ -61,35 +62,26 @@ const App: FC = () => {
   const [displayWidget, setDisplayWidget] = useState(
     !!getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()
   );
-  const [onlineCheckInterval, setOnlineCheckInterval] = useState(
-    ONLINE_CHECK_INTERVAL
-  );
+  const [onlineCheckInterval, setOnlineCheckInterval] = useState(ONLINE_CHECK_INTERVAL);
   const { burokrattOnlineStatus } = useAppSelector((state) => state.widget);
   const { chatStatus } = useAppSelector((state) => state.chat);
 
   useLayoutEffect(() => {
-    if (burokrattOnlineStatus === null)
-      dispatch(burokrattOnlineStatusRequest());
-    else if (burokrattOnlineStatus === false)
-      setOnlineCheckInterval(ONLINE_CHECK_INTERVAL);
-    else if (chatStatus === CHAT_STATUS.OPEN)
-      setOnlineCheckInterval(ONLINE_CHECK_INTERVAL_ACTIVE_CHAT);
+    if (burokrattOnlineStatus === false) setOnlineCheckInterval(ONLINE_CHECK_INTERVAL);
+    else if (chatStatus === CHAT_STATUS.OPEN) setOnlineCheckInterval(ONLINE_CHECK_INTERVAL_ACTIVE_CHAT);
   }, [chatStatus, burokrattOnlineStatus]);
 
-  useInterval(
-    () => dispatch(burokrattOnlineStatusRequest()),
-    onlineCheckInterval
-  );
+  useInterval(() => dispatch(getWidgetConfig()), onlineCheckInterval);
 
   useInterval(
-    () =>
-      setDisplayWidget(
-        !!getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()
-      ),
+    () => setDisplayWidget(!!getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()),
     OFFICE_HOURS_INTERVAL_TIMEOUT
   );
 
-  useGetWidgetConfig();
+  useEffect(() => {
+    window.parent.postMessage({ isOpened: isChatOpen }, window._env_.IFRAME_TARGET_OIRGIN);
+  }, [isChatOpen]);
+
   useGetEmergencyNotice();
   useAuthentication();
   useGetChat();
@@ -99,7 +91,7 @@ const App: FC = () => {
   useEffect(() => {
     const storageHandler = () => {
       const storedData = getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY);
-      const previousChatId = getFromLocalStorage('previousChatId');
+      const previousChatId = getFromLocalStorage("previousChatId");
       if (storedData === null && previousChatId === null) {
         setChatId("");
         dispatch(setChatId(""));
@@ -116,20 +108,53 @@ const App: FC = () => {
   }, []);
 
   useEffect(() => {
-    const sessions = localStorage.getItem("sessions");
-    if (sessions == null) {
-      localStorage.setItem("sessions", "1");
-    } else {
-      localStorage.setItem("sessions", `${parseInt(sessions) + 1}`);
+    const delay = 1000;
+
+    const timeOutId = setTimeout(() => {
+      initializeSession();
+    }, delay);
+
+    return () => clearTimeout(timeOutId)
+
+  }, []);
+
+  const initializeSession = () => {
+    let tabId = sessionStorage.getItem("tabId");
+    if (!tabId) {
+      tabId = generateUEID();
+      sessionStorage.setItem("tabId", tabId);
     }
 
-    window.onbeforeunload = function (_) {
-      const newSessionsCount = localStorage.getItem("sessions");
-      if (newSessionsCount !== null) {
-        localStorage.setItem("sessions", `${parseInt(newSessionsCount) - 1}`);
-      }
+    let currentState = getCurrentSessionState();
+
+    if (!currentState.ids.includes(tabId)) {
+      currentState.ids.push(tabId);
+      currentState.count = currentState.ids.length;
+      localStorage.setItem(CHAT_SESSIONS.SESSION_STATE_KEY, JSON.stringify(currentState));
+    }
+
+    const handleTabClose = () => {
+      const currentAppState = JSON.parse(localStorage.getItem(CHAT_SESSIONS.SESSION_STATE_KEY) as string) || { ids: [], count: 0 };
+
+      const updatedIds = currentAppState.ids.filter((id: string) => id !== tabId);
+      const updatedState = {
+        ids: updatedIds,
+        count: updatedIds.length,
+      };
+
+      localStorage.setItem(CHAT_SESSIONS.SESSION_STATE_KEY, JSON.stringify(updatedState));
     };
-  }, []);
+
+    window.addEventListener("beforeunload", handleTabClose);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleTabClose);
+    };
+  };
+
+  const getCurrentSessionState = () => {
+    return JSON.parse(localStorage.getItem(CHAT_SESSIONS.SESSION_STATE_KEY) as string) || { ids: [], count: 0 };
+  }
 
   useLayoutEffect(() => {
     if (!displayWidget || !isChatOpen || !chatId) return;
@@ -142,9 +167,7 @@ const App: FC = () => {
   }, [messages]);
 
   useEffect(() => {
-    const sessionStorageChatId = getFromLocalStorage(
-      SESSION_STORAGE_CHAT_ID_KEY
-    );
+    const sessionStorageChatId = getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY);
     if (sessionStorageChatId) {
       dispatch(setChatId(sessionStorageChatId));
       dispatch(setIsChatOpen(true));
@@ -163,8 +186,7 @@ const App: FC = () => {
   useNameAndTitleVisibility();
 
   if (burokrattOnlineStatus !== true) return <></>;
-  if (displayWidget && widgetConfig.isLoaded)
-    return isChatOpen ? <Chat /> : <Profile />;
+  if (displayWidget && widgetConfig.isLoaded) return isChatOpen ? <Chat /> : <Profile />;
   return <></>;
 };
 

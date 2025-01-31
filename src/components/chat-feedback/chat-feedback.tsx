@@ -3,11 +3,7 @@ import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import StyledButton from "../styled-components/styled-button";
 import { useAppDispatch } from "../../store";
-import {
-  downloadChat,
-  sendChatNpmRating,
-  setFeedbackRatingGiven,
-} from "../../slices/chat-slice";
+import { downloadChat, sendChatNpmRating, setFeedbackRatingGiven } from "../../slices/chat-slice";
 import { StyledButtonType } from "../../constants";
 import useChatSelector from "../../hooks/use-chat-selector";
 import { Download, DownloadElement } from "../../hooks/use-download-file";
@@ -26,7 +22,7 @@ const ChatFeedback = (): JSX.Element => {
     dispatch(sendChatNpmRating({ NpmRating: parseInt(feedbackRating ?? "1", 10) }));
     dispatch(setFeedbackRatingGiven(true));
   };
-  
+
   const handleDownload = async () => {
     const response = await dispatch(downloadChat(false));
     if (response.meta.requestStatus === "rejected") {
@@ -43,10 +39,8 @@ const ChatFeedback = (): JSX.Element => {
           organization: window._env_.ORGANIZATION_NAME,
         })}
       </p>
-      {feedback.showFeedbackWarning && (
-        <p className="missing-feeback">{t("feedback.warningText")}</p>
-      )}
-      <div className="feedback-box-input">
+      {feedback.showFeedbackWarning && <p className="missing-feeback">{t("feedback.warningText")}</p>}
+      <div className="feedback-box-input" style={{ alignSelf: "center" }}>
         {Array.from(Array(11).keys()).map((val: number) => (
           <StyledButton
             className="feedback-btn"

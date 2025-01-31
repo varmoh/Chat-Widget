@@ -1,8 +1,9 @@
 export interface WidgetConfigResponse {
   widgetProactiveSeconds: number;
-  isWidgetActive: boolean;
+  isWidgetActive: string;
   widgetDisplayBubbleMessageSeconds: number;
   widgetBubbleMessageText: string;
   widgetColor: string;
   widgetAnimation: string;
+  isBurokrattActive: string;
 }
