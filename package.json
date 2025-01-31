@@ -1,6 +1,6 @@
 {
   "name": "byk-widget",
-  "version": "0.1.0",
+  "version": "2.1.0",
   "private": true,
   "dependencies": {
     "@babel/runtime": "^7.12.13",
@@ -63,7 +63,7 @@
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-react-app": "7.0.1",
-    "husky": "^7.0.0",
+    "husky": "^9.1.6",
     "prettier": "2.4.1",
     "react-scripts": "5.0.1",
     "sass-loader": "^10.2.0",
@@ -85,8 +85,13 @@
     "lint:fix": "npm run lint -- --fix",
     "prettier:check": "prettier --check \"{,src/**/,webpack/}*.{json,yml,html,js,ts,tsx,css,scss}\"",
     "prettier:format": "prettier --write \"{,src/**/,webpack/}*.{json,yml,html,js,ts,tsx,css,scss}\"",
-    "prepare": "husky install && chmod a+x .husky/pre-push .husky/pre-commit",
-    "webpack": "webpack"
+    "webpack": "webpack",
+    "prepare": "husky",
+    "changelog": "./generate-changelog.sh",
+    "sync-version": "./sync-version.sh",
+    "bump-patch": "./bump-version.sh patch",
+    "bump-minor": "./bump-version.sh minor",
+    "bump-major": "./bump-version.sh major"
   },
   "browserslist": {
     "production": [
