@@ -12,6 +12,15 @@ export const wasPageReloaded = () => {
     .includes('reload');
 }
 
+export const wasPageReloadedNavigate = () => {
+  return window.performance
+      .getEntriesByType('navigation')
+      .some((nav) => {
+        const type = (nav as PerformanceNavigationTiming).type;
+        return type === "reload" || type === "navigate";
+      });
+}
+
 export const isChatAboutToBeTerminated = () => {
   const terminationTime = sessionStorage.getItem('terminationTime');
 
