@@ -72,6 +72,7 @@ export const initialChatState: ChatState = {
   showLoadingMessage: false,
   showResponseError: false,
   responseErrorMessage: "",
+  failedMessages: [],
 };
 
 export const initialAuthState: AuthenticationState = {

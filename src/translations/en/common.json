@@ -95,5 +95,8 @@
   "widget.action.continueChat": "Continue current chat",
   "widget.error.botError": "Sorry, the bot stopped working due to technical issues",
   "widget.error.technicalProblems": "Sorry, there were technical problems",
-  "widget.error.empty": "Empty message"
+  "widget.error.empty": "Empty message",
+  "messageSendingFailed": "Message sending failed!",
+  "sendAgain": "Send again",
+  "delete": "Delete"
 }

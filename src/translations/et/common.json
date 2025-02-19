@@ -95,5 +95,8 @@
   "widget.action.continueChat": "Jätka praegust vestlust",
   "widget.error.botError": "Vabandame, vestlus katkes tehniliste probleemide tõttu.",
   "widget.error.technicalProblems": "Vabandame, tekkisid tehnilised probleemid",
-  "widget.error.empty": "Tühi sõnum"
+  "widget.error.empty": "Tühi sõnum",
+  "messageSendingFailed": "Sõnumi saatmine ebaõnnestus!",
+  "sendAgain": "Saada uuesti",
+  "delete": "Kustuta"
 }

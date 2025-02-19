@@ -11,14 +11,14 @@ import LoadingMessage from '../chat-message/message-types/loading-message';
 
 const ChatContent = (): JSX.Element => {
   const OSref = useRef<OverlayScrollbarsComponent>(null);
-  const { messages, showLoadingMessage } = useChatSelector();
+  const { messages, failedMessages, showLoadingMessage } = useChatSelector();
 
   useEffect(() => {
     if (OSref.current) {
       const instance = OSref.current.osInstance();
       instance?.scroll({ y: '100%' }, 200);
     }
-  }, [messages]);
+  }, [messages, failedMessages]);
 
   return (
     <AnimatePresence initial={false}>
