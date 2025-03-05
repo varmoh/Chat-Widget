@@ -30,27 +30,60 @@ class ChatService {
     holidays: string[],
     holidayNames: string
   ): Promise<Chat> {
-    return http.post(RUUTER_ENDPOINTS.INIT_CHAT, { message, endUserTechnicalData, holidays, holidayNames });
+    return http.post(RUUTER_ENDPOINTS.INIT_CHAT, {
+      message,
+      endUserTechnicalData,
+      holidays,
+      holidayNames,
+    });
   }
 
   getChatById(): Promise<Chat> {
     return http.get(RUUTER_ENDPOINTS.GET_CHAT_BY_ID);
   }
 
-  sendNewMessage(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, { message, holidays, holidayNames });
+  sendNewMessage(
+    message: Message,
+    holidays: string[],
+    holidayNames: string
+  ): Promise<Document> {
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, {
+      message,
+      holidays,
+      holidayNames,
+    });
   }
 
-  sendNewSilentMessage(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, { message, holidays, holidayNames, silent: true });
+  sendNewSilentMessage(
+    message: Message,
+    holidays: string[],
+    holidayNames: string
+  ): Promise<Document> {
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, {
+      message,
+      holidays,
+      holidayNames,
+      silent: true,
+    });
   }
 
   sendMessagePreview({ chatId, content }: Message): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE_PREVIEW, { chatId, content: content != "" ? '_' : '' });
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE_PREVIEW, {
+      chatId,
+      content: content != "" ? "_" : "",
+    });
   }
 
-  redirectToBackoffice(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.REDIRECT_TO_BACKOFFICE, { message, holidays, holidayNames });
+  redirectToBackoffice(
+    message: Message,
+    holidays: string[],
+    holidayNames: string
+  ): Promise<Document> {
+    return http.post(RUUTER_ENDPOINTS.REDIRECT_TO_BACKOFFICE, {
+      message,
+      holidays,
+      holidayNames,
+    });
   }
 
   getMessages(): Promise<Message[]> {
@@ -62,7 +95,10 @@ class ChatService {
   }
 
   endChat(message: Message, status: string | null): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.END_CHAT, { message: message, status: status });
+    return http.post(RUUTER_ENDPOINTS.END_CHAT, {
+      message: message,
+      status: status,
+    });
   }
 
   getGreeting(): Promise<{ eng: string; est: string; isActive: boolean }> {
@@ -74,19 +110,39 @@ class ChatService {
   }
 
   getNewMessages(timeRangeBegin: string): Promise<Message[]> {
-    return http.get(RUUTER_ENDPOINTS.GET_NEW_MESSAGES, { params: { timeRangeBegin: timeRangeBegin } });
+    return http.get(RUUTER_ENDPOINTS.GET_NEW_MESSAGES, {
+      params: { timeRangeBegin: timeRangeBegin },
+    });
   }
 
   get(): Promise<EmergencyNoticeResponse> {
     return http.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
   }
 
-  sendNpmRating({ chatId, npmRating }: { chatId: string; npmRating: number }): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.SEND_NPM_RATING, { chatId, feedbackRating: npmRating });
+  sendNpmRating({
+    chatId,
+    npmRating,
+  }: {
+    chatId: string;
+    npmRating: number;
+  }): Promise<void> {
+    return http.post(RUUTER_ENDPOINTS.SEND_NPM_RATING, {
+      chatId,
+      feedbackRating: npmRating,
+    });
   }
 
-  sendFeedbackMessage({ userFeedback, chatId }: { userFeedback: string; chatId: string }): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.SEND_FEEDBACK_MESSAGE, { chatId, feedbackText: userFeedback });
+  sendFeedbackMessage({
+    userFeedback,
+    chatId,
+  }: {
+    userFeedback: string;
+    chatId: string;
+  }): Promise<void> {
+    return http.post(RUUTER_ENDPOINTS.SEND_FEEDBACK_MESSAGE, {
+      chatId,
+      feedbackText: userFeedback,
+    });
   }
 
   getEstimatedWaitingTime(chatId: string): Promise<EstimatedWaiting> {
@@ -105,7 +161,10 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.GENERATE_FORWARDING_REQUEST);
   }
 
-  generateDownloadChatRequest(chatId: string, email: string | null): Promise<string> {
+  generateDownloadChatRequest(
+    chatId: string,
+    email: string | null
+  ): Promise<string> {
     return http.post(RUUTER_ENDPOINTS.DOWNLOAD_CHAT, { chatId, email });
   }
 
@@ -113,7 +172,11 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.SEND_ATTACHMENT, attachment);
   }
 
-  sendUserContacts({ chatId, endUserEmail, endUserPhone }: UserContacts): Promise<void> {
+  sendUserContacts({
+    chatId,
+    endUserEmail,
+    endUserPhone,
+  }: UserContacts): Promise<void> {
     return http.post(RUUTER_ENDPOINTS.SEND_CONTACT_INFO);
   }
 
@@ -125,12 +188,19 @@ class ChatService {
     return http.get(RUUTER_ENDPOINTS.GET_CSA_TITLE_VISIBILITY);
   }
 
-  addChatToTerminationQueue(chatId: string): Promise<void> {
-    return notificationHttp.post('add-chat-to-termination-queue', { chatId });
+  addChatToTerminationQueue(chatId: string): void {
+    // navigator.sendBeacon is the only reliable way to send a request when the page is being unloaded
+    // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
+    navigator.sendBeacon(
+      `${window._env_.NOTIFICATION_NODE_URL}${RUUTER_ENDPOINTS.ADD_CHAT_TO_TERMINATION_QUEUE}`,
+      JSON.stringify({ chatId })
+    );
   }
 
   removeChatFromTerminationQueue(chatId: string): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.REMOVE_CHAT_FROM_TERMINATION_QUEUE, { chatId });
+    return http.post(RUUTER_ENDPOINTS.REMOVE_CHAT_FROM_TERMINATION_QUEUE, {
+      chatId,
+    });
   }
 }
 
