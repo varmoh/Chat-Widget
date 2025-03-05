@@ -12,5 +12,6 @@ window._env_ = {
     DAYS: [1, 2, 3, 4, 5, 6, 7],
   },
   ENABLE_HIDDEN_FEATURES: "TRUE",
+  SMAX_INTEGRATION: { enabled: false },
   IFRAME_TARGET_OIRGIN: "*",
 };

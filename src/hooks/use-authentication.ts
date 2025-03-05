@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from '../store';
-import { getUserinfo, loginWithTaraJwt, setIsAuthenticated } from '../slices/authentication-slice';
+import { authSmaxUserJwt, getUserinfo, loginWithTaraJwt, setIsAuthenticated } from '../slices/authentication-slice';
 import useAuthenticationSelector from './use-authentication-selector';
 import { redirectIfComeBackFromTim } from '../utils/auth-utils';
 import authenticationService from '../services/authentication-service';
@@ -29,6 +29,17 @@ const useAuthentication = (): void => {
   useEffect(() => {
     if (!isAuthenticated && !fetchingUserInfo) {
       dispatch(loginWithTaraJwt());
+    }
+  }, [isAuthenticated, fetchingUserInfo]);
+
+  useEffect(() => {
+    if (
+      !isAuthenticated &&
+      !fetchingUserInfo &&
+      window._env_.SMAX_INTEGRATION.enabled
+    ) {
+      dispatch(authSmaxUserJwt());
+      dispatch(setIsAuthenticated());
     }
   }, [isAuthenticated, fetchingUserInfo]);
 };

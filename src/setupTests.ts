@@ -22,6 +22,7 @@ window._env_ = {
   },
   ENABLE_HIDDEN_FEATURES: "TRUE",
   IFRAME_TARGET_OIRGIN: "*",
+  SMAX_INTEGRATION: { enabled: false },
 };
 
 beforeAll(() => {

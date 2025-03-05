@@ -25,6 +25,11 @@ const initialState: AuthenticationState = {
   },
 };
 
+export const authSmaxUserJwt = createAsyncThunk(
+  "auth/authSmaxUserJwt",
+  async () => { return await AuthenticationService.authSmaxUserJwt() }
+);
+
 export const loginWithTaraJwt = createAsyncThunk('auth/loginWithTaraJwt', async (_args, thunkApi) => {
   const {chat: { chatId }} = thunkApi.getState() as { chat: ChatState };
   if (chatId) {

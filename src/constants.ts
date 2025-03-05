@@ -135,6 +135,7 @@ export enum RUUTER_ENDPOINTS {
   ADD_CHAT_TO_TERMINATION_QUEUE = '/add-chat-to-termination-queue',
   REMOVE_CHAT_FROM_TERMINATION_QUEUE = '/remove-chat-from-termination-queue',
   LOGIN_WITH_TARA = '/auth/tara/login',
+  AUTHENTICATE_SMAX_USER = '/auth/tara/authenticate-smax-user',
 }
 
 export enum StyledButtonType {
