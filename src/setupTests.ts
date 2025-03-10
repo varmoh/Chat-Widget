@@ -6,7 +6,7 @@ import "./i18n";
 const { getComputedStyle } = window;
 window.getComputedStyle = (elt) => getComputedStyle(elt);
 window._env_ = {
-  RUUTER_API_URL: "http://localhost:8086",
+  RUUTER_API_URL: "http://localhost:8086/backoffice",
   NOTIFICATION_NODE_URL: "http://localhost:4040",
   ENVIRONMENT: "development",
   TIM_AUTHENTICATION_URL:
@@ -20,6 +20,7 @@ window._env_ = {
     END: 17,
     DAYS: [1, 2, 3, 4, 5],
   },
+  
   ENABLE_HIDDEN_FEATURES: "TRUE",
   IFRAME_TARGET_OIRGIN: "*",
 };

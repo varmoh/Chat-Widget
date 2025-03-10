@@ -1,5 +1,5 @@
 window._env_ = {
-  RUUTER_API_URL: "http://localhost:8086",
+  RUUTER_API_URL: "http://localhost:8086/backoffice",
   NOTIFICATION_NODE_URL: "http://localhost:4040",
   ENVIRONMENT: "development", // 'developement | production'
   TIM_AUTHENTICATION_URL:
