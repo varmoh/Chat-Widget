@@ -1,23 +1,26 @@
 @use '/src/scss';
+@import "normalize.css";
 
-.downloadContainer {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 0.2em;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  left: 0;
-}
+:global(.byk-chat) {
+  .downloadContainer {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.2em;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
 
-.downloadLink{
-  font-family: scss.$font-chat;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
-  text-align: center;
-  text-decoration-line: underline;
-  color: scss.$color-black;
-  cursor: pointer;
+  .downloadLink {
+    font-family: scss.$font-chat;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+    text-align: center;
+    text-decoration-line: underline;
+    color: scss.$color-black;
+    cursor: pointer;
+  }
 }

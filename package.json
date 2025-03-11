@@ -3,6 +3,7 @@
   "version": "2.1.0",
   "private": true,
   "dependencies": {
+    "normalize.css": "^8.0.1",
     "@babel/runtime": "^7.12.13",
     "@reduxjs/toolkit": "^1.6.2",
     "@types/styled-components": "^5.1.19",
