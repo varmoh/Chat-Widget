@@ -1,160 +1,163 @@
 @import "../../scss/main";
+@import "normalize.css";
 
-@mixin afterBg {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  border-radius: 50%;
-}
-
-.profile {
-  display: flex;
-  align-items: center;
-  padding: 1rem 1rem;
-  width: 77px;
-  height: 77px;
-  cursor: pointer;
-  background-color: $color-primary;
-  border-radius: 50%;
-  border: 2px solid $color-primary;
-  margin: 1rem 1rem;
-  box-sizing: border-box;
-
-  &__wrapper {
-    position: fixed;
+:global(.byk-chat) {
+  @mixin afterBg {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
     bottom: 0;
     right: 0;
+    border-radius: 50%;
   }
 
-  &__shockwave {
-    animation: shockwaveJump 1s ease-out infinite;
+  .profile {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1rem;
+    width: 77px;
+    height: 77px;
+    cursor: pointer;
+    background-color: $color-primary;
+    border-radius: 50%;
+    border: 2px solid $color-primary;
+    margin: 1rem 1rem;
+    box-sizing: border-box;
 
-    &:after {
-      @include afterBg;
-      animation: shockwave 1s 0.65s ease-out;
-      animation-iteration-count: inherit;
+    &__wrapper {
+      position: fixed;
+      bottom: 0;
+      right: 0;
     }
 
-    &:before {
-      @include afterBg;
-      animation: shockwave 1s 0.5s ease-out;
-      animation-iteration-count: inherit;
+    &__shockwave {
+      animation: shockwaveJump 1s ease-out infinite;
+
+      &:after {
+        @include afterBg;
+        animation: shockwave 1s 0.65s ease-out;
+        animation-iteration-count: inherit;
+      }
+
+      &:before {
+        @include afterBg;
+        animation: shockwave 1s 0.5s ease-out;
+        animation-iteration-count: inherit;
+      }
+    }
+
+    &__jump {
+      animation: 0.4s jump ease infinite alternate;
+    }
+
+    &__wiggle {
+      animation: 1s wiggle ease infinite;
+    }
+
+    &__greeting_message {
+      white-space: nowrap;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.5rem 0.5rem 0.25rem 0.5rem;
+      background-color: $color-white;
+      position: absolute;
+      font-size: 1rem;
+      font-family: 'ADAM', sans-serif;
+      line-height: 1.5;
+      top: 50%;
+      right: calc(100% - 6px);
+      opacity: 0;
+      transform: translateY(100%);
+      transition: all 250ms;
+
+      &__active {
+        opacity: 1;
+        transform: translateY(-50%);
+      }
     }
   }
 
-  &__jump {
-    animation: 0.4s jump ease infinite alternate;
+  .bubble {
+    padding: 0.1rem 0.4rem 0.1rem 0.4rem;
+    position: relative;
+    top: -18px;
+    left: -18px;
+    background-color: $color-primary;
+    color: #ffffff;
+    font-family: $font-chat;
+    border-radius: 50%;
   }
 
-  &__wiggle {
-    animation: 1s wiggle ease infinite;
-  }
-
-  &__greeting_message {
-    white-space: nowrap;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.5rem 0.5rem 0.25rem 0.5rem;
-    background-color: $color-white;
-    position: absolute;
-    font-size: 1rem;
-    font-family: 'ADAM', sans-serif;
-    line-height: 1.5;
-    top: 50%;
-    right: calc(100% - 6px);
-    opacity: 0;
-    transform: translateY(100%);
-    transition: all 250ms;
-
-    &__active {
-      opacity: 1;
-      transform: translateY(-50%);
+  @keyframes shockwaveJump {
+    0% {
+      transform: scale(1);
+    }
+    40% {
+      transform: scale(1.08);
+    }
+    50% {
+      transform: scale(0.98);
+    }
+    55% {
+      transform: scale(1.02);
+    }
+    60% {
+      transform: scale(0.98);
+    }
+    100% {
+      transform: scale(1);
     }
   }
-}
 
-.bubble {
-  padding: 0.1rem 0.4rem 0.1rem 0.4rem;
-  position: relative;
-  top: -18px;
-  left: -18px;
-  background-color: $color-primary;
-  color: #ffffff;
-  font-family: $font-chat;
-  border-radius: 50%;
-}
+  @keyframes shockwave {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.15), inset 0 0 1px rgba(0, 0, 0, 0.15);
+    }
+    95% {
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0), inset 0 0 30px rgba(0, 0, 0, 0);
+    }
+    100% {
+      transform: scale(2.25);
+    }
+  }
 
-@keyframes shockwaveJump {
-  0% {
-    transform: scale(1);
+  @keyframes jump {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+    100% {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
   }
-  40% {
-    transform: scale(1.08);
-  }
-  50% {
-    transform: scale(0.98);
-  }
-  55% {
-    transform: scale(1.02);
-  }
-  60% {
-    transform: scale(0.98);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
 
-@keyframes shockwave {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.15), inset 0 0 1px rgba(0, 0, 0, 0.15);
+  @keyframes wiggle {
+    0% {
+      transform: rotate(-3deg);
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+    }
+    20% {
+      transform: rotate(20deg);
+    }
+    40% {
+      transform: rotate(-15deg);
+    }
+    60% {
+      transform: rotate(5deg);
+    }
+    90% {
+      transform: rotate(-1deg);
+    }
+    100% {
+      transform: rotate(0);
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+    }
   }
-  95% {
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0), inset 0 0 30px rgba(0, 0, 0, 0);
-  }
-  100% {
-    transform: scale(2.25);
-  }
-}
 
-@keyframes jump {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  .logo {
+    filter: brightness(0) invert(1);
+    image-rendering: auto;
   }
-  100% {
-    transform: scale(1.05);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  }
-}
-
-@keyframes wiggle {
-  0% {
-    transform: rotate(-3deg);
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  }
-  20% {
-    transform: rotate(20deg);
-  }
-  40% {
-    transform: rotate(-15deg);
-  }
-  60% {
-    transform: rotate(5deg);
-  }
-  90% {
-    transform: rotate(-1deg);
-  }
-  100% {
-    transform: rotate(0);
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  }
-}
-
-.logo {
-  filter: brightness(0) invert(1);
-  image-rendering: auto;
 }

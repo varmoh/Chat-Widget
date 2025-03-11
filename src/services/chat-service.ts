@@ -30,60 +30,27 @@ class ChatService {
     holidays: string[],
     holidayNames: string
   ): Promise<Chat> {
-    return http.post(RUUTER_ENDPOINTS.INIT_CHAT, {
-      message,
-      endUserTechnicalData,
-      holidays,
-      holidayNames,
-    });
+    return http.post(RUUTER_ENDPOINTS.INIT_CHAT, { message, endUserTechnicalData, holidays, holidayNames });
   }
 
   getChatById(): Promise<Chat> {
     return http.get(RUUTER_ENDPOINTS.GET_CHAT_BY_ID);
   }
 
-  sendNewMessage(
-    message: Message,
-    holidays: string[],
-    holidayNames: string
-  ): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, {
-      message,
-      holidays,
-      holidayNames,
-    });
+  sendNewMessage(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, { message, holidays, holidayNames });
   }
 
-  sendNewSilentMessage(
-    message: Message,
-    holidays: string[],
-    holidayNames: string
-  ): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, {
-      message,
-      holidays,
-      holidayNames,
-      silent: true,
-    });
+  sendNewSilentMessage(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, { message, holidays, holidayNames, silent: true });
   }
 
   sendMessagePreview({ chatId, content }: Message): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE_PREVIEW, {
-      chatId,
-      content: content != "" ? "_" : "",
-    });
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE_PREVIEW, { chatId, content: content != "" ? '_' : '' });
   }
 
-  redirectToBackoffice(
-    message: Message,
-    holidays: string[],
-    holidayNames: string
-  ): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.REDIRECT_TO_BACKOFFICE, {
-      message,
-      holidays,
-      holidayNames,
-    });
+  redirectToBackoffice(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
+    return http.post(RUUTER_ENDPOINTS.REDIRECT_TO_BACKOFFICE, { message, holidays, holidayNames });
   }
 
   getMessages(): Promise<Message[]> {
@@ -95,10 +62,7 @@ class ChatService {
   }
 
   endChat(message: Message, status: string | null): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.END_CHAT, {
-      message: message,
-      status: status,
-    });
+    return http.post(RUUTER_ENDPOINTS.END_CHAT, { message: message, status: status });
   }
 
   getGreeting(): Promise<{ eng: string; est: string; isActive: boolean }> {
@@ -110,9 +74,7 @@ class ChatService {
   }
 
   getNewMessages(timeRangeBegin: string): Promise<Message[]> {
-    return http.get(RUUTER_ENDPOINTS.GET_NEW_MESSAGES, {
-      params: { timeRangeBegin: timeRangeBegin },
-    });
+    return http.get(RUUTER_ENDPOINTS.GET_NEW_MESSAGES, { params: { timeRangeBegin: timeRangeBegin } });
   }
 
   get(): Promise<EmergencyNoticeResponse> {

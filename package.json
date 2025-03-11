@@ -3,6 +3,7 @@
   "version": "2.1.0",
   "private": true,
   "dependencies": {
+    "normalize.css": "^8.0.1",
     "@babel/runtime": "^7.12.13",
     "@reduxjs/toolkit": "^1.6.2",
     "@types/styled-components": "^5.1.19",
@@ -26,6 +27,7 @@
     "primereact": "^6.6.0",
     "re-resizable": "6.9.9",
     "react": "^17.0.2",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^17.0.2",
     "react-i18next": "^11.14.2",
     "react-redux": "^7.2.5",
