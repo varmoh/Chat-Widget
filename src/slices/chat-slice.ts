@@ -31,6 +31,13 @@ import {
   isChatAboutToBeTerminated,
   wasPageReloaded,
 } from "../utils/browser-utils";
+import {
+  browserName,
+  fullBrowserVersion,
+  osName,
+  osVersion,
+  parseUserAgent,
+} from "react-device-detect";
 
 export interface EstimatedWaiting {
   positionInUnassignedChats: string;
@@ -184,11 +191,13 @@ export const initChat = createAsyncThunk(
   "chat/init",
   async (message: Message) => {
     const { holidays, holidayNames } = getHolidays();
+    const userAgent = parseUserAgent(navigator.userAgent);
+    const agentInfo = `Agent: ${browserName} (v${fullBrowserVersion}), OS: ${osName} (v${osVersion}), device: ${userAgent.device.vendor} (${userAgent.device.model})`;
     return ChatService.init(
       message,
       {
         endUserUrl: window.location.href.toString(),
-        endUserOs: navigator.userAgent.toString(),
+        endUserOs: agentInfo,
       },
       holidays,
       holidayNames
