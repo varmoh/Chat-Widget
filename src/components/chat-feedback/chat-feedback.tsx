@@ -13,6 +13,7 @@ const ChatFeedback = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const {t} = useTranslation();
     const {feedback} = useChatSelector();
+    const [loading, setLoading] = useState<boolean>(false);
     const [selectedFeedbackButtonValue, setSelectedFeedbackButtonValue] = useState<string>("");
     const downloadRef = useRef<DownloadElement>(null);
 
@@ -24,12 +25,17 @@ const ChatFeedback = (): JSX.Element => {
     };
 
     const handleDownload = async () => {
-        const response = await dispatch(downloadChat(false));
-        if (response.meta.requestStatus === "rejected") {
-            return false;
+        setLoading(true)
+        try {
+            const response = await dispatch(downloadChat(false));
+            if (response.meta.requestStatus === "rejected") {
+                return false;
+            }
+            downloadRef.current?.download({title: `chat-history.pdf`, data: (response.payload as any).data});
+            return true;
+        } finally {
+            setLoading(false);
         }
-        downloadRef.current?.download({title: `chat-history.pdf`, data: (response.payload as any).data});
-        return true;
     };
 
     return (
@@ -90,6 +96,22 @@ const ChatFeedbackStyle = styled.div`
         width: 32px;
         vertical-align: baseline;
         margin: 0;
+    }
+
+    .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid transparent;
+        border-top-color: blue;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        display: inline-block;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
     }
 
     .feedback-box-input {
