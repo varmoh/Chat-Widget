@@ -57,7 +57,7 @@ const ChatFeedback = (): JSX.Element => {
                 <div className={styles.downloadContainer}>
                     <Download ref={downloadRef}/>
                     <a onClick={handleDownload} className={styles.downloadLink}>
-                        {t("widget.action.download-chat")}
+                        {loading ? <span className="spinner"></span> : t("widget.action.download-chat")}
                     </a>
                 </div>
                 <p className="feedback-paragraph below">{t("feedback.lowerText")}</p>
