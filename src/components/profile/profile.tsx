@@ -55,7 +55,6 @@ export const Profile = (): JSX.Element => {
                     }}
                     aria-label={t("profile.button.open-chat")}
                     title={t("profile.button.open-chat")}
-                    onKeyDown={openChat}
                     onClick={openChat}
                     tabIndex={0}
                 >
