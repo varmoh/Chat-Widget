@@ -44,7 +44,7 @@ const ChatFeedback = (): JSX.Element => {
                 <div className="feedback-box-input" style={{alignSelf: "center"}}>
                     {Array.from(Array(11).keys()).map((val: number) => (
                         <StyledButton
-                            className="feedback-btn"
+                            className={`feedback-btn ${val <= 6 ? "red" : val <= 8 ? "yellow" : "green"}`}
                             onClick={(e) => handleFeedback(e.currentTarget.textContent)}
                             styleType={StyledButtonType.GRAY}
                             key={val}
@@ -90,6 +90,36 @@ const ChatFeedbackStyle = styled.div`
         width: 32px;
         vertical-align: baseline;
         margin: 0;
+        border-radius: 5px;
+        color: white;
+        margin-left: 5px;
+
+        &.red {
+          background-color: #f25050;
+ 
+          &:hover,
+          &:focus {
+            background-color: #003cff;
+          }
+        }
+        
+        &.yellow {
+          background-color: #f1d15a;
+ 
+          &:hover,
+          &:focus {
+            background-color: #003cff;
+          }
+        }
+
+        &.green {
+          background-color: #46ba45;
+ 
+          &:hover,
+          &:focus {
+            background-color: #003cff;
+          }
+        }
     }
 
     .feedback-box-input {
