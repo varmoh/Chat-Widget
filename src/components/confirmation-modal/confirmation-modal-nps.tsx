@@ -139,29 +139,19 @@ const ConfirmationModalStyles = styled.div`
 
         &.red {
           background-color: #f25050;
- 
-          &:hover,
-          &:focus {
-            background-color: #003cff;
-          }
         }
         
         &.yellow {
           background-color: #f1d15a;
- 
-          &:hover,
-          &:focus {
-            background-color: #003cff;
-          }
         }
 
         &.green {
           background-color: #46ba45;
- 
-          &:hover,
-          &:focus {
-            background-color: #003cff;
-          }
+        }
+        
+        :hover,
+        :focus {
+          background-color: #003cff !important;
         }
     }
 
