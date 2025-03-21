@@ -41,7 +41,7 @@ const ChatFeedback = (): JSX.Element => {
                     })}
                 </p>
                 {feedback.showFeedbackWarning && <p className="missing-feeback">{t("feedback.warningText")}</p>}
-                <div className="feedback-box-input" style={{alignSelf: "center"}}>
+                <div className="feedback-box-input" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                     {Array.from(Array(11).keys()).map((val: number) => (
                         <StyledButton
                             className={`feedback-btn ${val <= 6 ? "red" : val <= 8 ? "yellow" : "green"}`}
@@ -92,7 +92,8 @@ const ChatFeedbackStyle = styled.div`
         margin: 0;
         border-radius: 5px;
         color: white;
-        margin-left: 5px;
+        margin-left: 2px;
+        margin-bottom: 2px;
 
         &.red {
           background-color: #f25050;
