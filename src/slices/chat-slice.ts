@@ -192,7 +192,9 @@ export const initChat = createAsyncThunk(
   async (message: Message) => {
     const { holidays, holidayNames } = getHolidays();
     const userAgent = parseUserAgent(navigator.userAgent);
-    const agentInfo = `Agent: ${browserName} (v${fullBrowserVersion}), OS: ${osName} (v${osVersion}), device: ${userAgent.device.vendor} (${userAgent.device.model})`;
+    const userDevice = userAgent.device.vendor ?? 'unknown';
+    const userDeviceModel = userAgent.device.model != undefined ? ` (${userAgent.device.model})` : '';
+    const agentInfo = `Agent: ${browserName} (v${fullBrowserVersion}), OS: ${osName} (v${osVersion}), device: ${userDevice}${userDeviceModel}`;
     return ChatService.init(
       message,
       {
