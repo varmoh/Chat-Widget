@@ -47,6 +47,7 @@ const ChatKeyPad = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const hiddenFileInputRef = useRef<HTMLInputElement | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const [dynamicStyle, setdynamicStyle] = useState("");
 
     const handleUploadClick = () => {
         hiddenFileInputRef.current?.click();
@@ -74,6 +75,19 @@ const ChatKeyPad = (): JSX.Element => {
         if (textarea) {
             textarea.style.height = "1em";
             textarea.style.height = `${textarea.scrollHeight}px`;
+
+            const newHeight = textarea.scrollHeight;
+
+            setdynamicStyle((dynStyle) => {
+                if (newHeight >= 70 && newHeight <= 85) {
+                    return "threeLines";
+                } else if (newHeight > 85) {
+                    return "fourLines";
+                } else {
+                    return "";
+                }
+                return dynStyle;
+            });
         }
     };
 
@@ -176,7 +190,10 @@ const ChatKeyPad = (): JSX.Element => {
         [chatId, userInput]
     );
 
-    const keypadClasses = classNames(styles.keypad);
+    const keypadClasses = classNames(styles.keypad,{
+        [styles.three_lines]: dynamicStyle === "threeLines",
+        [styles.four_lines]: dynamicStyle === "fourLines",
+    });
 
     return (
         <div className="byk-chat">
