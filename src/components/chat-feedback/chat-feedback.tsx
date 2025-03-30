@@ -1,5 +1,4 @@
 import React, {useRef, useState} from "react";
-import styled from "styled-components";
 import {useTranslation} from "react-i18next";
 import StyledButton from "../styled-components/styled-button";
 import {useAppDispatch} from "../../store";
@@ -8,6 +7,7 @@ import {StyledButtonType} from "../../constants";
 import useChatSelector from "../../hooks/use-chat-selector";
 import {Download, DownloadElement} from "../../hooks/use-download-file";
 import styles from "./chat-feedback.module.scss";
+import {ChatFeedbackStyle} from "../../styling/StyledElements";
 
 const ChatFeedback = (): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -65,45 +65,5 @@ const ChatFeedback = (): JSX.Element => {
         </div>
     );
 };
-
-const ChatFeedbackStyle = styled.div`
-    height: auto;
-    padding-top: 0.8em;
-
-    border-top: 2px solid #f0f1f2;
-    flex-direction: column;
-    display: flex;
-    color: blue;
-
-    .feedback-paragraph {
-        margin: 0 0.8em;
-        font-size: 14px;
-    }
-
-    .feedback-paragraph.above:after {
-        content: "*";
-        color: #ff4800;
-    }
-
-    .feedback-btn {
-        padding: 0.5rem;
-        width: 32px;
-        vertical-align: baseline;
-        margin: 0;
-    }
-
-    .feedback-box-input {
-        justify-content: space-around;
-        display: flex;
-        flex-flow: row nowrap;
-        margin: 1rem 0.8em 2rem 0.8em;
-    }
-
-    .missing-feeback {
-        color: #ff4800;
-        margin: 0 0.8em -0.5rem 0.8em;
-        font-size: 0.75rem;
-    }
-`;
 
 export default ChatFeedback;
