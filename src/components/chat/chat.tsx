@@ -58,213 +58,176 @@ const RESIZABLE_HANDLES = {
 };
 
 const Chat = (): JSX.Element => {
-  const dispatch = useAppDispatch();
-  const [showWidgetDetails, setShowWidgetDetails] = useState(false);
-  const [showFeedbackResult, setShowFeedbackResult] = useState(false);
-  const { t } = useTranslation();
-  const { isAuthenticated } = useAuthenticationSelector();
-  const { height, width } = useWindowDimensions();
-  const {
-    isChatEnded,
-    chatId,
-    messageQueue,
-    idleChat,
-    showContactForm,
-    showUnavailableContactForm,
-    showAskToForwardToCsaForm,
-    feedback,
-    messages,
-    chatDimensions,
-    chatMode,
-    showResponseError,
-  } = useChatSelector();
+  // const dispatch = useAppDispatch();
+  // const [showWidgetDetails, setShowWidgetDetails] = useState(false);
+  // const [showFeedbackResult, setShowFeedbackResult] = useState(false);
+  // const { t } = useTranslation();
+  // const { isAuthenticated } = useAuthenticationSelector();
+  // const { height, width } = useWindowDimensions();
+  // const {
+  //   isChatEnded,
+  //   chatId,
+  //   messageQueue,
+  //   idleChat,
+  //   showContactForm,
+  //   showUnavailableContactForm,
+  //   showAskToForwardToCsaForm,
+  //   feedback,
+  //   messages,
+  //   chatDimensions,
+  //   chatMode,
+  //   showResponseError,
+  // } = useChatSelector();
 
-  const isTabActive = useTabActive();
+  // const isTabActive = useTabActive();
 
-  const [isFocused, setIsFocused] = useState(true);
+  // const [isFocused, setIsFocused] = useState(true);
 
-  const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector((state) => state.widget);
+  // const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector((state) => state.widget);
 
-  const chatRef = useRef<HTMLDivElement>(null);
+  // const chatRef = useRef<HTMLDivElement>(null);
 
-  // Prevent chat from being cut off on iOS devices when on-screen keyboard is open
-  useEffect(() => {
-    const vv = window.visualViewport;
-    const currentRef = chatRef.current;
+  // // Prevent chat from being cut off on iOS devices when on-screen keyboard is open
+  // useEffect(() => {
+  //   const vv = window.visualViewport;
+  //   const currentRef = chatRef.current;
 
-    function setChatHeight() {
-      if (currentRef && vv && /iPhone|iPad|iPod/.test(window.navigator.userAgent)) {
-        currentRef.style.height = `${vv.height}px`;
-      }
-    }
+  //   function setChatHeight() {
+  //     if (currentRef && vv && /iPhone|iPad|iPod/.test(window.navigator.userAgent)) {
+  //       currentRef.style.height = `${vv.height}px`;
+  //     }
+  //   }
 
-    vv?.addEventListener('resize', setChatHeight);
-    setChatHeight();
+  //   vv?.addEventListener("resize", setChatHeight);
+  //   setChatHeight();
 
-    return () => vv?.removeEventListener('resize', setChatHeight);
-  }, []);
+  //   return () => vv?.removeEventListener("resize", setChatHeight);
+  // }, []);
 
-  useEffect(() => {
-    if (feedback.isFeedbackRatingGiven && feedback.isFeedbackMessageGiven && !feedback.isFeedbackConfirmationShown) {
-      setShowFeedbackResult(true);
-      setTimeout(async () => {
-        dispatch(setIsFeedbackConfirmationShown(true));
-        setShowFeedbackResult(false);
-      }, FEEDBACK_CONFIRMATION_TIMEOUT);
-    }
-  }, [dispatch, feedback.isFeedbackConfirmationShown, feedback.isFeedbackMessageGiven, feedback.isFeedbackRatingGiven]);
+  // useEffect(() => {
+  //   if (feedback.isFeedbackRatingGiven && feedback.isFeedbackMessageGiven && !feedback.isFeedbackConfirmationShown) {
+  //     setShowFeedbackResult(true);
+  //     setTimeout(async () => {
+  //       dispatch(setIsFeedbackConfirmationShown(true));
+  //       setShowFeedbackResult(false);
+  //     }, FEEDBACK_CONFIRMATION_TIMEOUT);
+  //   }
+  // }, [dispatch, feedback.isFeedbackConfirmationShown, feedback.isFeedbackMessageGiven, feedback.isFeedbackRatingGiven]);
 
-  useEffect(() => {
-    if (
-      !chatId &&
-      !feedback.isFeedbackConfirmationShown &&
-      (!messages.length || !messages.map((m) => m.event).includes(CHAT_EVENTS.GREETING))
-    ) {
-      dispatch(getGreeting());
-    }
-  }, [dispatch, chatId, feedback.isFeedbackConfirmationShown, messages]);
+  // useEffect(() => {
+  //   if (
+  //     !chatId &&
+  //     !feedback.isFeedbackConfirmationShown &&
+  //     (!messages.length || !messages.map((m) => m.event).includes(CHAT_EVENTS.GREETING))
+  //   ) {
+  //     dispatch(getGreeting());
+  //   }
+  // }, [dispatch, chatId, feedback.isFeedbackConfirmationShown, messages]);
 
-  const handleChatResize: ResizeCallback = (event, direction, elementRef, delta) => {
-    const newDimensions = {
-      width: chatDimensions.width + delta.width,
-      height: chatDimensions.height + delta.height,
-    };
-    dispatch(setChatDimensions(newDimensions));
-  };
+  // const handleChatResize: ResizeCallback = (event, direction, elementRef, delta) => {
+  //   const newDimensions = {
+  //     width: chatDimensions.width + delta.width,
+  //     height: chatDimensions.height + delta.height,
+  //   };
+  //   dispatch(setChatDimensions(newDimensions));
+  // };
 
-  useLayoutEffect(() => {
-    if (isChatEnded === false) {
-      if (messages.length > 0) {
-        const interval = setInterval(() => {
-          let lastActive;
+  // useLayoutEffect(() => {
+  //   if (isChatEnded === false) {
+  //     if (messages.length > 0) {
+  //       const interval = setInterval(() => {
+  //         let lastActive;
 
-          if (idleChat.lastActive === "") {
-            lastActive = messages[messages.length - 1].authorTimestamp;
-          } else {
-            lastActive = idleChat.lastActive;
-          }
-          const differenceInSeconds = getIdleTime(lastActive);
-          if (differenceInSeconds >= IDLE_CHAT_INTERVAL) {
-            dispatch(setIdleChat({ isIdle: true }));
-            if (showConfirmationModal) {
-              dispatch(endChat({ event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS, isUpperCase: true }));
-            }
-          }
-        }, IDLE_CHAT_INTERVAL * 1000);
-        return () => {
-          clearInterval(interval);
-        };
-      }
-    } else if (feedback.isFeedbackConfirmationShown) {
-      dispatch(resetChatState({ event: null }));
-    }
-  }, [idleChat.isIdle, messages, showConfirmationModal, isChatEnded, feedback.isFeedbackConfirmationShown]);
+  //         if (idleChat.lastActive === "") {
+  //           lastActive = messages[messages.length - 1].authorTimestamp;
+  //         } else {
+  //           lastActive = idleChat.lastActive;
+  //         }
+  //         const differenceInSeconds = getIdleTime(lastActive);
+  //         if (differenceInSeconds >= IDLE_CHAT_INTERVAL) {
+  //           dispatch(setIdleChat({ isIdle: true }));
+  //           if (showConfirmationModal) {
+  //             dispatch(
+  //               endChat({
+  //                 event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
+  //                 isUpperCase: true,
+  //               })
+  //             );
+  //           }
+  //         }
+  //       }, IDLE_CHAT_INTERVAL * 1000);
+  //       return () => {
+  //         clearInterval(interval);
+  //       };
+  //     }
+  //   } else if (feedback.isFeedbackConfirmationShown) {
+  //     dispatch(resetChatState({ event: null }));
+  //   }
+  // }, [idleChat.isIdle, messages, showConfirmationModal, isChatEnded, feedback.isFeedbackConfirmationShown]);
 
-  useLayoutEffect(() => {
-    if (isChatEnded === false) {
-      if (messages.length > 0) {
-        const interval = setInterval(() => {
-          let lastActive;
+  // useLayoutEffect(() => {
+  //   if (isChatEnded === false) {
+  //     if (messages.length > 0) {
+  //       const interval = setInterval(() => {
+  //         let lastActive;
 
-          if (idleChat.lastActive === "") {
-            lastActive = messages[messages.length - 1].authorTimestamp;
-          } else {
-            lastActive = idleChat.lastActive;
-          }
-          const differenceInSeconds = getIdleTime(lastActive);
-          if (differenceInSeconds >= IDLE_CHAT_INTERVAL + IDLE_CHAT_CHOICES_INTERVAL) {
-            dispatch(
-              endChat({
-                event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
-                isUpperCase: true,
-              })
-            );
-          }
-        }, IDLE_CHAT_CHOICES_INTERVAL * 1000);
-        return () => {
-          clearInterval(interval);
-        };
-      }
-    }
-  }, [idleChat.isIdle, showConfirmationModal, feedback.isFeedbackConfirmationShown]);
+  //         if (idleChat.lastActive === "") {
+  //           lastActive = messages[messages.length - 1].authorTimestamp;
+  //         } else {
+  //           lastActive = idleChat.lastActive;
+  //         }
+  //         const differenceInSeconds = getIdleTime(lastActive);
+  //         if (differenceInSeconds >= IDLE_CHAT_INTERVAL + IDLE_CHAT_CHOICES_INTERVAL) {
+  //           dispatch(
+  //             endChat({
+  //               event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
+  //               isUpperCase: true,
+  //             })
+  //           );
+  //         }
+  //       }, IDLE_CHAT_CHOICES_INTERVAL * 1000);
+  //       return () => {
+  //         clearInterval(interval);
+  //       };
+  //     }
+  //   }
+  // }, [idleChat.isIdle, showConfirmationModal, feedback.isFeedbackConfirmationShown]);
 
-  useReloadChatEndEffect();
+  // useReloadChatEndEffect();
 
-  useEffect(() => {
-    if (
-      isTabActive &&
-      isFocused &&
-      messages.length > 0 &&
-      !messages[messages.length - 1].event &&
-      messages[messages.length - 1].authorRole === AUTHOR_ROLES.BACKOFFICE_USER
-    ) {
-      const message: Message = {
-        chatId,
-        authorRole: AUTHOR_ROLES.END_USER,
-        authorTimestamp: new Date().toISOString(),
-        event: CHAT_EVENTS.MESSAGE_READ,
-      };
-      dispatch(sendNewMessage(message));
-    }
-  }, [isTabActive, isFocused, messages]);
+  // useEffect(() => {
+  //   if (
+  //     isTabActive &&
+  //     isFocused &&
+  //     messages.length > 0 &&
+  //     !messages[messages.length - 1].event &&
+  //     messages[messages.length - 1].authorRole === AUTHOR_ROLES.BACKOFFICE_USER
+  //   ) {
+  //     const message: Message = {
+  //       chatId,
+  //       authorRole: AUTHOR_ROLES.END_USER,
+  //       authorTimestamp: new Date().toISOString(),
+  //       event: CHAT_EVENTS.MESSAGE_READ,
+  //     };
+  //     dispatch(sendNewMessage(message));
+  //   }
+  // }, [isTabActive, isFocused, messages]);
 
-  window.onfocus = function () {
-    setIsFocused(true);
-  };
-  window.onblur = function () {
-    setIsFocused(false);
-  };
+  // window.onfocus = function () {
+  //   setIsFocused(true);
+  // };
+  // window.onblur = function () {
+  //   setIsFocused(false);
+  // };
 
   return (
-    <div className={styles.chatWrapper}>
-      <Resizable
-        size={chatDimensions}
-        minWidth={CHAT_WINDOW_WIDTH}
-        minHeight={CHAT_WINDOW_HEIGHT}
-        maxHeight={height - 50}
-        maxWidth={width - 50}
-        enable={RESIZABLE_HANDLES}
-        onResizeStop={handleChatResize}
-      >
-        <motion.div
-          className={`${styles.chat} ${isAuthenticated ? styles.authenticated : ""}`}
-          animate={{ y: 0 }}
-          style={{ y: 400 }}
-          ref={chatRef}
-        >
-          <ChatHeader
-            isDetailSelected={showWidgetDetails}
-            detailHandler={() => setShowWidgetDetails(!showWidgetDetails)}
-          />
-          {messageQueue.length >= 5 && <WarningNotification warningMessage={t("chat.error-message")} />}
-          {burokrattOnlineStatus !== true && <OnlineStatusNotification />}
-          {showWidgetDetails && <WidgetDetails />}
-          {!showWidgetDetails && showContactForm && <EndUserContacts />}
-          {!showWidgetDetails && showUnavailableContactForm && <UnavailableEndUserContacts />}
-          {!showWidgetDetails && !showContactForm && !showUnavailableContactForm && showAskToForwardToCsaForm && <AskForwardToCsa />}
-          {!showWidgetDetails && !showContactForm && !showUnavailableContactForm && !showAskToForwardToCsaForm && <ChatContent />}
-          {idleChat.isIdle && <IdleChatNotification />}
-          {showResponseError && <ResponseErrorNotification />}
-          {showFeedbackResult ? (
-            <ChatFeedbackConfirmation />
-          ) : (
-            <>
-              {!showWidgetDetails &&
-                !showContactForm &&
-                !showUnavailableContactForm &&
-                !feedback.isFeedbackConfirmationShown &&
-                isChatEnded &&
-                chatId && <ChatFeedback />}
-              {!showWidgetDetails &&
-                !showContactForm &&
-                !showUnavailableContactForm &&
-                !feedback.isFeedbackConfirmationShown &&
-                chatMode === CHAT_MODES.FREE && <ChatKeyPad />}
-              <ConfirmationModal />
-            </>
-          )}
-        </motion.div>
-      </Resizable>
+    <div>
+      {/* <ChatHeader isDetailSelected={showWidgetDetails} detailHandler={() => setShowWidgetDetails(!showWidgetDetails)} /> */}
+      <input type="text"></input>
+      {/* {!showWidgetDetails && !showContactForm && !showUnavailableContactForm && !showAskToForwardToCsaForm && (
+        <ChatContent />
+      )}
+      <ChatKeyPad /> */}
     </div>
   );
 };
