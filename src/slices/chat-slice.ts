@@ -38,6 +38,7 @@ import {
   osVersion,
   parseUserAgent,
 } from "react-device-detect";
+import { getUserinfo } from "./authentication-slice";
 
 export interface EstimatedWaiting {
   positionInUnassignedChats: string;
@@ -276,17 +277,23 @@ export const endChat = createAsyncThunk(
       chatServiceStatus = "IDLE";
     }
 
-    return chatStatus === CHAT_STATUS.ENDED
-      ? null
-      : ChatService.endChat(
-          {
-            chatId,
-            authorTimestamp: new Date().toISOString(),
-            authorRole: AUTHOR_ROLES.END_USER,
-            event: endEvent,
-          },
-          chatServiceStatus ?? "ENDED"
-        );
+    if (chatStatus === CHAT_STATUS.ENDED) {
+      return null;
+    }
+
+    const result = await ChatService.endChat(
+      {
+        chatId,
+        authorTimestamp: new Date().toISOString(),
+        authorRole: AUTHOR_ROLES.END_USER,
+        event: endEvent,
+      },
+      chatServiceStatus ?? "ENDED"
+    );
+
+    thunkApi.dispatch(getUserinfo());
+
+    return result;
   }
 );
 
