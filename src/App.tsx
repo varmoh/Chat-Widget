@@ -74,29 +74,29 @@ const App: FC = () => {
       e.preventDefault();
     }
 
-    let supportsPassive = false;
-    try {
-      window.addEventListener(
-        "test",
-        () => {},
-        Object.defineProperty({}, "passive", {
-          get: () => {
-            supportsPassive = true;
-          },
-        })
-      );
-    } catch (e) {}
-    const wheelOpt = supportsPassive ? { passive: false } : false;
+    // let supportsPassive = false;
+    // try {
+    //   window.addEventListener(
+    //     "test",
+    //     () => {},
+    //     Object.defineProperty({}, "passive", {
+    //       get: () => {
+    //         supportsPassive = true;
+    //       },
+    //     })
+    //   );
+    // } catch (e) {}
+    // const wheelOpt = supportsPassive ? { passive: false } : false;
 
     function disableScroll() {
-      window.addEventListener("touchmove", preventDefault, wheelOpt);
+      window.addEventListener("touchmove", preventDefault, { passive: false });
     }
 
     // call this to Enable
     function enableScroll() {
       // window.removeEventListener("DOMMouseScroll", preventDefault, false);
       // window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
-      // todo error if wheelOpt instead of false? need to test if works with false
+      // todo error if wheelOpt OR { passive: false } instead of false? need to test if works with false
       window.removeEventListener("touchmove", preventDefault, false);
       // window.removeEventListener("keydown", preventDefaultForScrollKeys, false);
     }
