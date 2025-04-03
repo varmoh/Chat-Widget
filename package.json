@@ -87,7 +87,7 @@
     "prettier:check": "prettier --check \"{,src/**/,webpack/}*.{json,yml,html,js,ts,tsx,css,scss}\"",
     "prettier:format": "prettier --write \"{,src/**/,webpack/}*.{json,yml,html,js,ts,tsx,css,scss}\"",
     "webpack": "webpack",
-    "prepare": "husky",
+    "prepare": " ",
     "changelog": "./generate-changelog.sh",
     "sync-version": "./sync-version.sh",
     "bump-patch": "./bump-version.sh patch",
