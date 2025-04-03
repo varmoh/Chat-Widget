@@ -111,7 +111,8 @@ const ChatKeyPad = (): JSX.Element => {
 
     const isInputValid = () => {
         if (!userInput.trim()) return false;
-        if (userInput.length >= MESSAGE_MAX_CHAR_LIMIT) {
+        
+        if (userInput.length > MESSAGE_MAX_CHAR_LIMIT) {
             setErrorMessage(t("keypad.long-message-warning"));
             return false;
         }
