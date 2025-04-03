@@ -70,40 +70,11 @@ const App: FC = () => {
   const { chatStatus } = useAppSelector((state) => state.chat);
 
   useEffect(() => {
-    // addEventListener("scroll", (e) => {
-    //   e.preventDefault();
-    //   // e.stopPropagation();
-    //   console.log("scroll EVENT", e);
-    //   // return false;
-    // });
-
-    // addEventListener("touchmove", (e) => {
-    //   e.preventDefault();
-    //   // e.stopPropagation();
-    //   console.log("touchmove!!!", e);
-    //   // return false;
-    // });
-
-    // left: 37, up: 38, right: 39, down: 40,
-    // spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
-    var keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
-
     function preventDefault(e: { preventDefault: () => void }) {
       e.preventDefault();
     }
 
-    // function preventDefaultForScrollKeys(e: {
-    //   keyCode?: any;
-    //   preventDefault?: () => void;
-    // }) {
-    //   if (keys[e.keyCode]) {
-    //     preventDefault(e);
-    //     return false;
-    //   }
-    // }
-
-    // modern Chrome requires { passive: false } when adding event
-    var supportsPassive = false;
+    let supportsPassive = false;
     try {
       window.addEventListener(
         "test",
@@ -116,16 +87,19 @@ const App: FC = () => {
       );
     } catch (e) {}
 
-    var wheelOpt = supportsPassive ? { passive: false } : false;
-    var wheelEvent =
-      "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
+    const wheelOpt = supportsPassive ? { passive: false } : false;
 
-    // call this to Disable
     function disableScroll() {
-      window.addEventListener("DOMMouseScroll", preventDefault, false); // older FF
-      window.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
-      window.addEventListener("touchmove", preventDefault, wheelOpt); // mobile
-      // window.addEventListener("keydown", preventDefaultForScrollKeys, false);
+      window.addEventListener("touchmove", preventDefault, wheelOpt);
+    }
+
+    // call this to Enable
+    function enableScroll() {
+      // window.removeEventListener("DOMMouseScroll", preventDefault, false);
+      // window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
+      // todo error if wheelOpt instead of false? need to test if works with false
+      window.removeEventListener("touchmove", preventDefault, false);
+      // window.removeEventListener("keydown", preventDefaultForScrollKeys, false);
     }
 
     disableScroll();
