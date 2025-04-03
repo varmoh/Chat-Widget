@@ -80,13 +80,12 @@ const App: FC = () => {
         "test",
         () => {},
         Object.defineProperty({}, "passive", {
-          get: function () {
+          get: () => {
             supportsPassive = true;
           },
         })
       );
     } catch (e) {}
-
     const wheelOpt = supportsPassive ? { passive: false } : false;
 
     function disableScroll() {
