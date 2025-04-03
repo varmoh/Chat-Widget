@@ -47,10 +47,10 @@ const ConfirmationModalNps = ({npsFeedback}: Props) => {
                             organization: window._env_.ORGANIZATION_NAME,
                         })}
                     </p>
-                    <div className="feedback-box-input" style={{alignSelf: "center"}}>
+                    <div className="feedback-box-input" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                         {Array.from(Array(11).keys()).map((val: number) => (
                             <StyledButton
-                                className="feedback-btn"
+                                className={`feedback-btn ${val <= 6 ? "red" : val <= 8 ? "yellow" : "green"}`}
                                 onClick={(e) => handleFeedback(e.currentTarget.textContent)}
                                 styleType={StyledButtonType.GRAY}
                                 key={val}
@@ -130,13 +130,34 @@ const ConfirmationModalStyles = styled.div`
 
     .feedback-btn {
         padding: 0.5rem;
-        width: 29px;
+        width: 32px;
         vertical-align: baseline;
         margin: 0;
+        border-radius: 5px;
+        color: white;
+        margin-left: 2px;
+        margin-bottom: 2px;
+
+        &.red {
+          background-color: #f25050;
+        }
+        
+        &.yellow {
+          background-color: #f1d15a;
+        }
+
+        &.green {
+          background-color: #46ba45;
+        }
+        
+        :hover,
+        :focus {
+          background-color: #003cff !important;
+        }
     }
 
     .feedback-box-input {
-        margin: 1rem 0em 1rem 0em;
+        margin: 1rem 0em 0.6rem 0em;
     }
 
     .missing-feeback {
