@@ -2,7 +2,6 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import {motion} from "framer-motion";
 import classNames from "classnames";
 import {Message} from "../../../model/message-model";
-import styles from "../chat-message.module.scss";
 import RobotIcon from "../../../static/icons/buerokratt.svg";
 import {
     CHAT_EVENTS,
@@ -19,6 +18,7 @@ import {parseButtons, parseOptions} from "../../../utils/chat-utils";
 import useChatSelector from "../../../hooks/use-chat-selector";
 import {useTranslation} from "react-i18next";
 import Markdownify from "./Markdownify";
+import {ChatMessageStyled} from "../ChatMessageStyled";
 
 const leftAnimation = {
     animate: {opacity: 1, x: 0},
@@ -49,6 +49,8 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
         }
     }, [message]);
 
+    const messageClass = `admin  ${isTall ? "tall" : ""}`;
+
     const hasButtons = useMemo(() => {
         return parseButtons(message).length > 0;
     }, [message.buttons]);
@@ -71,30 +73,28 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
             transition={leftAnimation.transition}
             ref={messageRef}
         >
-            <div className="byk-chat">
-                <div className={classNames(styles.message, styles.admin, styles.content, {
-                    [styles.tall]: isTall
-                })}>
+            <ChatMessageStyled className="admin">
+                <ChatMessageStyled className={messageClass}>
                     {nameVisibility && csaName && message.event != CHAT_EVENTS.GREETING && (
-                        <div className={styles.name}>{csaName}</div>
+                        <div className="name">{csaName}</div>
                     )}
                     {titleVisibility &&
                         message.csaTitle &&
                         message.event != CHAT_EVENTS.GREETING && (
-                            <div className={styles.name}>{message.csaTitle}</div>
+                            <div className="name">{message.csaTitle}</div>
                         )}
-                    <div className={styles.main}>
-                        <div className={styles.icon}>
+                    <div className="main">
+                        <div className="icon">
                             {message.event === CHAT_EVENTS.EMERGENCY_NOTICE ? (
-                                <div className={styles.emergency}>!</div>
+                                <div className="emergency">!</div>
                             ) : (
                                 <img src={RobotIcon} alt="Robot icon"/>
                             )}
                         </div>
                         <div
-                            className={`${styles.content} ${
+                            className={`content ${
                                 message.event === CHAT_EVENTS.EMERGENCY_NOTICE &&
-                                styles.emergency_content
+                                'emergency_content'
                             }`}
                         >
                             <Markdownify message={message.content ?? ""}/>
@@ -106,12 +106,12 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
                         </div>
                         <div
                             className={classNames(
-                                styles.feedback,
+                                "feedback",
                                 message.content?.length !== undefined &&
                                 message.content?.length >
                                 MAXIMUM_MESSAGE_TEXT_LENGTH_FOR_ONE_ROW
-                                    ? styles.column
-                                    : styles.row
+                                    ? "column"
+                                    : "row"
                             )}
                         >
                             {![CHAT_EVENTS.GREETING, CHAT_EVENTS.EMERGENCY_NOTICE].includes(
@@ -124,8 +124,8 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
                                             type="button"
                                             className={
                                                 message.rating === RATING_TYPES.LIKED
-                                                    ? styles.highlight
-                                                    : styles.grey
+                                                    ? "highlight"
+                                                    : "grey"
                                             }
                                             onClick={() => {
                                                 setNewFeedbackRating(RATING_TYPES.LIKED);
@@ -137,15 +137,15 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
                                             type="button"
                                             className={
                                                 message.rating === RATING_TYPES.DISLIKED
-                                                    ? styles.highlight
-                                                    : styles.grey
+                                                    ? "highlight"
+                                                    : "grey"
                                             }
                                             onClick={() => {
                                                 setNewFeedbackRating(RATING_TYPES.DISLIKED);
                                             }}
                                         >
                                             <img
-                                                className={styles.thumbsDownImg}
+                                                className="thumbsDownImg"
                                                 src={Thumbs}
                                                 alt="thumbs down icon"
                                             />
@@ -156,8 +156,8 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
                     </div>
                     {hasButtons && <ChatButtonGroup message={message}/>}
                     {hasOptions && <ChatOptionGroup message={message}/>}
-                </div>
-            </div>
+                </ChatMessageStyled>
+            </ChatMessageStyled>
         </motion.div>
     );
 };

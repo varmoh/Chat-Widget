@@ -13,6 +13,7 @@ import File from "../../../static/icons/file.svg";
 import {addMessage, removeMessageFromDisplay, sendNewMessage,} from "../../../slices/chat-slice";
 import {useAppDispatch} from "../../../store";
 import useChatSelector from "../../../hooks/use-chat-selector";
+import {ChatMessageStyled, MessageFailedWrapperStyled} from "../ChatMessageStyled";
 
 const rightAnimation = {
     animate: {opacity: 1, x: 0},
@@ -36,9 +37,13 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
         }
     }, [content, props.message?.file]);
 
-    const messageClass = classNames(styles.message, styles.client, styles.content, {
-        [styles.tall]: isTall
-    });
+    // const messageClass = classNames(styles.message, styles.client, styles.content, {
+    //     [styles.tall]: isTall
+    // });
+
+    // const messageClass = `client  ${isTall ? "tall" : ""}`;
+    const messageClass = `client`;
+    const contentTallClass = `content  ${isTall ? "clientTallContent" : ""}`;
 
     if (props.message?.file) {
         return (
@@ -48,18 +53,20 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
                 transition={rightAnimation.transition}
                 ref={messageRef}
             >
-                <div className={messageClass}>
-                    <div className={styles.icon}>
-                        <img src={PersonIcon} alt="Person icon"/>
-                    </div>
-                    <div className={`${styles.content} ${styles.file}`}>
-                        <img className={styles.fileIcon} src={File} alt="File icon"/>
-                        <p className={styles.fileName}>{props.message?.file.name}</p>
-                        <p className={styles.fileData}>{`${props.message?.file.type
-                            .split("/")[1]
-                            .toUpperCase()}, ${formatBytes(props.message?.file.size)}`}</p>
-                    </div>
-                </div>
+                <ChatMessageStyled>
+                    <ChatMessageStyled className={messageClass}>
+                        <div className={styles.icon}>
+                            <img src={PersonIcon} alt="Person icon"/>
+                        </div>
+                        <div className={`${styles.content} ${styles.file}`}>
+                            <img className={styles.fileIcon} src={File} alt="File icon"/>
+                            <p className={styles.fileName}>{props.message?.file.name}</p>
+                            <p className={styles.fileData}>{`${props.message?.file.type
+                                .split("/")[1]
+                                .toUpperCase()}, ${formatBytes(props.message?.file.size)}`}</p>
+                        </div>
+                    </ChatMessageStyled>
+                </ChatMessageStyled>
             </motion.div>
         );
     }
@@ -71,33 +78,33 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
             transition={rightAnimation.transition}
             ref={messageRef}
         >
-            <div className="byk-chat">
-                <div className={messageClass}>
-                    <div className={styles.icon}>
+            <ChatMessageStyled>
+                <ChatMessageStyled className={messageClass}>
+                    <div className="client icon">
                         <img src={PersonIcon} alt="Person icon"/>
                     </div>
-                    <div className={styles.content}>
+                    <div className={classNames("content", { clientTallContent: isTall })}>
                         <Markdownify message={content ?? ""}/>
                     </div>
-                </div>
+                </ChatMessageStyled>
                 {!props.message?.id &&
                     failedMessages.some(
                         (msg) => msg.authorTimestamp === props.message?.authorTimestamp
                     ) && (
-                        <div className={styles.messageFailedWrapper}>
+                        <MessageFailedWrapperStyled>
                             <img
                                 src={OutlineError}
-                                className={styles.errorIcon}
+                                className="errorIcon"
                                 alt="Outline error"
                             />
                             <div>
-              <span className={styles.messageFailedText}>
+              <span className="messageFailedText">
                 {t("messageSendingFailed")}
               </span>
-                                <div className={styles.messageFailedButtons}>
+                                <div className="messageFailedButtons">
                                     <Button
                                         title="send"
-                                        className={styles.messageFailedButton}
+                                        className="messageFailedButton"
                                         onClick={() => {
                                             dispatch(removeMessageFromDisplay(props.message!));
                                             const retryMessage = {
@@ -112,7 +119,7 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
                                     </Button>
                                     <Button
                                         title="delete"
-                                        className={styles.messageFailedButton}
+                                        className="messageFailedButton"
                                         onClick={() => {
                                             dispatch(removeMessageFromDisplay(props.message!));
                                         }}
@@ -121,9 +128,9 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
                                     </Button>
                                 </div>
                             </div>
-                        </div>
+                        </MessageFailedWrapperStyled>
                     )}
-            </div>
+            </ChatMessageStyled>
         </motion.div>
     );
 };

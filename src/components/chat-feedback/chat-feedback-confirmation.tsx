@@ -8,34 +8,34 @@ const ChatFeedbackConfirmation = (): JSX.Element => {
     const {t} = useTranslation();
 
     return (
-            <FeedbackConfirmationStyle>
-                <div className="smile-icon">
-                    <img src={SmileIcon} alt="Smile icon"/>
-                    <h2 className="feedback-confirmation-message">{t('feedback.confirmationText')}</h2>
-                </div>
-                <TimeoutBar timeout={`${FEEDBACK_CONFIRMATION_TIMEOUT}ms`}/>
-            </FeedbackConfirmationStyle>
+        <FeedbackConfirmationStyle>
+            <div className="smile-icon">
+                <img src={SmileIcon} alt="Smile icon"/>
+                <h2 className="feedback-confirmation-message">{t('feedback.confirmationText')}</h2>
+            </div>
+            <TimeoutBar timeout={`${FEEDBACK_CONFIRMATION_TIMEOUT}ms`}/>
+        </FeedbackConfirmationStyle>
     );
 };
 export default ChatFeedbackConfirmation;
 
 const FeedbackConfirmationStyle = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem 0;
+
+    .feedback-confirmation-message {
+        padding: 1rem 0;
+        color: #003cff;
+    }
+
+    .smile-icon {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 2rem 0;
-
-        .feedback-confirmation-message {
-            padding: 1rem 0;
-            color: #003cff;
-        }
-
-        .smile-icon {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+        align-items: center;
+    }
 `;
 
 const TimeoutBar = styled.div<{ timeout: string }>`

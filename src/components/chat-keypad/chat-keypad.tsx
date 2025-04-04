@@ -1,5 +1,4 @@
 import React, {ChangeEvent, useCallback, useEffect, useRef, useState} from "react";
-import classNames from "classnames";
 import {useTranslation} from "react-i18next";
 import styled from "styled-components";
 import {useAppDispatch} from "../../store";
@@ -16,7 +15,6 @@ import {
 } from "../../slices/chat-slice";
 import Send from "../../static/icons/send.svg";
 import File from "../../static/icons/file.svg";
-import styles from "./chat-keypad.module.scss";
 import useChatSelector from "../../hooks/use-chat-selector";
 import KeypadErrorMessage from "./keypad-error-message";
 import ChatKeypadCharCounter from "./chat-keypad-char-counter";
@@ -36,6 +34,7 @@ import formatBytes from "../../utils/format-bytes";
 import debounce from "../../utils/debounce";
 import {Subject} from "rxjs";
 import {debounceTime, distinctUntilChanged, switchMap} from "rxjs/operators";
+import {ChatKeypadStyled} from "./ChatKeypadStyled";
 
 const ChatKeyPad = (): JSX.Element => {
     const [userInput, setUserInput] = useState<string>("");
@@ -176,17 +175,15 @@ const ChatKeyPad = (): JSX.Element => {
         [chatId, userInput]
     );
 
-    const keypadClasses = classNames(styles.keypad);
-
     return (
-        <div className="byk-chat">
+        <ChatKeypadStyled>
             <KeypadErrorMessage>{errorMessage}</KeypadErrorMessage>
-            <div className={`${keypadClasses}`}>
+            <div className="keypad">
                 <textarea
                     ref={textareaRef}
                     disabled={userInputFile ? true : isKeypadDisabled}
                     aria-label={t("keypad.input.label")}
-                    className={`${styles.input}`}
+                    className="input"
                     value={userInputFile ? userInputFile.name : userInput}
                     placeholder={t("keypad.input.placeholder")}
                     onChange={(e) => {
@@ -219,7 +216,7 @@ const ChatKeyPad = (): JSX.Element => {
                         <button
                             onKeyDown={addNewMessageToState}
                             onClick={addNewMessageToState}
-                            className={styles.button}
+                            className="button"
                             title={t("keypad.button.label")}
                             aria-label={t("keypad.button.label")}
                             tabIndex={0}
@@ -232,40 +229,40 @@ const ChatKeyPad = (): JSX.Element => {
                 )}
             </div>
             <ChatKeypadCharCounter userInput={userInput}/>
-        </div>
+        </ChatKeypadStyled>
     );
 
     function renderSendFileButton() {
         if (userInputFile) {
             return (
-                <div className="byk-chat">
+                <ChatKeypadStyled>
                     <button
                         onKeyDown={() => null}
                         onClick={handleUploadClear}
-                        className={styles.button_cancelUpload}
+                        className="button_cancelUpload"
                         title={t("keypad.button.label")}
                         aria-label={t("keypad.button.label")}
                         tabIndex={0}
                     >
                         <img src={Close} alt="Close icon"/>
                     </button>
-                </div>
+                </ChatKeypadStyled>
             );
         }
 
         return (
-            <div className="byk-chat">
+            <ChatKeypadStyled>
                 <button
                     onKeyDown={() => null}
                     onClick={handleUploadClick}
-                    className={styles.button}
+                    className="button"
                     title={t("keypad.button.label")}
                     aria-label={t("keypad.button.label")}
                     tabIndex={0}
                 >
                     <img src={File} alt="Send file icon"/>
                 </button>
-            </div>
+            </ChatKeypadStyled>
         )
     }
 

@@ -2,7 +2,7 @@ import {motion} from "framer-motion";
 import classNames from "classnames";
 import styles from "../chat-message.module.scss";
 import RobotIcon from "../../../static/icons/buerokratt.svg";
-import "../loading-animation.scss";
+import {LoadingAnimationStyles} from "../LoadingAnimationStyled";
 
 const leftAnimation = {
     animate: {opacity: 1, x: 0},
@@ -22,11 +22,11 @@ const LoadingMessage = (): JSX.Element => {
                         </div>
                         <div className="byk-chat">
                         <div className={`${styles.content}`}>
-                            <div className="bouncing-loader">
+                            <LoadingAnimationStyles className="bouncing-loader">
                                 <div></div>
                                 <div></div>
                                 <div></div>
-                            </div>
+                            </LoadingAnimationStyles>
                         </div>
                         </div>
                     </div>

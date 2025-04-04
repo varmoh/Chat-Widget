@@ -4,9 +4,9 @@ import useChatSelector from "../../hooks/use-chat-selector";
 import {useAppDispatch} from "../../store";
 import {AUTHOR_ROLES, CHAT_EVENTS, StyledButtonType} from "../../constants";
 import StyledButton from "../styled-components/styled-button";
-import styles from "./ask-forward-to-csa-modal.module.scss";
 import {redirectToBackoffice, sendMessageWithNewEvent, setShowAskToForwardToCsaForm} from "../../slices/chat-slice";
 import {Message} from "../../model/message-model";
+import {AskForwardToCsaModalStyles} from "./AskForwardToCsaStyled";
 
 const AskForwardToCsaModal = (): JSX.Element => {
     const {forwardToCsaMessage, chatId, forwardToCsaMessageId} = useChatSelector();
@@ -14,10 +14,10 @@ const AskForwardToCsaModal = (): JSX.Element => {
     const {t} = useTranslation();
 
     return (
-        <div className="byk-chat">
-            <div className={styles.container}>
-                <h3 className={styles.header}>{forwardToCsaMessage}</h3>
-                <div className={styles.buttons}>
+        <AskForwardToCsaModalStyles>
+            <div className="container">
+                <h3 className="header">{forwardToCsaMessage}</h3>
+                <div className="buttons">
                     <StyledButton styleType={StyledButtonType.GRAY} onClick={() => {
                         dispatch(setShowAskToForwardToCsaForm(false));
                         if (chatId) {
@@ -52,7 +52,7 @@ const AskForwardToCsaModal = (): JSX.Element => {
                     </StyledButton>
                 </div>
             </div>
-        </div>
+        </AskForwardToCsaModalStyles>
     );
 };
 

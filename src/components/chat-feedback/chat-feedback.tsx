@@ -6,8 +6,7 @@ import {downloadChat, sendChatNpmRating, setFeedbackRatingGiven} from "../../sli
 import {StyledButtonType} from "../../constants";
 import useChatSelector from "../../hooks/use-chat-selector";
 import {Download, DownloadElement} from "../../hooks/use-download-file";
-import styles from "./chat-feedback.module.scss";
-import {ChatFeedbackStyle} from "../../styling/StyledElements";
+import {ChatFeedbackStyled} from "./ChatFeedbackStyled";
 
 const ChatFeedback = (): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -33,36 +32,34 @@ const ChatFeedback = (): JSX.Element => {
     };
 
     return (
-        <div className="byk-chat">
-            <ChatFeedbackStyle>
-                <p className="feedback-paragraph above">
-                    {t("feedback.upperText", {
-                        organization: window._env_.ORGANIZATION_NAME,
-                    })}
-                </p>
-                {feedback.showFeedbackWarning && <p className="missing-feeback">{t("feedback.warningText")}</p>}
-                <div className="feedback-box-input" style={{alignSelf: "center"}}>
-                    {Array.from(Array(11).keys()).map((val: number) => (
-                        <StyledButton
-                            className="feedback-btn"
-                            onClick={(e) => handleFeedback(e.currentTarget.textContent)}
-                            styleType={StyledButtonType.GRAY}
-                            key={val}
-                            active={selectedFeedbackButtonValue === val.toString()}
-                        >
-                            <span>{val}</span>
-                        </StyledButton>
-                    ))}
-                </div>
-                <div className={styles.downloadContainer}>
-                    <Download ref={downloadRef}/>
-                    <a onClick={handleDownload} className={styles.downloadLink}>
-                        {t("widget.action.download-chat")}
-                    </a>
-                </div>
-                <p className="feedback-paragraph below">{t("feedback.lowerText")}</p>
-            </ChatFeedbackStyle>
-        </div>
+        <ChatFeedbackStyled>
+            <p className="feedback-paragraph above">
+                {t("feedback.upperText", {
+                    organization: window._env_.ORGANIZATION_NAME,
+                })}
+            </p>
+            {feedback.showFeedbackWarning && <p className="missing-feeback">{t("feedback.warningText")}</p>}
+            <div className="feedback-box-input" style={{alignSelf: "center"}}>
+                {Array.from(Array(11).keys()).map((val: number) => (
+                    <StyledButton
+                        className="feedback-btn"
+                        onClick={(e) => handleFeedback(e.currentTarget.textContent)}
+                        styleType={StyledButtonType.GRAY}
+                        key={val}
+                        active={selectedFeedbackButtonValue === val.toString()}
+                    >
+                        <span>{val}</span>
+                    </StyledButton>
+                ))}
+            </div>
+            <div className="downloadContainer">
+                <Download ref={downloadRef}/>
+                <a onClick={handleDownload} className="downloadLink">
+                    {t("widget.action.download-chat")}
+                </a>
+            </div>
+            <p className="feedback-paragraph below">{t("feedback.lowerText")}</p>
+        </ChatFeedbackStyled>
     );
 };
 

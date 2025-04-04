@@ -1,5 +1,5 @@
 import {SyntheticEvent, useState} from "react";
-import styles from "./stars.module.scss";
+import {StarsStyles} from "./StarsStyled";
 
 interface Props {
     onClick: (e: number) => any;
@@ -15,11 +15,11 @@ const Stars = ({onClick}: Props) => {
     }
 
     return (
-        <div className="byk-chat">
-            <div className={styles.container}>
+        <StarsStyles>
+            <div className="container">
                 {[...Array(5)].map((e, i) => (
                     <svg
-                        className={`${selected! >= i ? styles.selected : ""}`}
+                        className={`${selected! >= i ? "selected" : ""}`}
                         key={`${e} - ${i}`}
                         onClick={(e) => handleClick(e, i)}
                         width="34"
@@ -38,7 +38,7 @@ const Stars = ({onClick}: Props) => {
                     </svg>
                 ))}
             </div>
-        </div>
+        </StarsStyles>
     );
 };
 

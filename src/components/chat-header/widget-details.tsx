@@ -3,7 +3,8 @@ import {useTranslation} from 'react-i18next';
 import {StyledButtonType, TERMS_AND_CONDITIONS_LINK} from '../../constants';
 import EU_SF_logo_src from '../../static/icons/sf_logo_horizontal.jpg';
 import NEXT_GEN_FLAGS from '../../static/icons/NextGen_Rahastanud_EL_NextGeneration.jpg';
-import {TermsAndConditionsStyles, WidgetDetailsStyles} from "../../styling/StyledElements";
+import {WidgetDetailsStyles} from "./WidgetDetailsStyled";
+import {TermsAndConditionsStyles} from "./TermsAndConditionsStyled";
 
 const WidgetDetails = (): JSX.Element => {
     const {t} = useTranslation();

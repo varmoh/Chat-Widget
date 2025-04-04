@@ -1,27 +1,27 @@
 import {useTranslation} from 'react-i18next';
 import Button from '../button/button';
-import styles from './idle-chat-notification.module.scss';
 import {useAppDispatch} from '../../store';
 import {endChat, setIdleChat} from '../../slices/chat-slice';
 import {CHAT_EVENTS} from '../../constants';
 import {customJwtExtend} from '../../slices/authentication-slice';
+import {IdleChatNotificationStyled} from "./IdleChatNotificationStyled";
 
 const IdleChatNotification = () => {
     const {t} = useTranslation();
     const dispatch = useAppDispatch();
 
     return (
-        <div className="byk-chat">
-            <div className={styles.container}>
+        <IdleChatNotificationStyled>
+            <div className="byk_container">
                 <dialog
-                    className={styles.content}
+                    className="byk_content"
                     aria-modal="true"
                     aria-labelledby={t("notifications.idle-chat-notification")}
                 >
-                    <h2 className={styles.title}>
+                    <h2 className="byk_title">
                         {t("notifications.idle-chat-notification")}
                     </h2>
-                    <div className={styles.actions}>
+                    <div className="byk_actions">
                         <Button
                             title={t("widget.action.yes")}
                             onClick={() => {
@@ -49,7 +49,7 @@ const IdleChatNotification = () => {
                     </div>
                 </dialog>
             </div>
-        </div>
+        </IdleChatNotificationStyled>
     );
 };
 
