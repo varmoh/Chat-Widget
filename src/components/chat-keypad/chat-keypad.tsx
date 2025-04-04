@@ -218,6 +218,8 @@ const ChatKeyPad = (): JSX.Element => {
             handleKeyUp();
             adjustHeight();
           }}
+          onFocus={() => console.log("FOCUS")}
+          onBlur={() => console.log("blur")}
         />
         <input
           type="file"
