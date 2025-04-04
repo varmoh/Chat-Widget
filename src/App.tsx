@@ -70,19 +70,6 @@ const App: FC = () => {
   const { burokrattOnlineStatus } = useAppSelector((state) => state.widget);
   const { chatStatus } = useAppSelector((state) => state.chat);
 
-  useEffect(() => {
-    // todo most important: how to enable scroll in chat? something else instead of window?
-    // todo: should be set on input focus
-
-    // todo remove, tesing only
-    addEventListener("touchmove", (e) => {
-      console.log("touchmove event", e);
-    });
-    addEventListener("scroll", (e) => {
-      console.log("scroll EVENT", e);
-    });
-  }, []);
-
   useLayoutEffect(() => {
     if (burokrattOnlineStatus === false)
       setOnlineCheckInterval(ONLINE_CHECK_INTERVAL);
@@ -232,7 +219,7 @@ const App: FC = () => {
 
   useNameAndTitleVisibility();
 
-  // if (burokrattOnlineStatus !== true) return <></>;
+  if (burokrattOnlineStatus !== true) return <></>;
   if (displayWidget && widgetConfig.isLoaded)
     return isChatOpen ? <Chat /> : <Profile />;
   return <></>;
