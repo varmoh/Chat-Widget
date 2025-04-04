@@ -70,38 +70,32 @@ const App: FC = () => {
   const { chatStatus } = useAppSelector((state) => state.chat);
 
   useEffect(() => {
-    function preventDefault(e: { preventDefault: () => void }) {
+    function preventDefault(e: Event) {
       e.preventDefault();
     }
 
-    // let supportsPassive = false;
-    // try {
-    //   window.addEventListener(
-    //     "test",
-    //     () => {},
-    //     Object.defineProperty({}, "passive", {
-    //       get: () => {
-    //         supportsPassive = true;
-    //       },
-    //     })
-    //   );
-    // } catch (e) {}
-    // const wheelOpt = supportsPassive ? { passive: false } : false;
+    // todo most important: how to enable scroll in chat? something else instead of window?
+    // todo: should be set on input focus
+
+    // todo remove, tesing only
+    addEventListener("touchmove", (e) => {
+      console.log("touchmove event", e);
+    });
+    addEventListener("scroll", (e) => {
+      console.log("scroll EVENT", e);
+    });
 
     function disableScroll() {
-      window.addEventListener("touchmove", preventDefault, { passive: false });
+      const el = window;
+      el.addEventListener("touchmove", preventDefault, { passive: false });
     }
 
-    // call this to Enable
     function enableScroll() {
-      // window.removeEventListener("DOMMouseScroll", preventDefault, false);
-      // window.removeEventListener(wheelEvent, preventDefault, wheelOpt);
-      // todo error if wheelOpt OR { passive: false } instead of false? need to test if works with false
       window.removeEventListener("touchmove", preventDefault, false);
-      // window.removeEventListener("keydown", preventDefaultForScrollKeys, false);
     }
 
-    disableScroll();
+    // disableScroll();
+    // enableScroll();
   }, []);
 
   useLayoutEffect(() => {
