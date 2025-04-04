@@ -94,7 +94,7 @@ const App: FC = () => {
       window.removeEventListener("touchmove", preventDefault, false);
     }
 
-    // disableScroll();
+    disableScroll();
     // enableScroll();
   }, []);
 
