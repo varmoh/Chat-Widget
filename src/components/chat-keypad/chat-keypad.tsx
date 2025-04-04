@@ -48,7 +48,11 @@ import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
 import { isIphone } from "../../utils/browser-utils";
 
-const preventDefault = (e: Event) => {
+const preventScrolling = (e: Event) => {
+  // Allow scrolling if the target is inside ChatContent
+  const target = e.target as HTMLElement;
+  if (target.closest(".os-host-flexbox")) return;
+
   e.preventDefault();
 };
 
@@ -195,14 +199,15 @@ const ChatKeyPad = (): JSX.Element => {
 
   const disableIosScroll = () => {
     if (isIphone()) {
-      const el = window;
-      el.addEventListener("touchmove", preventDefault, { passive: false });
+      window.addEventListener("touchmove", preventScrolling, {
+        passive: false,
+      });
     }
   };
 
   const enableIosScroll = () => {
     if (isIphone()) {
-      window.removeEventListener("touchmove", preventDefault, false);
+      window.removeEventListener("touchmove", preventScrolling, false);
     }
   };
 
