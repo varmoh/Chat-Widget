@@ -33,6 +33,7 @@ import { customJwtExtend } from "./slices/authentication-slice";
 import { getFromLocalStorage } from "./utils/local-storage-utils";
 import useNameAndTitleVisibility from "./hooks/use-name-title-visibility";
 import { generateUEID } from "./utils/generators";
+import { isMobileWidth } from "./utils/browser-utils";
 
 declare global {
   interface Window {
@@ -70,10 +71,6 @@ const App: FC = () => {
   const { chatStatus } = useAppSelector((state) => state.chat);
 
   useEffect(() => {
-    function preventDefault(e: Event) {
-      e.preventDefault();
-    }
-
     // todo most important: how to enable scroll in chat? something else instead of window?
     // todo: should be set on input focus
 
@@ -84,18 +81,6 @@ const App: FC = () => {
     addEventListener("scroll", (e) => {
       console.log("scroll EVENT", e);
     });
-
-    function disableScroll() {
-      const el = window;
-      el.addEventListener("touchmove", preventDefault, { passive: false });
-    }
-
-    function enableScroll() {
-      window.removeEventListener("touchmove", preventDefault, false);
-    }
-
-    // disableScroll();
-    // enableScroll();
   }, []);
 
   useLayoutEffect(() => {
@@ -117,7 +102,7 @@ const App: FC = () => {
 
   useEffect(() => {
     // Prevent meaningless body scrolling when chat is open on mobile
-    if (window.innerWidth < 480) {
+    if (isMobileWidth()) {
       document.getElementsByTagName("body")[0].style.overflow = isChatOpen
         ? "hidden"
         : "auto";

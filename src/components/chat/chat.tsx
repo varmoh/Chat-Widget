@@ -45,6 +45,7 @@ import ResponseErrorNotification from "../response-error-notification/response-e
 import useTabActive from "../../hooks/useTabActive";
 import { use } from "i18next";
 import AskForwardToCsa from "../ask-forward-to-csa-modal/ask-forward-to-csa-modal";
+import { isIphone, isMobileWidth } from "../../utils/browser-utils";
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -83,7 +84,9 @@ const Chat = (): JSX.Element => {
 
   const [isFocused, setIsFocused] = useState(true);
 
-  const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector((state) => state.widget);
+  const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector(
+    (state) => state.widget
+  );
 
   const chatRef = useRef<HTMLDivElement>(null);
 
@@ -93,38 +96,53 @@ const Chat = (): JSX.Element => {
     const currentRef = chatRef.current;
 
     function setChatHeight() {
-      if (currentRef && vv && /iPhone|iPad|iPod/.test(window.navigator.userAgent)) {
+      if (currentRef && vv && isIphone()) {
         currentRef.style.height = `${vv.height}px`;
       }
     }
 
-    vv?.addEventListener('resize', setChatHeight);
+    vv?.addEventListener("resize", setChatHeight);
     setChatHeight();
 
-    return () => vv?.removeEventListener('resize', setChatHeight);
+    return () => vv?.removeEventListener("resize", setChatHeight);
   }, []);
 
   useEffect(() => {
-    if (feedback.isFeedbackRatingGiven && feedback.isFeedbackMessageGiven && !feedback.isFeedbackConfirmationShown) {
+    if (
+      feedback.isFeedbackRatingGiven &&
+      feedback.isFeedbackMessageGiven &&
+      !feedback.isFeedbackConfirmationShown
+    ) {
       setShowFeedbackResult(true);
       setTimeout(async () => {
         dispatch(setIsFeedbackConfirmationShown(true));
         setShowFeedbackResult(false);
       }, FEEDBACK_CONFIRMATION_TIMEOUT);
     }
-  }, [dispatch, feedback.isFeedbackConfirmationShown, feedback.isFeedbackMessageGiven, feedback.isFeedbackRatingGiven]);
+  }, [
+    dispatch,
+    feedback.isFeedbackConfirmationShown,
+    feedback.isFeedbackMessageGiven,
+    feedback.isFeedbackRatingGiven,
+  ]);
 
   useEffect(() => {
     if (
       !chatId &&
       !feedback.isFeedbackConfirmationShown &&
-      (!messages.length || !messages.map((m) => m.event).includes(CHAT_EVENTS.GREETING))
+      (!messages.length ||
+        !messages.map((m) => m.event).includes(CHAT_EVENTS.GREETING))
     ) {
       dispatch(getGreeting());
     }
   }, [dispatch, chatId, feedback.isFeedbackConfirmationShown, messages]);
 
-  const handleChatResize: ResizeCallback = (event, direction, elementRef, delta) => {
+  const handleChatResize: ResizeCallback = (
+    event,
+    direction,
+    elementRef,
+    delta
+  ) => {
     const newDimensions = {
       width: chatDimensions.width + delta.width,
       height: chatDimensions.height + delta.height,
@@ -147,7 +165,12 @@ const Chat = (): JSX.Element => {
           if (differenceInSeconds >= IDLE_CHAT_INTERVAL) {
             dispatch(setIdleChat({ isIdle: true }));
             if (showConfirmationModal) {
-              dispatch(endChat({ event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS, isUpperCase: true }));
+              dispatch(
+                endChat({
+                  event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
+                  isUpperCase: true,
+                })
+              );
             }
           }
         }, IDLE_CHAT_INTERVAL * 1000);
@@ -158,7 +181,13 @@ const Chat = (): JSX.Element => {
     } else if (feedback.isFeedbackConfirmationShown) {
       dispatch(resetChatState({ event: null }));
     }
-  }, [idleChat.isIdle, messages, showConfirmationModal, isChatEnded, feedback.isFeedbackConfirmationShown]);
+  }, [
+    idleChat.isIdle,
+    messages,
+    showConfirmationModal,
+    isChatEnded,
+    feedback.isFeedbackConfirmationShown,
+  ]);
 
   useLayoutEffect(() => {
     if (isChatEnded === false) {
@@ -172,7 +201,10 @@ const Chat = (): JSX.Element => {
             lastActive = idleChat.lastActive;
           }
           const differenceInSeconds = getIdleTime(lastActive);
-          if (differenceInSeconds >= IDLE_CHAT_INTERVAL + IDLE_CHAT_CHOICES_INTERVAL) {
+          if (
+            differenceInSeconds >=
+            IDLE_CHAT_INTERVAL + IDLE_CHAT_CHOICES_INTERVAL
+          ) {
             dispatch(
               endChat({
                 event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
@@ -186,7 +218,11 @@ const Chat = (): JSX.Element => {
         };
       }
     }
-  }, [idleChat.isIdle, showConfirmationModal, feedback.isFeedbackConfirmationShown]);
+  }, [
+    idleChat.isIdle,
+    showConfirmationModal,
+    feedback.isFeedbackConfirmationShown,
+  ]);
 
   useReloadChatEndEffect();
 
@@ -227,7 +263,9 @@ const Chat = (): JSX.Element => {
         onResizeStop={handleChatResize}
       >
         <motion.div
-          className={`${styles.chat} ${isAuthenticated ? styles.authenticated : ""}`}
+          className={`${styles.chat} ${
+            isAuthenticated ? styles.authenticated : ""
+          }`}
           animate={{ y: 0 }}
           style={{ y: 400 }}
           ref={chatRef}
@@ -236,13 +274,23 @@ const Chat = (): JSX.Element => {
             isDetailSelected={showWidgetDetails}
             detailHandler={() => setShowWidgetDetails(!showWidgetDetails)}
           />
-          {messageQueue.length >= 5 && <WarningNotification warningMessage={t("chat.error-message")} />}
+          {messageQueue.length >= 5 && (
+            <WarningNotification warningMessage={t("chat.error-message")} />
+          )}
           {burokrattOnlineStatus !== true && <OnlineStatusNotification />}
           {showWidgetDetails && <WidgetDetails />}
           {!showWidgetDetails && showContactForm && <EndUserContacts />}
-          {!showWidgetDetails && showUnavailableContactForm && <UnavailableEndUserContacts />}
-          {!showWidgetDetails && !showContactForm && !showUnavailableContactForm && showAskToForwardToCsaForm && <AskForwardToCsa />}
-          {!showWidgetDetails && !showContactForm && !showUnavailableContactForm && !showAskToForwardToCsaForm && <ChatContent />}
+          {!showWidgetDetails && showUnavailableContactForm && (
+            <UnavailableEndUserContacts />
+          )}
+          {!showWidgetDetails &&
+            !showContactForm &&
+            !showUnavailableContactForm &&
+            showAskToForwardToCsaForm && <AskForwardToCsa />}
+          {!showWidgetDetails &&
+            !showContactForm &&
+            !showUnavailableContactForm &&
+            !showAskToForwardToCsaForm && <ChatContent />}
           {idleChat.isIdle && <IdleChatNotification />}
           {showResponseError && <ResponseErrorNotification />}
           {showFeedbackResult ? (

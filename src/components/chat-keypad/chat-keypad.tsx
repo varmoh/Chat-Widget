@@ -46,6 +46,11 @@ import formatBytes from "../../utils/format-bytes";
 import debounce from "../../utils/debounce";
 import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
+import { isIphone } from "../../utils/browser-utils";
+
+const preventDefault = (e: Event) => {
+  e.preventDefault();
+};
 
 const ChatKeyPad = (): JSX.Element => {
   const [userInput, setUserInput] = useState<string>("");
@@ -188,6 +193,19 @@ const ChatKeyPad = (): JSX.Element => {
 
   const keypadClasses = classNames(styles.keypad);
 
+  const disableIosScroll = () => {
+    if (isIphone()) {
+      const el = window;
+      el.addEventListener("touchmove", preventDefault, { passive: false });
+    }
+  };
+
+  const enableIosScroll = () => {
+    if (isIphone()) {
+      window.removeEventListener("touchmove", preventDefault, false);
+    }
+  };
+
   return (
     <div className="byk-chat">
       <KeypadErrorMessage>{errorMessage}</KeypadErrorMessage>
@@ -218,8 +236,8 @@ const ChatKeyPad = (): JSX.Element => {
             handleKeyUp();
             adjustHeight();
           }}
-          onFocus={() => console.log("FOCUS")}
-          onBlur={() => console.log("blur")}
+          onFocus={disableIosScroll}
+          onBlur={enableIosScroll}
         />
         <input
           type="file"
