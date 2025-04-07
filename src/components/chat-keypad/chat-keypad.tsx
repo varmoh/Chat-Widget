@@ -48,7 +48,7 @@ import { Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
 import { isIphone } from "../../utils/browser-utils";
 
-const preventScrolling = (e: Event) => {
+const preventWindowScrolling = (e: Event) => {
   // Allow scrolling if the target is inside ChatContent
   const target = e.target as HTMLElement;
   if (target.closest(".os-host-flexbox")) return;
@@ -216,17 +216,17 @@ const ChatKeyPad = (): JSX.Element => {
   });
 
   // Workaround for iOS to prevent unnecessary window scrolling when the keyboard is open
-  const disableIosScroll = () => {
+  const disableIosWindowScroll = () => {
     if (isIphone()) {
-      window.addEventListener("touchmove", preventScrolling, {
+      window.addEventListener("touchmove", preventWindowScrolling, {
         passive: false,
       });
     }
   };
 
-  const enableIosScroll = () => {
+  const enableIosWindowScroll = () => {
     if (isIphone()) {
-      window.removeEventListener("touchmove", preventScrolling, false);
+      window.removeEventListener("touchmove", preventWindowScrolling, false);
     }
   };
 
@@ -260,8 +260,8 @@ const ChatKeyPad = (): JSX.Element => {
             handleKeyUp();
             adjustHeight();
           }}
-          onFocus={disableIosScroll}
-          onBlur={enableIosScroll}
+          onFocus={disableIosWindowScroll}
+          onBlur={enableIosWindowScroll}
         />
         <input
           type="file"
