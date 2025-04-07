@@ -65,7 +65,7 @@ export const Profile = (): JSX.Element => {
                 </ProfileStyles>
                 {widgetConfig.showMessage && (
                     <div
-                        className={`profile profile__greeting_message ${delayFinished && "profile__greeting_message__active"}`}
+                        className={`profile__greeting_message ${delayFinished && "profile__greeting_message__active"}`}
                     >
                         {widgetConfig.bubbleMessageText}
                     </div>

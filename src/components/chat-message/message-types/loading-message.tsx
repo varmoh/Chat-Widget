@@ -21,13 +21,15 @@ const LoadingMessage = (): JSX.Element => {
                             <img src={RobotIcon} alt="Robot icon"/>
                         </div>
                         <div className="byk-chat">
-                        <div className={`${styles.content}`}>
-                            <LoadingAnimationStyles className="bouncing-loader">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </LoadingAnimationStyles>
-                        </div>
+                            <div className={`${styles.content}`}>
+                                <LoadingAnimationStyles >
+                                    <div className="bouncing-loader">
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </LoadingAnimationStyles>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {colors, fontChat} from "../../styling/style_settings";
 
 export const MessageFailedWrapperStyled = styled.div`
     display: flex;
@@ -72,12 +73,11 @@ export const ChatMessageStyled = styled.div`
 
     .event-button {
         cursor: pointer;
-        font-family: 'Aino Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-        'Helvetica Neue', sans-serif;
+        font-family: ${fontChat};
         font-size: 1em;
         margin: 0.7rem 0.3rem 0.3rem 0.3rem;
         padding: 0.3rem 1.5rem;
-        background-color: #003cff;
+        background-color: ${colors.primary};
         color: white;
         border: none;
         box-shadow: 2px 1px 4px grey;
@@ -95,12 +95,11 @@ export const ChatMessageStyled = styled.div`
 
     .action-button {
         cursor: pointer;
-        font-family: 'Aino Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-        'Helvetica Neue', sans-serif;
+        font-family: ${fontChat};
         font-size: 1em;
         margin: 0.7rem 0.3rem 0.3rem 0.3rem;
         padding: 0.3rem 1.5rem;
-        background-color: #003cff;
+        background-color: ${colors.primary};
         color: white;
         border: none;
         border-radius: 4px;
@@ -123,7 +122,7 @@ export const ChatMessageStyled = styled.div`
     }
 
     .action-option {
-        background-color: #3c0078;
+        background-color: ${colors.secondary};
     }
 
     .buttonsRow {
@@ -133,8 +132,7 @@ export const ChatMessageStyled = styled.div`
     .decline-event-button,
     .redirect-event-button {
         cursor: pointer;
-        font-family: 'Aino Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-        'Helvetica Neue', sans-serif;
+        font-family: ${fontChat};
         font-size: 1em;
         margin: 0.7rem 0.3rem 0.3rem 0.3rem;
         padding: 0.3rem 1.5rem;
@@ -193,14 +191,14 @@ export const ChatMessageStyled = styled.div`
         display: flex;
         flex-direction: column;
         align-items: center;
-        background-color: #f0f1f2;
+        background-color: ${colors.gray};
         text-align: center;
         color: #575a5d;
         border-radius: 6px;
         margin-right: 0.8em;
         margin-left: 0.8em;
     }
-
+    
     &.admin {
         margin-right: 4em;
         margin-left: 0.8em;
@@ -208,7 +206,7 @@ export const ChatMessageStyled = styled.div`
         flex-direction: column;
 
         .name {
-            color: #000;
+            color: ${colors.black};
             font-size: 0.95em;
             padding-left: 3.4em;
         }
@@ -219,14 +217,14 @@ export const ChatMessageStyled = styled.div`
 
             .content {
                 border-radius: 6px 48px 48px 29px;
-                background-color: #003cff;
+                background-color: ${colors.primary};
             }
 
             .emergency_content {
                 border-radius: 6px 48px 48px 29px;
-                border: 1px solid #83878b;
-                color: #000;
-                background-color: #fff;
+                border: 1px solid ${colors.inputBorderGray};
+                color: ${colors.black};
+                background-color: ${colors.white};
             }
 
             .icon {
@@ -253,7 +251,7 @@ export const ChatMessageStyled = styled.div`
 
         .content {
             border-radius: 48px 6px 29px 48px;
-            background-color: #3c0078;
+            background-color: ${colors.secondary};
         }
 
         .file {

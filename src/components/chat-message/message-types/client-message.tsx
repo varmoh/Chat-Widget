@@ -37,11 +37,6 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
         }
     }, [content, props.message?.file]);
 
-    // const messageClass = classNames(styles.message, styles.client, styles.content, {
-    //     [styles.tall]: isTall
-    // });
-
-    // const messageClass = `client  ${isTall ? "tall" : ""}`;
     const messageClass = `client`;
     const contentTallClass = `content  ${isTall ? "clientTallContent" : ""}`;
 
