@@ -40,10 +40,7 @@ const LinkPreview: React.FC<{
   );
 };
 
-const Markdownify: React.FC<MarkdownifyProps> = ({
-  message,
-  sanitizeLinks = false,
-}) => (
+const Markdownify: React.FC<MarkdownifyProps> = ({ message, sanitizeLinks = false }) => (
   <div className="byk-chat">
     <Markdown
       options={{
@@ -59,9 +56,11 @@ const Markdownify: React.FC<MarkdownifyProps> = ({
         disableParsingRawHTML: true,
       }}
     >
-      {message?.replace(/&#x([0-9A-Fa-f]+);/g, (_, hex) => {
-        return String.fromCharCode(parseInt(hex, 16));
-      }) ?? ""}
+      {message
+        ?.replace(/&#x([0-9A-Fa-f]+);/g, (_, hex) => {
+          return String.fromCharCode(parseInt(hex, 16));
+        })
+        .replace(/(?<=\n)\d+\.\s/g, "\n\n$&") ?? ""}
     </Markdown>
   </div>
 );
