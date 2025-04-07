@@ -13,6 +13,7 @@ const ChatFeedback = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const {t} = useTranslation();
     const {feedback} = useChatSelector();
+    const [loading, setLoading] = useState<boolean>(false);
     const [selectedFeedbackButtonValue, setSelectedFeedbackButtonValue] = useState<string>("");
     const downloadRef = useRef<DownloadElement>(null);
 
@@ -24,12 +25,17 @@ const ChatFeedback = (): JSX.Element => {
     };
 
     const handleDownload = async () => {
-        const response = await dispatch(downloadChat(false));
-        if (response.meta.requestStatus === "rejected") {
-            return false;
+        setLoading(true)
+        try {
+            const response = await dispatch(downloadChat(false));
+            if (response.meta.requestStatus === "rejected") {
+                return false;
+            }
+            downloadRef.current?.download({title: `chat-history.pdf`, data: (response.payload as any).data});
+            return true;
+        } finally {
+            setLoading(false);
         }
-        downloadRef.current?.download({title: `chat-history.pdf`, data: (response.payload as any).data});
-        return true;
     };
 
     return (
@@ -41,10 +47,10 @@ const ChatFeedback = (): JSX.Element => {
                     })}
                 </p>
                 {feedback.showFeedbackWarning && <p className="missing-feeback">{t("feedback.warningText")}</p>}
-                <div className="feedback-box-input" style={{alignSelf: "center"}}>
+                <div className="feedback-box-input" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                     {Array.from(Array(11).keys()).map((val: number) => (
                         <StyledButton
-                            className="feedback-btn"
+                            className={`feedback-btn ${val <= 6 ? "red" : val <= 8 ? "yellow" : "green"}`}
                             onClick={(e) => handleFeedback(e.currentTarget.textContent)}
                             styleType={StyledButtonType.GRAY}
                             key={val}
@@ -57,7 +63,7 @@ const ChatFeedback = (): JSX.Element => {
                 <div className={styles.downloadContainer}>
                     <Download ref={downloadRef}/>
                     <a onClick={handleDownload} className={styles.downloadLink}>
-                        {t("widget.action.download-chat")}
+                        {loading ? <span className="spinner"></span> : t("widget.action.download-chat")}
                     </a>
                 </div>
                 <p className="feedback-paragraph below">{t("feedback.lowerText")}</p>
@@ -90,6 +96,43 @@ const ChatFeedbackStyle = styled.div`
         width: 32px;
         vertical-align: baseline;
         margin: 0;
+        border-radius: 5px;
+        color: white;
+        margin-left: 2px;
+        margin-bottom: 2px;
+
+        &.red {
+          background-color: #f25050;
+        }
+        
+        &.yellow {
+          background-color: #f1d15a;
+        }
+
+        &.green {
+          background-color: #46ba45;
+        }
+        
+        :hover,
+        :focus {
+          background-color: #003cff !important;
+        }
+    }
+
+    .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid transparent;
+        border-top-color: blue;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        display: inline-block;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
     }
 
     .feedback-box-input {

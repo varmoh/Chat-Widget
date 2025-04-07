@@ -258,7 +258,8 @@ const Chat = (): JSX.Element => {
               {!showWidgetDetails &&
                 !showContactForm &&
                 !showUnavailableContactForm &&
-                !feedback.isFeedbackConfirmationShown &&
+                !feedback.isFeedbackConfirmationShown && 
+                !showAskToForwardToCsaForm &&
                 chatMode === CHAT_MODES.FREE && <ChatKeyPad />}
               <ConfirmationModal />
             </>

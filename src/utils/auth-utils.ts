@@ -17,7 +17,7 @@ export function redirectIfComeBackFromTim(callback: any) {
         }
       }
       removeRedirectPath();
-      widgetService.authenticateUser();
+      await widgetService.authenticateUser();
       callback();
     }, 500);
   }
