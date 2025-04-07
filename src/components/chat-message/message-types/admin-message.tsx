@@ -73,7 +73,7 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
             transition={leftAnimation.transition}
             ref={messageRef}
         >
-            <ChatMessageStyled className="admin">
+            <div>
                 <ChatMessageStyled className={messageClass}>
                     {nameVisibility && csaName && message.event != CHAT_EVENTS.GREETING && (
                         <div className="name">{csaName}</div>
@@ -157,7 +157,7 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
                     {hasButtons && <ChatButtonGroup message={message}/>}
                     {hasOptions && <ChatOptionGroup message={message}/>}
                 </ChatMessageStyled>
-            </ChatMessageStyled>
+            </div>
         </motion.div>
     );
 };
