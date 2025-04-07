@@ -215,17 +215,18 @@ const ChatKeyPad = (): JSX.Element => {
     [styles.four_lines]: dynamicStyle === "fourLines",
   });
 
-  const enableIosScroll = () => {
-    if (isIphone()) {
-      window.removeEventListener("touchmove", preventScrolling, false);
-    }
-  };
-
+  // Workaround for iOS to prevent unnecessary window scrolling when the keyboard is open
   const disableIosScroll = () => {
     if (isIphone()) {
       window.addEventListener("touchmove", preventScrolling, {
         passive: false,
       });
+    }
+  };
+
+  const enableIosScroll = () => {
+    if (isIphone()) {
+      window.removeEventListener("touchmove", preventScrolling, false);
     }
   };
 
