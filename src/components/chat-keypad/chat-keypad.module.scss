@@ -23,6 +23,9 @@
       align-items: center;
       margin: 1em 0.5em 2em 1em;
       flex: 1;
+      // Font size should be at least 16px to prevent zoom on input focus on iOS
+      // https://stackoverflow.com/questions/2989263
+      font-size: 16px !important;
       border: 0;
       outline: none;
       border-bottom: 1px solid $color-primary;
