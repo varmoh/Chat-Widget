@@ -23,4 +23,55 @@ export const ChatFeedbackStyled = styled.div`
         color: ${colors.black};
         cursor: pointer;
     }
+
+    .feedback-btn {
+        padding: 0.5rem;
+        width: 32px;
+        vertical-align: baseline;
+        margin: 0;
+        border-radius: 5px;
+        color: white;
+        margin-left: 2px;
+        margin-bottom: 2px;
+
+        &.red {
+            background-color: #f25050;
+        }
+
+        &.yellow {
+            background-color: #f1d15a;
+        }
+
+        &.green {
+            background-color: #46ba45;
+        }
+
+        :hover,
+        :focus {
+            background-color: #003cff !important;
+        }
+    }
+
+    .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid transparent;
+        border-top-color: blue;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        display: inline-block;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .feedback-box-input {
+        justify-content: space-around;
+        display: flex;
+        flex-flow: row nowrap;
+        margin: 1rem 0.8em 2rem 0.8em;
+    }
 `

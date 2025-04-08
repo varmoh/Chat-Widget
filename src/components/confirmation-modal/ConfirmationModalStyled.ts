@@ -143,10 +143,65 @@ export const ConfirmationModalStyled = styled.div`
         }
     }
 
-    .missingFeedback {
+    .feedback-btn {
+        padding: 0.5rem;
+        width: 32px;
+        vertical-align: baseline;
+        margin: 0;
+        border-radius: 5px;
+        color: white;
+        margin-left: 2px;
+        margin-bottom: 2px;
+
+        &.red {
+            background-color: #f25050;
+        }
+
+        &.yellow {
+            background-color: #f1d15a;
+        }
+
+        &.green {
+            background-color: #46ba45;
+        }
+
+        :hover,
+        :focus {
+            background-color: #003cff !important;
+        }
+    }
+
+    .feedback-box-input {
+        margin: 1rem 0em 0.6rem 0em;
+    }
+
+    .missing-feeback {
         color: #ff4800;
-        margin-bottom: -0.5em;
+        margin: 0 0.8em -0.5rem 0.8em;
         font-size: 0.75rem;
+    }
+
+    .feedbackInput {
+        padding: 7px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 5px;
+    }
+
+    .spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid transparent;
+        border-top-color: blue;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        display: inline-block;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
     }
 `
 
@@ -179,13 +234,34 @@ export const ConfirmationModalStyles = styled.div`
 
     .feedback-btn {
         padding: 0.5rem;
-        width: 29px;
+        width: 32px;
         vertical-align: baseline;
         margin: 0;
+        border-radius: 5px;
+        color: white;
+        margin-left: 2px;
+        margin-bottom: 2px;
+
+        &.red {
+            background-color: #f25050;
+        }
+
+        &.yellow {
+            background-color: #f1d15a;
+        }
+
+        &.green {
+            background-color: #46ba45;
+        }
+
+        :hover,
+        :focus {
+            background-color: #003cff !important;
+        }
     }
 
     .feedback-box-input {
-        margin: 1rem 0em 1rem 0em;
+        margin: 1rem 0em 0.6rem 0em;
     }
 
     .missing-feeback {

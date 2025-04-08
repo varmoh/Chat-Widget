@@ -45,10 +45,10 @@ const ConfirmationModalNps = ({npsFeedback}: Props) => {
                             organization: window._env_.ORGANIZATION_NAME,
                         })}
                     </p>
-                    <div className="feedback-box-input" style={{alignSelf: "center"}}>
+                    <div className="feedback-box-input" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
                         {Array.from(Array(11).keys()).map((val: number) => (
                             <StyledButton
-                                className="feedback-btn"
+                                className={`feedback-btn ${val <= 6 ? "red" : val <= 8 ? "yellow" : "green"}`}
                                 onClick={(e) => handleFeedback(e.currentTarget.textContent)}
                                 styleType={StyledButtonType.GRAY}
                                 key={val}

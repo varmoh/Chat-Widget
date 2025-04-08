@@ -67,6 +67,16 @@ export const ChatKeypadStyled = styled.div `
         }
     }
 
+    .three_lines {
+        margin-bottom: 5px;
+        padding-top: 20px;
+    }
+
+    .four_lines {
+        margin-bottom: 10px;
+        padding-top: 30px;
+    }
+
     .button_cancelUpload {
         background: #003cff;
         width: 32px;

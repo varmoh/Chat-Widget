@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {closeConfirmationModal} from "../../slices/widget-slice";
@@ -57,6 +57,7 @@ export default function ConfirmationModal(): JSX.Element {
                                     onClick={() =>
                                         handleClick(CHAT_EVENTS.CLIENT_LEFT_WITH_ACCEPTED)
                                     }
+                                    autoFocus
                                 >
                                     {t("widget.action.yes-got-answer")}
                                 </Button>
