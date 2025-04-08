@@ -3,7 +3,6 @@ import {useTranslation} from "react-i18next";
 import {motion} from "framer-motion";
 import classNames from "classnames";
 import {Message} from "../../../model/message-model";
-import styles from "../chat-message.module.scss";
 import OutlineError from "../../../static/icons/outline-error.svg";
 import PersonIcon from "../../../static/icons/person.svg";
 import Markdownify from "./Markdownify";
@@ -48,20 +47,20 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
                 transition={rightAnimation.transition}
                 ref={messageRef}
             >
-                <ChatMessageStyled>
+                <div>
                     <ChatMessageStyled className={messageClass}>
-                        <div className={styles.icon}>
+                        <div className="icon">
                             <img src={PersonIcon} alt="Person icon"/>
                         </div>
-                        <div className={`${styles.content} ${styles.file}`}>
-                            <img className={styles.fileIcon} src={File} alt="File icon"/>
-                            <p className={styles.fileName}>{props.message?.file.name}</p>
-                            <p className={styles.fileData}>{`${props.message?.file.type
+                        <div className="content file">
+                            <img className="fileIcon" src={File} alt="File icon"/>
+                            <p className="fileName">{props.message?.file.name}</p>
+                            <p className="fileData">{`${props.message?.file.type
                                 .split("/")[1]
                                 .toUpperCase()}, ${formatBytes(props.message?.file.size)}`}</p>
                         </div>
                     </ChatMessageStyled>
-                </ChatMessageStyled>
+                </div>
             </motion.div>
         );
     }
@@ -73,12 +72,12 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
             transition={rightAnimation.transition}
             ref={messageRef}
         >
-            <ChatMessageStyled>
+            <div>
                 <ChatMessageStyled className={messageClass}>
                     <div className="client icon">
                         <img src={PersonIcon} alt="Person icon"/>
                     </div>
-                    <div className={classNames("content", { clientTallContent: isTall })}>
+                    <div className={classNames("content", {clientTallContent: isTall})}>
                         <Markdownify message={content ?? ""}/>
                     </div>
                 </ChatMessageStyled>
@@ -125,7 +124,7 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
                             </div>
                         </MessageFailedWrapperStyled>
                     )}
-            </ChatMessageStyled>
+            </div>
         </motion.div>
     );
 };

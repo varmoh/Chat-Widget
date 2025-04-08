@@ -28,7 +28,7 @@ const LinkPreview: React.FC<{ href: string; children: React.ReactNode }> = ({hre
 };
 
 const Markdownify: React.FC<MarkdownifyProps> = ({message}) => (
-    <div className="byk-chat">
+    <div>
         <Markdown
             options={{
                 enforceAtxHeadings: true,
@@ -40,7 +40,9 @@ const Markdownify: React.FC<MarkdownifyProps> = ({message}) => (
                 disableParsingRawHTML: true,
             }}
         >
-            {message?.replace(/&#x([0-9A-Fa-f]+);/g, (_, hex) => { return String.fromCharCode(parseInt(hex, 16)); }) ?? ""}
+            {message?.replace(/&#x([0-9A-Fa-f]+);/g, (_, hex) => {
+                return String.fromCharCode(parseInt(hex, 16));
+            }) ?? ""}
         </Markdown>
     </div>
 );

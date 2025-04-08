@@ -5,7 +5,7 @@ import {useAppDispatch} from "../../../store";
 import {addMessage, initChat, queueMessage, sendNewMessage} from "../../../slices/chat-slice";
 import useChatSelector from "../../../hooks/use-chat-selector";
 import {parseButtons} from "../../../utils/chat-utils";
-import styles from "../chat-message.module.scss";
+import {ChatMessageStyled} from "../ChatMessageStyled";
 
 const ChatButtonGroup = ({message}: { message: Message }): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -39,13 +39,13 @@ const ChatButtonGroup = ({message}: { message: Message }): JSX.Element => {
     const enabled = messages[messages.length - 1] === message && chatMode === CHAT_MODES.FLOW;
 
     return (
-        <div className="byk-chat">
-            <div className={styles.buttonsRow}>
+        <ChatMessageStyled>
+            <div className="buttonsRow">
                 {parsedButtons?.map(({title, payload}) => (
                     <button
                         key={payload}
                         type="button"
-                        className={styles["action-button"]}
+                        className="action-button"
                         onClick={() => addNewMessageToState(payload)}
                         disabled={!enabled}
                     >
@@ -53,7 +53,7 @@ const ChatButtonGroup = ({message}: { message: Message }): JSX.Element => {
                     </button>
                 ))}
             </div>
-        </div>
+        </ChatMessageStyled>
     );
 };
 

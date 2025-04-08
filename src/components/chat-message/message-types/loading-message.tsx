@@ -14,7 +14,7 @@ const LoadingMessage = (): JSX.Element => {
         <motion.div animate={leftAnimation.animate} initial={leftAnimation.initial}
                     transition={leftAnimation.transition}>
             <ChatMessageStyled className="admin">
-                <div className="message admin">
+                <div className="message">
                     <div className="main">
                         <div className="icon">
                             <img src={RobotIcon} alt="Robot icon"/>

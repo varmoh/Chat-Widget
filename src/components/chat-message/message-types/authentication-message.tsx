@@ -2,8 +2,8 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import useChatSelector from "../../../hooks/use-chat-selector";
 import useAuthenticationSelector from "../../../hooks/use-authentication-selector";
-import styles from "../chat-message.module.scss";
 import {redirectToTim} from "../../../utils/auth-utils";
+import {ChatMessageStyled} from "../ChatMessageStyled";
 
 const AuthenticationMessage = (): JSX.Element => {
     const {t} = useTranslation();
@@ -12,15 +12,15 @@ const AuthenticationMessage = (): JSX.Element => {
 
     return (
         <>
-            <div className="byk-chat">
+            <ChatMessageStyled>
                 <div className="authenticationbox-explanation-text">
                     {t("notifications.authenticate")}
                 </div>
                 <button
                     disabled={isChatEnded || isAuthenticated}
                     onClick={redirectToTim}
-                    className={`${styles["event-button"]} ${
-                        isAuthenticated ? styles.authenticated : ""
+                    className={`event-button ${
+                        isAuthenticated ? "authenticated" : ""
                     }`}
                 >
                     {chatId && isAuthenticated ? (
@@ -29,7 +29,7 @@ const AuthenticationMessage = (): JSX.Element => {
                         <span>{t("notifications.authenticate.needs-authentication")}</span>
                     )}
                 </button>
-            </div>
+            </ChatMessageStyled>
         </>
     );
 };
