@@ -7,7 +7,7 @@ import {sendMessageWithNewEvent, sendNewSilentMessage} from '../../slices/chat-s
 import {useAppDispatch} from '../../store';
 import {getContactCommentNewMessage, getContactFormFulfilledNewMessage} from '../../utils/chat-utils';
 import useChatSelector from '../../hooks/use-chat-selector';
-import styles from './waiting-time-notification.module.scss';
+import {WaitingTimeNotificationStyles} from "./WaitingTimeNotificationStyled";
 
 const WaitingTimeNotificationForm = () => {
     const {t} = useTranslation();
@@ -51,8 +51,8 @@ const WaitingTimeNotificationForm = () => {
     }
 
     return (
-        <div className="byk-chat">
-            <form className={styles.form} onSubmit={handleFormSubmit}>
+        <WaitingTimeNotificationStyles>
+            <form className="form" onSubmit={handleFormSubmit}>
                 <input
                     type="phone"
                     placeholder={t('widget.form.phone')}
@@ -83,7 +83,7 @@ const WaitingTimeNotificationForm = () => {
                     {t('chat.feedback.button.label')}
                 </Button>
             </form>
-        </div>
+        </WaitingTimeNotificationStyles>
     );
 };
 

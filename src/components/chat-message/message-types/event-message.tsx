@@ -1,7 +1,6 @@
 import React, {ReactElement} from 'react';
 import {motion} from 'framer-motion';
-import classNames from 'classnames';
-import styles from '../chat-message.module.scss';
+import {ChatMessageStyled} from "../ChatMessageStyled";
 
 const leftAnimation = {
     animate: {opacity: 1, x: 0},
@@ -15,11 +14,11 @@ const EventMessage = (props: { content: ReactElement }): JSX.Element => {
     return (
         <motion.div animate={leftAnimation.animate} initial={leftAnimation.initial}
                     transition={leftAnimation.transition}>
-            <div className="byk-chat">
-                <div className={classNames(styles.message, styles.event)}>
+            <ChatMessageStyled>
+                <div className="message event">
                     <div aria-live="polite">{content}</div>
                 </div>
-            </div>
+            </ChatMessageStyled>
         </motion.div>
     );
 };

@@ -41,7 +41,7 @@ const LinkPreview: React.FC<{
 };
 
 const Markdownify: React.FC<MarkdownifyProps> = ({ message, sanitizeLinks = false }) => (
-  <div className="byk-chat">
+  <div>
     <Markdown
       options={{
         enforceAtxHeadings: true,

@@ -1,32 +1,31 @@
-import { motion } from "framer-motion";
-import { memo, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Resizable, ResizeCallback } from "re-resizable";
+import {motion} from "framer-motion";
+import {memo, useEffect, useLayoutEffect, useRef, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {Resizable, ResizeCallback} from "re-resizable";
 import useChatSelector from "../../hooks/use-chat-selector";
 import {
-  FEEDBACK_CONFIRMATION_TIMEOUT,
-  CHAT_WINDOW_HEIGHT,
-  CHAT_WINDOW_WIDTH,
-  CHAT_EVENTS,
-  IDLE_CHAT_INTERVAL,
-  AUTHOR_ROLES,
-  IDLE_CHAT_CHOICES_INTERVAL,
-  CHAT_MODES,
+    AUTHOR_ROLES,
+    CHAT_EVENTS,
+    CHAT_MODES,
+    CHAT_WINDOW_HEIGHT,
+    CHAT_WINDOW_WIDTH,
+    FEEDBACK_CONFIRMATION_TIMEOUT,
+    IDLE_CHAT_CHOICES_INTERVAL,
+    IDLE_CHAT_INTERVAL,
 } from "../../constants";
 import ChatContent from "../chat-content/chat-content";
 import ChatHeader from "../chat-header/chat-header";
 import ChatKeyPad from "../chat-keypad/chat-keypad";
 import ConfirmationModal from "../confirmation-modal/confirmation-modal";
-import styles from "./chat.module.scss";
-import { useAppDispatch, useAppSelector } from "../../store";
+import {useAppDispatch, useAppSelector} from "../../store";
 import {
-  resetChatState,
-  endChat,
-  getGreeting,
-  sendNewMessage,
-  setChatDimensions,
-  setIdleChat,
-  setIsFeedbackConfirmationShown,
+    endChat,
+    getGreeting,
+    resetChatState,
+    sendNewMessage,
+    setChatDimensions,
+    setIdleChat,
+    setIsFeedbackConfirmationShown,
 } from "../../slices/chat-slice";
 import WarningNotification from "../warning-notification/warning-notification";
 import ChatFeedback from "../chat-feedback/chat-feedback";
@@ -37,63 +36,63 @@ import useAuthenticationSelector from "../../hooks/use-authentication-selector";
 import OnlineStatusNotification from "../online-status-notification/online-status-notification";
 import IdleChatNotification from "../idle-chat-notification/idle-chat-notification";
 import getIdleTime from "../../utils/getIdleTime";
-import { Message } from "../../model/message-model";
+import {Message} from "../../model/message-model";
 import UnavailableEndUserContacts from "../unavailable-end-user-contacts/unavailable-end-user-contacts";
 import useReloadChatEndEffect from "../../hooks/use-reload-chat-end-effect";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import ResponseErrorNotification from "../response-error-notification/response-error-notification";
 import useTabActive from "../../hooks/useTabActive";
-import { use } from "i18next";
 import AskForwardToCsa from "../ask-forward-to-csa-modal/ask-forward-to-csa-modal";
 import { isIphone, isMobileWidth } from "../../utils/browser-utils";
+import {ChatStyles} from "./ChatStyled";
 
 const RESIZABLE_HANDLES = {
-  topLeft: true,
-  top: true,
-  topRight: false,
-  right: false,
-  bottomRight: false,
-  bottom: false,
-  bottomLeft: false,
-  left: true,
+    topLeft: true,
+    top: true,
+    topRight: false,
+    right: false,
+    bottomRight: false,
+    bottom: false,
+    bottomLeft: false,
+    left: true,
 };
 
 const Chat = (): JSX.Element => {
-  const dispatch = useAppDispatch();
-  const [showWidgetDetails, setShowWidgetDetails] = useState(false);
-  const [showFeedbackResult, setShowFeedbackResult] = useState(false);
-  const { t } = useTranslation();
-  const { isAuthenticated } = useAuthenticationSelector();
-  const { height, width } = useWindowDimensions();
-  const {
-    isChatEnded,
-    chatId,
-    messageQueue,
-    idleChat,
-    showContactForm,
-    showUnavailableContactForm,
-    showAskToForwardToCsaForm,
-    feedback,
-    messages,
-    chatDimensions,
-    chatMode,
-    showResponseError,
-  } = useChatSelector();
+    const dispatch = useAppDispatch();
+    const [showWidgetDetails, setShowWidgetDetails] = useState(false);
+    const [showFeedbackResult, setShowFeedbackResult] = useState(false);
+    const {t} = useTranslation();
+    const {isAuthenticated} = useAuthenticationSelector();
+    const {height, width} = useWindowDimensions();
+    const {
+        isChatEnded,
+        chatId,
+        messageQueue,
+        idleChat,
+        showContactForm,
+        showUnavailableContactForm,
+        showAskToForwardToCsaForm,
+        feedback,
+        messages,
+        chatDimensions,
+        chatMode,
+        showResponseError,
+    } = useChatSelector();
 
-  const isTabActive = useTabActive();
+    const isTabActive = useTabActive();
 
-  const [isFocused, setIsFocused] = useState(true);
+    const [isFocused, setIsFocused] = useState(true);
 
   const { burokrattOnlineStatus, showConfirmationModal } = useAppSelector(
     (state) => state.widget
   );
 
-  const chatRef = useRef<HTMLDivElement>(null);
+    const chatRef = useRef<HTMLDivElement>(null);
 
-  // Prevent chat from being cut off on iOS devices when on-screen keyboard is open
-  useEffect(() => {
-    const vv = window.visualViewport;
-    const currentRef = chatRef.current;
+    // Prevent chat from being cut off on iOS devices when on-screen keyboard is open
+    useEffect(() => {
+        const vv = window.visualViewport;
+        const currentRef = chatRef.current;
 
     function setChatHeight() {
       if (currentRef && vv && isIphone()) {
@@ -150,11 +149,11 @@ const Chat = (): JSX.Element => {
     dispatch(setChatDimensions(newDimensions));
   };
 
-  useLayoutEffect(() => {
-    if (isChatEnded === false) {
-      if (messages.length > 0) {
-        const interval = setInterval(() => {
-          let lastActive;
+    useLayoutEffect(() => {
+        if (isChatEnded === false) {
+            if (messages.length > 0) {
+                const interval = setInterval(() => {
+                    let lastActive;
 
           if (idleChat.lastActive === "") {
             lastActive = messages[messages.length - 1].authorTimestamp;
@@ -189,11 +188,11 @@ const Chat = (): JSX.Element => {
     feedback.isFeedbackConfirmationShown,
   ]);
 
-  useLayoutEffect(() => {
-    if (isChatEnded === false) {
-      if (messages.length > 0) {
-        const interval = setInterval(() => {
-          let lastActive;
+    useLayoutEffect(() => {
+        if (isChatEnded === false) {
+            if (messages.length > 0) {
+                const interval = setInterval(() => {
+                    let lastActive;
 
           if (idleChat.lastActive === "") {
             lastActive = messages[messages.length - 1].authorTimestamp;
@@ -224,35 +223,36 @@ const Chat = (): JSX.Element => {
     feedback.isFeedbackConfirmationShown,
   ]);
 
-  useReloadChatEndEffect();
+    useReloadChatEndEffect();
 
-  useEffect(() => {
-    if (
-      isTabActive &&
-      isFocused &&
-      messages.length > 0 &&
-      !messages[messages.length - 1].event &&
-      messages[messages.length - 1].authorRole === AUTHOR_ROLES.BACKOFFICE_USER
-    ) {
-      const message: Message = {
-        chatId,
-        authorRole: AUTHOR_ROLES.END_USER,
-        authorTimestamp: new Date().toISOString(),
-        event: CHAT_EVENTS.MESSAGE_READ,
-      };
-      dispatch(sendNewMessage(message));
-    }
-  }, [isTabActive, isFocused, messages]);
+    useEffect(() => {
+        if (
+            isTabActive &&
+            isFocused &&
+            messages.length > 0 &&
+            !messages[messages.length - 1].event &&
+            messages[messages.length - 1].authorRole === AUTHOR_ROLES.BACKOFFICE_USER
+        ) {
+            const message: Message = {
+                chatId,
+                authorRole: AUTHOR_ROLES.END_USER,
+                authorTimestamp: new Date().toISOString(),
+                event: CHAT_EVENTS.MESSAGE_READ,
+            };
+            dispatch(sendNewMessage(message));
+        }
+    }, [isTabActive, isFocused, messages]);
 
-  window.onfocus = function () {
-    setIsFocused(true);
-  };
-  window.onblur = function () {
-    setIsFocused(false);
-  };
+    window.onfocus = function () {
+        setIsFocused(true);
+    };
+    window.onblur = function () {
+        setIsFocused(false);
+    };
 
   return (
-    <div className={styles.chatWrapper}>
+  <ChatStyles>
+    <div className="chatWrapper">
       <Resizable
         size={chatDimensions}
         minWidth={CHAT_WINDOW_WIDTH}
@@ -263,8 +263,8 @@ const Chat = (): JSX.Element => {
         onResizeStop={handleChatResize}
       >
         <motion.div
-          className={`${styles.chat} ${
-            isAuthenticated ? styles.authenticated : ""
+          className={`chat ${
+            isAuthenticated ? "authenticated" : ""
           }`}
           animate={{ y: 0 }}
           style={{ y: 400 }}
@@ -306,7 +306,7 @@ const Chat = (): JSX.Element => {
               {!showWidgetDetails &&
                 !showContactForm &&
                 !showUnavailableContactForm &&
-                !feedback.isFeedbackConfirmationShown && 
+                !feedback.isFeedbackConfirmationShown &&
                 !showAskToForwardToCsaForm &&
                 chatMode === CHAT_MODES.FREE && <ChatKeyPad />}
               <ConfirmationModal />
@@ -315,6 +315,7 @@ const Chat = (): JSX.Element => {
         </motion.div>
       </Resizable>
     </div>
+  </ChatStyles>
   );
 };
 

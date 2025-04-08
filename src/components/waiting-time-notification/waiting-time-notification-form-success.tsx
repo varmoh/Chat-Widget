@@ -1,6 +1,6 @@
 import {FC} from 'react';
-import styles from './waiting-time-notification.module.scss';
 import {useTranslation} from 'react-i18next';
+import {WaitingTimeNotificationStyles} from "./WaitingTimeNotificationStyled";
 
 interface Props {
     formData: {
@@ -15,8 +15,8 @@ const WaitingTImeNotificationFormSuccess: FC<Props> = ({
                                                        }) => {
     const {t} = useTranslation();
     return (
-        <div className="byk-chat">
-            <div className={styles.form}>
+        <WaitingTimeNotificationStyles>
+            <div className="form">
                 <table>
                     <thead>
                     <tr>
@@ -36,7 +36,7 @@ const WaitingTImeNotificationFormSuccess: FC<Props> = ({
                     </tbody>
                 </table>
             </div>
-        </div>
+        </WaitingTimeNotificationStyles>
     );
 };
 

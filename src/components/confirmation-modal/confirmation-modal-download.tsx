@@ -3,12 +3,12 @@ import Button from "../button";
 import {ButtonColor} from "../button/button";
 import {InputText} from "primereact/inputtext";
 import {useAppDispatch} from "../../store";
-import styles from "./confirmation-modal.module.scss";
 import {useTranslation} from "react-i18next";
 import {Download, DownloadElement} from "../../hooks/use-download-file";
 import {downloadChat, setEmailAdress} from "../../slices/chat-slice";
 import {EMAIL_REGEX} from "../../constants";
 import useChatSelector from "../../hooks/use-chat-selector";
+import {ConfirmationModalStyled} from "./ConfirmationModalStyled";
 
 const ConfirmationModalDownload = () => {
     const {t} = useTranslation();
@@ -53,17 +53,17 @@ const ConfirmationModalDownload = () => {
     };
 
     return (
-        <div className="byk-chat">
-            <div className={styles.downloadContainer}>
+        <ConfirmationModalStyled>
+            <div className="downloadContainer">
                 {!showForwardForm ? (
                     <>
                         <Download ref={downloadRef}/>
                         <button
-                            className={styles.downloadLink}
+                            className="downloadLink"
                             disabled={loading}
                             onClick={() => handleDownload(false)}
                         >
-                            {loading ? <span className={styles.spinner}></span> : t("widget.action.download-chat")}
+                            {loading ? <span className="spinner"></span> : t("widget.action.download-chat")}
                         </button>
                         {error && (
                             <div>
@@ -75,8 +75,8 @@ const ConfirmationModalDownload = () => {
           </a> */}
                     </>
                 ) : (
-                    <form className={styles.forwardForm}>
-                        <div className={styles.forwardInput}>
+                    <form className="forwardForm">
+                        <div className="forwardInput">
                             <InputText
                                 id="email-input"
                                 className="email-input"
@@ -88,12 +88,12 @@ const ConfirmationModalDownload = () => {
                                     setInvalidMessage("");
                                 }}
                             />
-                            <hr className={styles.divider}/>
+                            <hr className="divider"/>
                             {invalidMessage && (
-                                <p className={styles.missingFeedback}>{invalidMessage}</p>
+                                <p className="missingFeedback">{invalidMessage}</p>
                             )}
                         </div>
-                        <div className={styles.downloadActions}>
+                        <div className="downloadActions">
                             <Button
                                 onClick={() => setShowForwardForm(false)}
                                 title={t("widget.action.skip")}
@@ -116,7 +116,7 @@ const ConfirmationModalDownload = () => {
                     </form>
                 )}
             </div>
-        </div>
+        </ConfirmationModalStyled>
     );
 };
 

@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import classNames from "classnames";
-import { Message } from "../../../model/message-model";
-import styles from "../chat-message.module.scss";
+import {Message} from "../../../model/message-model";
 import OutlineError from "../../../static/icons/outline-error.svg";
 import PersonIcon from "../../../static/icons/person.svg";
 import Markdownify from "./Markdownify";
@@ -17,6 +16,7 @@ import {
 } from "../../../slices/chat-slice";
 import { useAppDispatch } from "../../../store";
 import useChatSelector from "../../../hooks/use-chat-selector";
+import {ChatMessageStyled, MessageFailedWrapperStyled} from "../ChatMessageStyled";
 
 const rightAnimation = {
   animate: { opacity: 1, x: 0 },
@@ -43,101 +43,97 @@ const ClientMessage = (props: {
     }
   }, [content, props.message?.file]);
 
-  const messageClass = classNames(
-    styles.message,
-    styles.client,
-    styles.content,
-    {
-      [styles.tall]: isTall,
-    }
-  );
+    const messageClass = `client`;
+    const contentTallClass = `content  ${isTall ? "clientTallContent" : ""}`;
 
-  if (props.message?.file) {
-    return (
-      <motion.div
-        animate={rightAnimation.animate}
-        initial={rightAnimation.initial}
-        transition={rightAnimation.transition}
-        ref={messageRef}
-      >
-        <div className={messageClass}>
-          <div className={styles.icon}>
-            <img src={PersonIcon} alt="Person icon" />
-          </div>
-          <div className={`${styles.content} ${styles.file}`}>
-            <img className={styles.fileIcon} src={File} alt="File icon" />
-            <p className={styles.fileName}>{props.message?.file.name}</p>
-            <p className={styles.fileData}>{`${props.message?.file.type
-              .split("/")[1]
-              .toUpperCase()}, ${formatBytes(props.message?.file.size)}`}</p>
-          </div>
-        </div>
-      </motion.div>
-    );
-  }
-
-  return (
-    <motion.div
-      animate={rightAnimation.animate}
-      initial={rightAnimation.initial}
-      transition={rightAnimation.transition}
-      ref={messageRef}
-    >
-      <div className="byk-chat">
-        <div className={messageClass}>
-          <div className={styles.icon}>
-            <img src={PersonIcon} alt="Person icon" />
-          </div>
-          <div className={styles.content}>
-            <Markdownify message={content ?? ""} sanitizeLinks />
-          </div>
-        </div>
-        {!props.message?.id &&
-          failedMessages.some(
-            (msg) => msg.authorTimestamp === props.message?.authorTimestamp
-          ) && (
-            <div className={styles.messageFailedWrapper}>
-              <img
-                src={OutlineError}
-                className={styles.errorIcon}
-                alt="Outline error"
-              />
-              <div>
-                <span className={styles.messageFailedText}>
-                  {t("messageSendingFailed")}
-                </span>
-                <div className={styles.messageFailedButtons}>
-                  <Button
-                    title="send"
-                    className={styles.messageFailedButton}
-                    onClick={() => {
-                      dispatch(removeMessageFromDisplay(props.message!));
-                      const retryMessage = {
-                        ...props.message!,
-                        authorTimestamp: new Date().toISOString(),
-                      };
-                      dispatch(addMessage(retryMessage));
-                      dispatch(sendNewMessage(retryMessage));
-                    }}
-                  >
-                    <strong>{t("sendAgain")}</strong>
-                  </Button>
-                  <Button
-                    title="delete"
-                    className={styles.messageFailedButton}
-                    onClick={() => {
-                      dispatch(removeMessageFromDisplay(props.message!));
-                    }}
-                  >
-                    <strong>{t("delete")}</strong>
-                  </Button>
+    if (props.message?.file) {
+        return (
+            <motion.div
+                animate={rightAnimation.animate}
+                initial={rightAnimation.initial}
+                transition={rightAnimation.transition}
+                ref={messageRef}
+            >
+                <div>
+                    <ChatMessageStyled className={messageClass}>
+                        <div className="icon">
+                            <img src={PersonIcon} alt="Person icon"/>
+                        </div>
+                        <div className="content file">
+                            <img className="fileIcon" src={File} alt="File icon"/>
+                            <p className="fileName">{props.message?.file.name}</p>
+                            <p className="fileData">{`${props.message?.file.type
+                                .split("/")[1]
+                                .toUpperCase()}, ${formatBytes(props.message?.file.size)}`}</p>
+                        </div>
+                    </ChatMessageStyled>
                 </div>
-              </div>
+            </motion.div>
+        );
+    }
+
+    return (
+        <motion.div
+            animate={rightAnimation.animate}
+            initial={rightAnimation.initial}
+            transition={rightAnimation.transition}
+            ref={messageRef}
+        >
+            <div>
+                <ChatMessageStyled className={messageClass}>
+                    <div className="client icon">
+                        <img src={PersonIcon} alt="Person icon"/>
+                    </div>
+                    <div className={classNames("content", {clientTallContent: isTall})}>
+                        <Markdownify message={content ?? ""} sanitizeLinks/>
+                    </div>
+                </ChatMessageStyled>
+                {!props.message?.id &&
+                    failedMessages.some(
+                        (msg) => msg.authorTimestamp === props.message?.authorTimestamp
+                    ) && (
+                        <MessageFailedWrapperStyled>
+                            <img
+                                src={OutlineError}
+                                className="errorIcon"
+                                alt="Outline error"
+                            />
+                            <div>
+              <span className="messageFailedText">
+                {t("messageSendingFailed")}
+              </span>
+                                <div className="messageFailedButtons">
+                                    <Button
+                                        title="send"
+                                        className="messageFailedButton"
+                                        onClick={() => {
+                                            dispatch(removeMessageFromDisplay(props.message!));
+                                            const retryMessage = {
+                                                ...props.message!,
+                                                authorTimestamp: new Date().toISOString(),
+                                            };
+                                            dispatch(addMessage(retryMessage));
+                                            dispatch(sendNewMessage(retryMessage));
+                                        }}
+                                    >
+                                        <strong>{t("sendAgain")}</strong>
+                                    </Button>
+                                    <Button
+                                        title="delete"
+                                        className="messageFailedButton"
+                                        onClick={() => {
+                                            dispatch(removeMessageFromDisplay(props.message!));
+                                        }}
+                                    >
+                                        <strong>{t("delete")}</strong>
+                                    </Button>
+                                </div>
+                            </div>
+                        </MessageFailedWrapperStyled>
+                    )}
             </div>
-          )}
-      </div>
-    </motion.div>
-  );
+        </motion.div>
+    );
 };
 
 export default ClientMessage;

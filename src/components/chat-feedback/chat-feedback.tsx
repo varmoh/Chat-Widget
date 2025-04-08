@@ -1,5 +1,4 @@
 import React, {useRef, useState} from "react";
-import styled from "styled-components";
 import {useTranslation} from "react-i18next";
 import StyledButton from "../styled-components/styled-button";
 import {useAppDispatch} from "../../store";
@@ -7,7 +6,7 @@ import {downloadChat, sendChatNpmRating, setFeedbackRatingGiven} from "../../sli
 import {StyledButtonType} from "../../constants";
 import useChatSelector from "../../hooks/use-chat-selector";
 import {Download, DownloadElement} from "../../hooks/use-download-file";
-import styles from "./chat-feedback.module.scss";
+import {ChatFeedbackStyled} from "./ChatFeedbackStyled";
 
 const ChatFeedback = (): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -39,114 +38,35 @@ const ChatFeedback = (): JSX.Element => {
     };
 
     return (
-        <div className="byk-chat">
-            <ChatFeedbackStyle>
-                <p className="feedback-paragraph above">
-                    {t("feedback.upperText", {
-                        organization: window._env_.ORGANIZATION_NAME,
-                    })}
-                </p>
-                {feedback.showFeedbackWarning && <p className="missing-feeback">{t("feedback.warningText")}</p>}
-                <div className="feedback-box-input" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                    {Array.from(Array(11).keys()).map((val: number) => (
-                        <StyledButton
-                            className={`feedback-btn ${val <= 6 ? "red" : val <= 8 ? "yellow" : "green"}`}
-                            onClick={(e) => handleFeedback(e.currentTarget.textContent)}
-                            styleType={StyledButtonType.GRAY}
-                            key={val}
-                            active={selectedFeedbackButtonValue === val.toString()}
-                        >
-                            <span>{val}</span>
-                        </StyledButton>
-                    ))}
-                </div>
-                <div className={styles.downloadContainer}>
-                    <Download ref={downloadRef}/>
-                    <a onClick={handleDownload} className={styles.downloadLink}>
-                        {loading ? <span className="spinner"></span> : t("widget.action.download-chat")}
-                    </a>
-                </div>
-                <p className="feedback-paragraph below">{t("feedback.lowerText")}</p>
-            </ChatFeedbackStyle>
-        </div>
+        <ChatFeedbackStyled>
+            <p className="feedback-paragraph above">
+                {t("feedback.upperText", {
+                    organization: window._env_.ORGANIZATION_NAME,
+                })}
+            </p>
+            {feedback.showFeedbackWarning && <p className="missing-feeback">{t("feedback.warningText")}</p>}
+            <div className="feedback-box-input" style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
+                {Array.from(Array(11).keys()).map((val: number) => (
+                    <StyledButton
+                        className={`feedback-btn ${val <= 6 ? "red" : val <= 8 ? "yellow" : "green"}`}
+                        onClick={(e) => handleFeedback(e.currentTarget.textContent)}
+                        styleType={StyledButtonType.GRAY}
+                        key={val}
+                        active={selectedFeedbackButtonValue === val.toString()}
+                    >
+                        <span>{val}</span>
+                    </StyledButton>
+                ))}
+            </div>
+            <div className="downloadContainer">
+                <Download ref={downloadRef}/>
+                <a onClick={handleDownload} className="downloadLink">
+                    {loading ? <span className="spinner"></span> : t("widget.action.download-chat")}
+                </a>
+            </div>
+            <p className="feedback-paragraph below">{t("feedback.lowerText")}</p>
+        </ChatFeedbackStyled>
     );
 };
-
-const ChatFeedbackStyle = styled.div`
-    height: auto;
-    padding-top: 0.8em;
-
-    border-top: 2px solid #f0f1f2;
-    flex-direction: column;
-    display: flex;
-    color: blue;
-
-    .feedback-paragraph {
-        margin: 0 0.8em;
-        font-size: 14px;
-    }
-
-    .feedback-paragraph.above:after {
-        content: "*";
-        color: #ff4800;
-    }
-
-    .feedback-btn {
-        padding: 0.5rem;
-        width: 32px;
-        vertical-align: baseline;
-        margin: 0;
-        border-radius: 5px;
-        color: white;
-        margin-left: 2px;
-        margin-bottom: 2px;
-
-        &.red {
-          background-color: #f25050;
-        }
-        
-        &.yellow {
-          background-color: #f1d15a;
-        }
-
-        &.green {
-          background-color: #46ba45;
-        }
-        
-        :hover,
-        :focus {
-          background-color: #003cff !important;
-        }
-    }
-
-    .spinner {
-        width: 14px;
-        height: 14px;
-        border: 2px solid transparent;
-        border-top-color: blue;
-        border-radius: 50%;
-        animation: spin 0.6s linear infinite;
-        display: inline-block;
-    }
-
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    .feedback-box-input {
-        justify-content: space-around;
-        display: flex;
-        flex-flow: row nowrap;
-        margin: 1rem 0.8em 2rem 0.8em;
-    }
-
-    .missing-feeback {
-        color: #ff4800;
-        margin: 0 0.8em -0.5rem 0.8em;
-        font-size: 0.75rem;
-    }
-`;
 
 export default ChatFeedback;

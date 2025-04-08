@@ -1,10 +1,10 @@
 import {useTranslation} from "react-i18next";
 import Button from "../button/button";
-import styles from "./response-error-notification.module.scss";
 import {useAppDispatch} from "../../store";
 import {endChat, resetState, setShowErrorMessage} from "../../slices/chat-slice";
 import useChatSelector from "../../hooks/use-chat-selector";
 import {CHAT_EVENTS} from "../../constants";
+import {ResponseErrorNotificationStyles} from "./ResponseErrorNotificationStyled";
 
 const ResponseErrorNotification = () => {
     const {t} = useTranslation();
@@ -12,14 +12,14 @@ const ResponseErrorNotification = () => {
     const {chatId, responseErrorMessage} = useChatSelector();
 
     return (
-        <div className="byk-chat">
-            <div className={styles.container}>
-                <dialog className={styles.content} aria-modal="true"
+        <ResponseErrorNotificationStyles>
+            <div className="container">
+                <dialog className="content" aria-modal="true"
                         aria-labelledby={t("notifications.idle-chat-notification")}>
-                    <h2 className={styles.title}>
+                    <h2 className="title">
                         {t(responseErrorMessage.length > 0 ? responseErrorMessage : "widget.error.technicalProblems")}
                     </h2>
-                    <div className={styles.actions}>
+                    <div className="actions">
                         <Button
                             title={t("widget.action.restartChat")}
                             onClick={() => {
@@ -43,7 +43,7 @@ const ResponseErrorNotification = () => {
                     </div>
                 </dialog>
             </div>
-        </div>
+        </ResponseErrorNotificationStyles>
     );
 };
 
