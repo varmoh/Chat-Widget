@@ -22,6 +22,10 @@ export interface WidgetState {
     animation: string;
     isLoaded: boolean;
     isBurokrattActive: boolean | null;
+    feedbackActive: boolean | null;
+    feedbackQuestion: string;
+    feedbackNoticeActive: boolean | null;
+    feedbackNotice: string;
   };
   chatId?: string | null;
 }
@@ -38,6 +42,10 @@ const initialState: WidgetState = {
     animation: CHAT_BUBBLE_ANIMATION,
     isLoaded: false,
     isBurokrattActive: null,
+    feedbackActive: null,
+    feedbackQuestion: '',
+    feedbackNoticeActive: null,
+    feedbackNotice: '',
   },
   chatId: null,
 };
@@ -79,6 +87,10 @@ export const widgetSlice = createSlice({
       state.widgetConfig.color = action.payload?.widgetColor ?? CHAT_BUBBLE_COLOR;
       state.widgetConfig.animation = action.payload?.widgetAnimation ?? CHAT_BUBBLE_ANIMATION;
       state.widgetConfig.isBurokrattActive = action.payload?.isBurokrattActive === 'true';
+      state.widgetConfig.feedbackActive = action.payload?.feedbackActive === "true";
+      state.widgetConfig.feedbackQuestion = action.payload?.feedbackQuestion ?? '';
+      state.widgetConfig.feedbackNoticeActive = action.payload?.feedbackNoticeActive === "true";
+      state.widgetConfig.feedbackNotice = action.payload?.feedbackNotice ?? '';
       if (state.chatId != null && state.widgetConfig.isBurokrattActive === false) {
         state.burokrattOnlineStatus = true;
       } else {

@@ -7,16 +7,22 @@ import {StyledButtonType} from "../../constants";
 import useChatSelector from "../../hooks/use-chat-selector";
 import {Download, DownloadElement} from "../../hooks/use-download-file";
 import {ChatFeedbackStyled} from "./ChatFeedbackStyled";
+import useWidgetSelector from "../../hooks/use-widget-selector";
 
 const ChatFeedback = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const {t} = useTranslation();
     const {feedback} = useChatSelector();
+    const { widgetConfig } = useWidgetSelector();
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedFeedbackButtonValue, setSelectedFeedbackButtonValue] = useState<string>("");
     const downloadRef = useRef<DownloadElement>(null);
 
     const handleFeedback = (feedbackRating: string | null) => {
+        if (!widgetConfig.feedbackActive) {
+          dispatch(setFeedbackRatingGiven(true));
+          return;
+        };
         if (feedbackRating === null) return;
         setSelectedFeedbackButtonValue(feedbackRating);
         dispatch(sendChatNpmRating({NpmRating: parseInt(feedbackRating ?? "1", 10)}));
@@ -38,34 +44,34 @@ const ChatFeedback = (): JSX.Element => {
     };
 
     return (
-        <ChatFeedbackStyled>
-            <p className="feedback-paragraph above">
-                {t("feedback.upperText", {
-                    organization: window._env_.ORGANIZATION_NAME,
-                })}
-            </p>
-            {feedback.showFeedbackWarning && <p className="missing-feeback">{t("feedback.warningText")}</p>}
-            <div className="feedback-box-input" style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                {Array.from(Array(11).keys()).map((val: number) => (
-                    <StyledButton
-                        className={`feedback-btn ${val <= 6 ? "red" : val <= 8 ? "yellow" : "green"}`}
-                        onClick={(e) => handleFeedback(e.currentTarget.textContent)}
-                        styleType={StyledButtonType.GRAY}
-                        key={val}
-                        active={selectedFeedbackButtonValue === val.toString()}
-                    >
-                        <span>{val}</span>
-                    </StyledButton>
-                ))}
-            </div>
-            <div className="downloadContainer">
-                <Download ref={downloadRef}/>
-                <a onClick={handleDownload} className="downloadLink">
-                    {loading ? <span className="spinner"></span> : t("widget.action.download-chat")}
-                </a>
-            </div>
-            <p className="feedback-paragraph below">{t("feedback.lowerText")}</p>
-        </ChatFeedbackStyled>
+      <ChatFeedbackStyled>
+        {widgetConfig.feedbackActive && <p className="feedback-paragraph above">{widgetConfig.feedbackQuestion}</p>}
+        {widgetConfig.feedbackActive && feedback.showFeedbackWarning && (
+          <p className="missing-feeback">{t("feedback.warningText")}</p>
+        )}
+        {widgetConfig.feedbackActive && (
+          <div className="feedback-box-input" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+            {Array.from(Array(11).keys()).map((val: number) => (
+              <StyledButton
+                className={`feedback-btn ${val <= 6 ? "red" : val <= 8 ? "yellow" : "green"}`}
+                onClick={(e) => handleFeedback(e.currentTarget.textContent)}
+                styleType={StyledButtonType.GRAY}
+                key={val}
+                active={selectedFeedbackButtonValue === val.toString()}
+              >
+                <span>{val}</span>
+              </StyledButton>
+            ))}
+          </div>
+        )}
+        <div className="downloadContainer">
+          <Download ref={downloadRef} />
+          <a onClick={handleDownload} className="downloadLink">
+            {loading ? <span className="spinner"></span> : t("widget.action.download-chat")}
+          </a>
+        </div>
+        {widgetConfig.feedbackNoticeActive && <p className="feedback-paragraph below">{widgetConfig.feedbackNotice}</p>}
+      </ChatFeedbackStyled>
     );
 };
 

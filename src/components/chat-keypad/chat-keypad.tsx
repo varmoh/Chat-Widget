@@ -7,6 +7,7 @@ import {
     clearMessageQueue,
     initChat,
     queueMessage,
+    resetState,
     sendFeedbackMessage,
     sendMessagePreview,
     sendNewMessage,
@@ -37,6 +38,7 @@ import {Subject} from "rxjs";
 import {debounceTime, distinctUntilChanged, switchMap} from "rxjs/operators";
 import {isIphone} from "../../utils/browser-utils";
 import classNames from "classnames";
+import useWidgetSelector from "../../hooks/use-widget-selector";
 
 const preventWindowScrolling = (e: Event) => {
     // Allow scrolling if the target is inside ChatContent
@@ -58,6 +60,7 @@ const ChatKeyPad = (): JSX.Element => {
     const hiddenFileInputRef = useRef<HTMLInputElement | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [dynamicStyle, setdynamicStyle] = useState("");
+    const { widgetConfig } = useWidgetSelector();
 
     const handleUploadClick = () => {
         hiddenFileInputRef.current?.click();
@@ -106,14 +109,21 @@ const ChatKeyPad = (): JSX.Element => {
     }, []);
 
     const handleTextFeedback = () => {
-        if (!feedback.isFeedbackRatingGiven) {
+        if (widgetConfig.feedbackActive && !feedback.isFeedbackRatingGiven) {
             dispatch(setFeedbackWarning(true));
             return;
         }
+        if (!widgetConfig.feedbackActive && !widgetConfig.feedbackNoticeActive) {
+          dispatch(resetState());
+          return;
+        }
         dispatch(setFeedbackWarning(false));
-        dispatch(sendFeedbackMessage({userInput}));
+        if (widgetConfig.feedbackNoticeActive) dispatch(sendFeedbackMessage({ userInput }));
         dispatch(setFeedbackMessageGiven(true));
         setIsKeypadDisabled(true);
+        if (!widgetConfig.feedbackActive) {
+            dispatch(resetState());
+        }
     };
     useEffect(() => {
         if (messageQueue.length >= MESSAGE_QUE_MAX_LENGTH) {
