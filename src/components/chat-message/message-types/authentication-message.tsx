@@ -13,7 +13,7 @@ const AuthenticationMessage = (): JSX.Element => {
     return (
         <>
             <ChatMessageStyled>
-                <div className="authenticationbox-explanation-text">
+                <div style={{color: '#575a5d'}} className="authenticationbox-explanation-text">
                     {t("notifications.authenticate")}
                 </div>
                 <button

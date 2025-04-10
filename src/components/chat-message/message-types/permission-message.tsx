@@ -25,7 +25,7 @@ const PermissionMessage = (props: { message: Message }): JSX.Element => {
     return (
         <>
             <ChatMessageStyled>
-                <div>{t('notifications.ask-permission')}</div>
+                <div style={{color: '#575a5d'}}>{t('notifications.ask-permission')}</div>
                 <div className="buttons">
                     <button onClick={() => permissionResponse(false)} type="button"
                             className="decline-event-button">
