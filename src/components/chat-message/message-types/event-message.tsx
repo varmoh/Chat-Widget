@@ -14,8 +14,8 @@ const EventMessage = (props: { content: ReactElement }): JSX.Element => {
     return (
         <motion.div animate={leftAnimation.animate} initial={leftAnimation.initial}
                     transition={leftAnimation.transition}>
-            <ChatMessageStyled>
-                <div className="message event">
+            <ChatMessageStyled className={`message event`}>
+                <div>
                     <div aria-live="polite">{content}</div>
                 </div>
             </ChatMessageStyled>

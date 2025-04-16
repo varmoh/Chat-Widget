@@ -35,7 +35,7 @@ const RedirectMessage = (props: { message: Message }): JSX.Element => {
     return (
         <>
             <ChatMessageStyled>
-                <div>{t('redirect.ask-permission')}</div>
+                <div style={{color: '#575a5d'}}>{t('redirect.ask-permission')}</div>
                 <div className="buttons">
                     <button onClick={() => redirectResponse(false)} type="button"
                             className="redirect-event-button">

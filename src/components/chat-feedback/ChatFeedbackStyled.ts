@@ -26,12 +26,12 @@ export const ChatFeedbackStyled = styled.div`
 
     .feedback-btn {
         padding: 0.5rem;
-        width: 32px;
+        width: 28px;
         vertical-align: baseline;
         margin: 0;
         border-radius: 5px;
         color: white;
-        margin-left: 2px;
+        margin-left: 1px;
         margin-bottom: 2px;
 
         &.red {
@@ -44,6 +44,10 @@ export const ChatFeedbackStyled = styled.div`
 
         &.green {
             background-color: #46ba45;
+        }
+
+        &.last {
+            padding-left: 6px;
         }
 
         :hover,
