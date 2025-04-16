@@ -1,13 +1,13 @@
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
 import {closeConfirmationModal} from "../../slices/widget-slice";
 import {RootState, useAppDispatch} from "../../store";
 import Button from "../button";
-import styles from "./confirmation-modal.module.scss";
 import ConfirmationModalNps from "./confirmation-modal-nps";
 import ConfirmationModalDownload from "./confirmation-modal-download";
 import {CHAT_EVENTS} from "../../constants";
+import {ConfirmationModalStyled} from "./ConfirmationModalStyled";
 
 export default function ConfirmationModal(): JSX.Element {
     const {t} = useTranslation();
@@ -39,24 +39,25 @@ export default function ConfirmationModal(): JSX.Element {
     }
 
     return (
-        <div className="byk-chat">
-            <div className={styles.container}>
+        <ConfirmationModalStyled>
+            <div className="container">
                 <dialog
-                    className={styles.content}
+                    className="content"
                     aria-modal="true"
                     aria-labelledby={t("widget.action.close-confirmation")}
                 >
                     {nps.showNps === false ? (
                         <>
-                            <h2 className={styles.title}>
+                            <h2 className="title">
                                 {t("widget.action.close-confirmation")}
                             </h2>
-                            <div className={styles.actions}>
+                            <div className="actions">
                                 <Button
                                     title={t("header.button.confirmation.yes")}
                                     onClick={() =>
                                         handleClick(CHAT_EVENTS.CLIENT_LEFT_WITH_ACCEPTED)
                                     }
+                                    autoFocus
                                 >
                                     {t("widget.action.yes-got-answer")}
                                 </Button>
@@ -84,6 +85,6 @@ export default function ConfirmationModal(): JSX.Element {
                     )}
                 </dialog>
             </div>
-        </div>
+        </ConfirmationModalStyled>
     );
 }

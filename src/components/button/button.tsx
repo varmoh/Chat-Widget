@@ -1,5 +1,5 @@
-import styles from './button.module.scss';
 import {AriaAttributes, ButtonHTMLAttributes, DetailedHTMLProps, FC,} from 'react';
+import {ButtonStyles} from "./ButtonStyled";
 
 export interface Props
     extends DetailedHTMLProps<
@@ -21,10 +21,10 @@ const Button: FC<Props> = (props) => {
     const {color = ButtonColor.BLUE, title = '', onClick, ...rest} = props;
 
     return (
-        <div className="byk-chat">
+        <ButtonStyles>
             <button
-                className={`${styles.button} ${
-                    color === ButtonColor.BLUE ? styles.blue : styles.gray
+                className={`button ${
+                    color === ButtonColor.BLUE ? "blue" : "gray"
                 }`}
                 title={title}
                 type="button"
@@ -34,7 +34,7 @@ const Button: FC<Props> = (props) => {
             >
                 {props.children}
             </button>
-        </div>
+        </ButtonStyles>
     );
 };
 

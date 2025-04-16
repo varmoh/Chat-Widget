@@ -1,14 +1,14 @@
-import {useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import Button from "../button";
 import {ButtonColor} from "../button/button";
 import {InputText} from "primereact/inputtext";
 import {useAppDispatch} from "../../store";
-import styles from "./confirmation-modal.module.scss";
 import {useTranslation} from "react-i18next";
 import {Download, DownloadElement} from "../../hooks/use-download-file";
 import {downloadChat, setEmailAdress} from "../../slices/chat-slice";
 import {EMAIL_REGEX} from "../../constants";
 import useChatSelector from "../../hooks/use-chat-selector";
+import {ConfirmationModalStyled} from "./ConfirmationModalStyled";
 
 const ConfirmationModalDownload = () => {
     const {t} = useTranslation();
@@ -16,45 +16,67 @@ const ConfirmationModalDownload = () => {
     const [showForwardForm, setShowForwardForm] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const downloadRef = useRef<DownloadElement>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<boolean>(false);
     const [invalidMessage, setInvalidMessage] = useState("");
     const handleDownload = async (isForwardToEmail: boolean) => {
-        if (
-            isForwardToEmail &&
-            (endUserContacts.mailAddress === "" ||
-                !new RegExp(EMAIL_REGEX).test(endUserContacts.mailAddress))
-        ) {
-            setInvalidMessage(t("widget.contacts.contact.invalid.email"));
-            return false;
-        }
+        setLoading(true)
+        try {
+            if (
+                isForwardToEmail &&
+                (endUserContacts.mailAddress === "" ||
+                    !new RegExp(EMAIL_REGEX).test(endUserContacts.mailAddress))
+            ) {
+                setInvalidMessage(t("widget.contacts.contact.invalid.email"));
+                return false;
+            }
 
-        const response = await dispatch(downloadChat(isForwardToEmail));
-        if (response.meta.requestStatus === "rejected") return false;
-        downloadRef.current?.download({
-            title: `chat-history.pdf`,
-            data: (response.payload as any).data,
-        });
-        return true;
+            const response = await dispatch(downloadChat(isForwardToEmail));
+
+            if (response.meta.requestStatus === "rejected") {
+                hideErrorAfterDelay();
+                return false;
+            }
+            downloadRef.current?.download({
+                title: `chat-history.pdf`,
+                data: (response.payload as any).data,
+            });
+            return true;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const hideErrorAfterDelay = () => {
+        setError(true);
+        setTimeout(() => setError(false), 4000);
     };
 
     return (
-        <div className="byk-chat">
-            <div className={styles.downloadContainer}>
+        <ConfirmationModalStyled>
+            <div className="downloadContainer">
                 {!showForwardForm ? (
                     <>
                         <Download ref={downloadRef}/>
                         <button
-                            className={styles.downloadLink}
+                            className="downloadLink"
+                            disabled={loading}
                             onClick={() => handleDownload(false)}
                         >
-                            {t("widget.action.download-chat")}
+                            {loading ? <span className="spinner"></span> : t("widget.action.download-chat")}
                         </button>
+                        {error && (
+                            <div>
+                                <span style={{color: "red"}}>{t("widget.error.technicalProblemsTryAgain")}</span>
+                            </div>
+                        )}
                         {/* <a onClick={() => setShowForwardForm(true)} className={styles.downloadLink}>
             {t("widget.action.forward-chat")}
           </a> */}
                     </>
                 ) : (
-                    <form className={styles.forwardForm}>
-                        <div className={styles.forwardInput}>
+                    <form className="forwardForm">
+                        <div className="forwardInput">
                             <InputText
                                 id="email-input"
                                 className="email-input"
@@ -66,12 +88,12 @@ const ConfirmationModalDownload = () => {
                                     setInvalidMessage("");
                                 }}
                             />
-                            <hr className={styles.divider}/>
+                            <hr className="divider"/>
                             {invalidMessage && (
-                                <p className={styles.missingFeedback}>{invalidMessage}</p>
+                                <p className="missingFeedback">{invalidMessage}</p>
                             )}
                         </div>
-                        <div className={styles.downloadActions}>
+                        <div className="downloadActions">
                             <Button
                                 onClick={() => setShowForwardForm(false)}
                                 title={t("widget.action.skip")}
@@ -94,7 +116,7 @@ const ConfirmationModalDownload = () => {
                     </form>
                 )}
             </div>
-        </div>
+        </ConfirmationModalStyled>
     );
 };
 

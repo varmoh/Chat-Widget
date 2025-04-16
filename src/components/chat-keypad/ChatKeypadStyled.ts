@@ -1,6 +1,7 @@
-@import '../../scss/main';
+import styled from "styled-components";
+import { colors } from "../../styling/style_settings";
 
-:global(.byk-chat) {
+export const ChatKeypadStyled = styled.div`
   .keypad {
     display: flex;
     align-items: center;
@@ -25,7 +26,7 @@
       flex: 1;
       border: 0;
       outline: none;
-      border-bottom: 1px solid $color-primary;
+      border-bottom: 1px solid ${colors.primary};
       border-radius: 0;
       padding-bottom: 2px;
       resize: none;
@@ -37,14 +38,14 @@
       max-height: 5.6em;
 
       &::placeholder {
-        color: $color-placeholder-gray;
+        color: ${colors.placeholderGray};
       }
 
       &:disabled {
         pointer-events: none;
         user-select: none;
         background-color: transparent;
-        border-bottom: 1px solid $color-placeholder-gray;
+        border-bottom: 1px solid ${colors.placeholderGray};
       }
     }
 
@@ -60,10 +61,20 @@
       margin: 0;
 
       &:focus {
-        outline: 2px solid $color-focus-dark;
+        outline: 2px solid ${colors.focusDark};
         border-radius: 1px;
       }
     }
+  }
+
+  .three_lines {
+    margin-bottom: 5px;
+    padding-top: 20px;
+  }
+
+  .four_lines {
+    margin-bottom: 10px;
+    padding-top: 30px;
   }
 
   .button_cancelUpload {
@@ -72,12 +83,12 @@
     height: 32px;
     cursor: pointer;
   }
-}
 
-@media screen and (max-width: 480px) {
-  .input {
-    // Font size should be at least 16px to prevent zoom on input focus on iOS
-    // https://stackoverflow.com/questions/2989263
-    font-size: 16px !important;
+  @media screen and (max-width: 480px) {
+    .input {
+      /* Font size should be at least 16px to prevent zoom on input focus on iOS */
+      /* https://stackoverflow.com/questions/2989263 */
+      font-size: 16px !important;
+    }
   }
-}
+`;

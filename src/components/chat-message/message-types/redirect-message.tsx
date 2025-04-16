@@ -9,7 +9,7 @@ import {
     updateMessage
 } from '../../../slices/chat-slice';
 import {useAppDispatch} from '../../../store';
-import styles from '../chat-message.module.scss';
+import {ChatMessageStyled} from "../ChatMessageStyled";
 
 const RedirectMessage = (props: { message: Message }): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -34,19 +34,19 @@ const RedirectMessage = (props: { message: Message }): JSX.Element => {
 
     return (
         <>
-            <div className="byk-chat">
-                <div>{t('redirect.ask-permission')}</div>
+            <ChatMessageStyled>
+                <div style={{color: '#575a5d'}}>{t('redirect.ask-permission')}</div>
                 <div className="buttons">
                     <button onClick={() => redirectResponse(false)} type="button"
-                            className={styles['redirect-event-button']}>
+                            className="redirect-event-button">
                         {t('chatMessage.deny')}
                     </button>
                     <button onClick={() => redirectResponse(true)} type="button"
-                            className={styles['redirect-event-button']}>
+                            className="redirect-event-button">
                         {t('chatMessage.accept')}
                     </button>
                 </div>
-            </div>
+            </ChatMessageStyled>
         </>
     );
 };

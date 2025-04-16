@@ -1,44 +1,50 @@
-import React, {useEffect, useRef, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {motion} from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
 import classNames from "classnames";
 import {Message} from "../../../model/message-model";
-import styles from "../chat-message.module.scss";
 import OutlineError from "../../../static/icons/outline-error.svg";
 import PersonIcon from "../../../static/icons/person.svg";
 import Markdownify from "./Markdownify";
 import Button from "../../button";
 import formatBytes from "../../../utils/format-bytes";
 import File from "../../../static/icons/file.svg";
-import {addMessage, removeMessageFromDisplay, sendNewMessage,} from "../../../slices/chat-slice";
-import {useAppDispatch} from "../../../store";
+import {
+  addMessage,
+  removeMessageFromDisplay,
+  sendNewMessage,
+} from "../../../slices/chat-slice";
+import { useAppDispatch } from "../../../store";
 import useChatSelector from "../../../hooks/use-chat-selector";
+import {ChatMessageStyled, MessageFailedWrapperStyled} from "../ChatMessageStyled";
 
 const rightAnimation = {
-    animate: {opacity: 1, x: 0},
-    initial: {opacity: 0, x: 20},
-    transition: {duration: 0.25, delay: 0.25},
+  animate: { opacity: 1, x: 0 },
+  initial: { opacity: 0, x: 20 },
+  transition: { duration: 0.25, delay: 0.25 },
 };
 
-const ClientMessage = (props: { message?: Message, content?: string }): JSX.Element => {
-    const dispatch = useAppDispatch();
-    const {failedMessages} = useChatSelector();
-    const {t} = useTranslation();
+const ClientMessage = (props: {
+  message?: Message;
+  content?: string;
+}): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const { failedMessages } = useChatSelector();
+  const { t } = useTranslation();
 
-    const content = props.message?.content || props.content;
-    const messageRef = useRef<HTMLDivElement>(null);
-    const [isTall, setIsTall] = useState(false);
+  const content = props.message?.content || props.content;
+  const messageRef = useRef<HTMLDivElement>(null);
+  const [isTall, setIsTall] = useState(false);
 
-    useEffect(() => {
-        if (messageRef.current) {
-            const height = messageRef.current.offsetHeight;
-            setIsTall(height > 42);
-        }
-    }, [content, props.message?.file]);
+  useEffect(() => {
+    if (messageRef.current) {
+      const height = messageRef.current.offsetHeight;
+      setIsTall(height > 42);
+    }
+  }, [content, props.message?.file]);
 
-    const messageClass = classNames(styles.message, styles.client, styles.content, {
-        [styles.tall]: isTall
-    });
+    const messageClass = `client`;
+    const contentTallClass = `content  ${isTall ? "clientTallContent" : ""}`;
 
     if (props.message?.file) {
         return (
@@ -48,17 +54,19 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
                 transition={rightAnimation.transition}
                 ref={messageRef}
             >
-                <div className={messageClass}>
-                    <div className={styles.icon}>
-                        <img src={PersonIcon} alt="Person icon"/>
-                    </div>
-                    <div className={`${styles.content} ${styles.file}`}>
-                        <img className={styles.fileIcon} src={File} alt="File icon"/>
-                        <p className={styles.fileName}>{props.message?.file.name}</p>
-                        <p className={styles.fileData}>{`${props.message?.file.type
-                            .split("/")[1]
-                            .toUpperCase()}, ${formatBytes(props.message?.file.size)}`}</p>
-                    </div>
+                <div>
+                    <ChatMessageStyled className={messageClass}>
+                        <div className="icon">
+                            <img src={PersonIcon} alt="Person icon"/>
+                        </div>
+                        <div className="content file">
+                            <img className="fileIcon" src={File} alt="File icon"/>
+                            <p className="fileName">{props.message?.file.name}</p>
+                            <p className="fileData">{`${props.message?.file.type
+                                .split("/")[1]
+                                .toUpperCase()}, ${formatBytes(props.message?.file.size)}`}</p>
+                        </div>
+                    </ChatMessageStyled>
                 </div>
             </motion.div>
         );
@@ -71,33 +79,33 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
             transition={rightAnimation.transition}
             ref={messageRef}
         >
-            <div className="byk-chat">
-                <div className={messageClass}>
-                    <div className={styles.icon}>
+            <div>
+                <ChatMessageStyled className={messageClass}>
+                    <div className="client icon">
                         <img src={PersonIcon} alt="Person icon"/>
                     </div>
-                    <div className={styles.content}>
-                        <Markdownify message={content ?? ""}/>
+                    <div className={classNames("content", {clientTallContent: isTall})}>
+                        <Markdownify message={content ?? ""} sanitizeLinks/>
                     </div>
-                </div>
+                </ChatMessageStyled>
                 {!props.message?.id &&
                     failedMessages.some(
                         (msg) => msg.authorTimestamp === props.message?.authorTimestamp
                     ) && (
-                        <div className={styles.messageFailedWrapper}>
+                        <MessageFailedWrapperStyled>
                             <img
                                 src={OutlineError}
-                                className={styles.errorIcon}
+                                className="errorIcon"
                                 alt="Outline error"
                             />
                             <div>
-              <span className={styles.messageFailedText}>
+              <span className="messageFailedText">
                 {t("messageSendingFailed")}
               </span>
-                                <div className={styles.messageFailedButtons}>
+                                <div className="messageFailedButtons">
                                     <Button
                                         title="send"
-                                        className={styles.messageFailedButton}
+                                        className="messageFailedButton"
                                         onClick={() => {
                                             dispatch(removeMessageFromDisplay(props.message!));
                                             const retryMessage = {
@@ -112,7 +120,7 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
                                     </Button>
                                     <Button
                                         title="delete"
-                                        className={styles.messageFailedButton}
+                                        className="messageFailedButton"
                                         onClick={() => {
                                             dispatch(removeMessageFromDisplay(props.message!));
                                         }}
@@ -121,7 +129,7 @@ const ClientMessage = (props: { message?: Message, content?: string }): JSX.Elem
                                     </Button>
                                 </div>
                             </div>
-                        </div>
+                        </MessageFailedWrapperStyled>
                     )}
             </div>
         </motion.div>

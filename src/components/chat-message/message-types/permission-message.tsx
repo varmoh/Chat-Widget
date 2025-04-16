@@ -4,7 +4,7 @@ import {Message} from '../../../model/message-model';
 import {AUTHOR_ROLES, CHAT_EVENTS} from '../../../constants';
 import {sendMessageWithNewEvent, updateMessage} from '../../../slices/chat-slice';
 import {useAppDispatch} from '../../../store';
-import styles from '../chat-message.module.scss';
+import {ChatMessageStyled} from "../ChatMessageStyled";
 
 const PermissionMessage = (props: { message: Message }): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -24,18 +24,18 @@ const PermissionMessage = (props: { message: Message }): JSX.Element => {
 
     return (
         <>
-            <div className="byk-chat">
-                <div>{t('notifications.ask-permission')}</div>
+            <ChatMessageStyled>
+                <div style={{color: '#575a5d'}}>{t('notifications.ask-permission')}</div>
                 <div className="buttons">
                     <button onClick={() => permissionResponse(false)} type="button"
-                            className={styles['decline-event-button']}>
+                            className="decline-event-button">
                         {t('chatMessage.deny')}
                     </button>
-                    <button onClick={() => permissionResponse(true)} type="button" className={styles['event-button']}>
+                    <button onClick={() => permissionResponse(true)} type="button" className="event-button">
                         {t('chatMessage.accept')}
                     </button>
                 </div>
-            </div>
+            </ChatMessageStyled>
         </>
     );
 };
