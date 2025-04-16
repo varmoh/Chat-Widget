@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import StyledButton from "../styled-components/styled-button";
 import {useAppDispatch} from "../../store";
 import {downloadChat, sendChatNpmRating, setFeedbackRatingGiven} from "../../slices/chat-slice";
-import {StyledButtonType} from "../../constants";
+import {isFeedbackRatingColorsEnabled, StyledButtonType} from "../../constants";
 import useChatSelector from "../../hooks/use-chat-selector";
 import {Download, DownloadElement} from "../../hooks/use-download-file";
 import {ChatFeedbackStyled} from "./ChatFeedbackStyled";
@@ -46,17 +46,21 @@ const ChatFeedback = (): JSX.Element => {
             </p>
             {feedback.showFeedbackWarning && <p className="missing-feeback">{t("feedback.warningText")}</p>}
             <div className="feedback-box-input" style={{display: "flex", flexWrap: "wrap", justifyContent: "center"}}>
-                {Array.from(Array(11).keys()).map((val: number) => (
-                    <StyledButton
-                        className={`feedback-btn ${val <= 6 ? "red" : val <= 8 ? "yellow" : "green"} ${val == 10 ? "last" : ""}`}
+                {Array.from(Array(11).keys()).map((val: number) => {
+                    const isMediumCheck = val <= 8 ? "yellow" : "green";
+                    const color = val <= 6 ? "red" : isMediumCheck;
+                    return (
+                      <StyledButton
+                        className={`feedback-btn ${isFeedbackRatingColorsEnabled ? color : ''} ${val == 10 ? "last" : ""}`}
                         onClick={(e) => handleFeedback(e.currentTarget.textContent)}
                         styleType={StyledButtonType.GRAY}
                         key={val}
                         active={selectedFeedbackButtonValue === val.toString()}
-                    >
+                      >
                         <span>{val}</span>
-                    </StyledButton>
-                ))}
+                      </StyledButton>
+                    );
+                })}
             </div>
             <div className="downloadContainer">
                 <Download ref={downloadRef}/>

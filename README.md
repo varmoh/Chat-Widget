@@ -52,6 +52,7 @@ Snippet can be embedded to any site using the following html:
     },
     ENABLE_HIDDEN_FEATURES: 'FALSE',
     IFRAME_TARGET_OIRGIN: "*",
+    FEEDBACK_RATING_COLORS_ENABLED: 'FALSE',
     other variables...
   };
 </script>

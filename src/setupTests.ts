@@ -20,8 +20,9 @@ window._env_ = {
     END: 17,
     DAYS: [1, 2, 3, 4, 5],
   },
-  
+
   ENABLE_HIDDEN_FEATURES: "TRUE",
+  FEEDBACK_RATING_COLORS_ENABLED: "FALSE",
   IFRAME_TARGET_OIRGIN: "*",
 };
 

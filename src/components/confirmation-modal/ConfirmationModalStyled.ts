@@ -149,19 +149,21 @@ export const ConfirmationModalStyled = styled.div`
         vertical-align: baseline;
         margin: 0;
         border-radius: 5px;
-        color: white;
         margin-left: 1px;
         margin-bottom: 2px;
 
         &.red {
+            color: white;
             background-color: #f25050;
         }
 
         &.yellow {
+            color: white;
             background-color: #f1d15a;
         }
 
         &.green {
+            color: white;
             background-color: #46ba45;
         }
 
@@ -242,19 +244,21 @@ export const ConfirmationModalStyles = styled.div`
         vertical-align: baseline;
         margin: 0;
         border-radius: 5px;
-        color: white;
         margin-left: 1px;
         margin-bottom: 2px;
 
         &.red {
+            color: white;
             background-color: #f25050;
         }
 
         &.yellow {
+            color: white;
             background-color: #f1d15a;
         }
 
         &.green {
+            color: white;
             background-color: #46ba45;
         }
 

@@ -151,3 +151,7 @@ export enum RATING_TYPES {
 export const isHiddenFeatureEnabled = 
   window._env_.ENABLE_HIDDEN_FEATURES?.toLowerCase().trim() == 'true' ||
   window._env_.ENABLE_HIDDEN_FEATURES?.toLowerCase().trim() == '1';
+
+export const isFeedbackRatingColorsEnabled =
+  window._env_.FEEDBACK_RATING_COLORS_ENABLED?.toLowerCase().trim() == 'true' ||  
+  window._env_.FEEDBACK_RATING_COLORS_ENABLED?.toLowerCase().trim() == '1';
