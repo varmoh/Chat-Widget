@@ -33,6 +33,7 @@
   "chatMessage.phone-only-template": "My phone number is {{phoneNr}}",
   "chatMessage.email-and-phone-template": "My email is {{email}} and phone number is {{phoneNr}}",
   "chatMessage.comment-template": "User Question:\n{{comment}}",
+  "chatMessage.edited-message": "The message has been changed! {{date}}",
   "header.button.minimize.label": "Minimize",
   "header.button.close.label": "Close",
   "header.button.detail.label": "Details",

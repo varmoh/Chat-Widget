@@ -71,6 +71,16 @@ export const ChatMessageStyled = styled.div`
         flex-shrink: 0;
     }
 
+    .edited-message {
+      color: #9799a4;
+      font-size: 11px;
+      line-height: 20px;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      padding: 0.1rem 3.1rem;
+    }
+
     .event-button {
         cursor: pointer;
         font-family: ${fontChat};
