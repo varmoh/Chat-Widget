@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import {colors, fontChat} from "../../styling/style_settings";
+import LinkIcon from "../../static/icons/link-external-white.svg";
 
 export const MessageFailedWrapperStyled = styled.div`
     display: flex;
@@ -58,7 +59,7 @@ export const ChatMessageStyled = styled.div`
         white-space: pre-wrap;
 
         a {
-            background: url("../../static/icons/link-external-white.svg") no-repeat right center;
+            background: url(${LinkIcon}) no-repeat right center;
             padding-right: 1.25em;
             color: white;
         }
@@ -296,7 +297,7 @@ export const ChatMessageStyled = styled.div`
 
         a {
             color: white;
-            background: url(../../static/icons/link-external-white.svg) no-repeat right center;
+            background: url(${LinkIcon}) no-repeat right center;
             padding-right: 18px;
         }
     }
