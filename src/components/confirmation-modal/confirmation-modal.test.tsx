@@ -11,7 +11,7 @@ import {
   CHAT_SHOW_BUBBLE_MESSAGE,
   CHAT_BUBBLE_MESSAGE_DELAY_SECONDS,
   CHAT_BUBBLE_COLOR,
-  CHAT_BUBBLE_ANIMATION,
+  CHAT_BUBBLE_ANIMATION, IDLE_CHAT_INTERVAL,
 } from "../../constants";
 
 let store: EnhancedStore;
@@ -37,6 +37,8 @@ describe("Confirmation modal component", () => {
             animation: CHAT_BUBBLE_ANIMATION,
             isLoaded: false,
             isBurokrattActive: null,
+            showIdleWarningMessage: false,
+            chatActiveDuration: IDLE_CHAT_INTERVAL
           },
           chatId: null,
         },

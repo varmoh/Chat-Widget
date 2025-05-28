@@ -1,4 +1,11 @@
-import { CHAT_BUBBLE_PROACTIVE_SECONDS, CHAT_SHOW_BUBBLE_MESSAGE, CHAT_BUBBLE_MESSAGE_DELAY_SECONDS, CHAT_BUBBLE_COLOR, CHAT_BUBBLE_ANIMATION } from '../constants';
+import {
+  CHAT_BUBBLE_PROACTIVE_SECONDS,
+  CHAT_SHOW_BUBBLE_MESSAGE,
+  CHAT_BUBBLE_MESSAGE_DELAY_SECONDS,
+  CHAT_BUBBLE_COLOR,
+  CHAT_BUBBLE_ANIMATION,
+  IDLE_CHAT_INTERVAL
+} from '../constants';
 import reducer, { closeConfirmationModal, showConfirmationModal, WidgetState } from './widget-slice';
 
 const initialState: WidgetState = {
@@ -13,6 +20,8 @@ const initialState: WidgetState = {
     animation: CHAT_BUBBLE_ANIMATION,
     isLoaded: false,
     isBurokrattActive: null,
+    showIdleWarningMessage: false,
+    chatActiveDuration: IDLE_CHAT_INTERVAL
   },
   chatId: null,
 };

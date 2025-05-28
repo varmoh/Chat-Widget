@@ -1,5 +1,6 @@
 {
   "profile.button.open-chat": "Open chat",
+  "conversation.inactive-termination": "The chat has been ended due to inactivity. Please feel free to start a new conversation if you still need assistance.",
   "notifications.chat-redirected": "Conversation has been redirected to another customer support agent.",
   "notifications.chat-ended": "Your conversation has ended.<br>To continue chatting with Bürokratt, start a new chat.",
   "notifications.authenticate": "Please authenticate yourself",

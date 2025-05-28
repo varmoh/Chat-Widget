@@ -45,6 +45,7 @@ import useTabActive from "../../hooks/useTabActive";
 import AskForwardToCsa from "../ask-forward-to-csa-modal/ask-forward-to-csa-modal";
 import { isIphone, isMobileWidth } from "../../utils/browser-utils";
 import {ChatStyles} from "./ChatStyled";
+import useWidgetSelector from "../../hooks/use-widget-selector";
 
 const RESIZABLE_HANDLES = {
     topLeft: true,
@@ -64,6 +65,7 @@ const Chat = (): JSX.Element => {
     const {t} = useTranslation();
     const {isAuthenticated} = useAuthenticationSelector();
     const {height, width} = useWindowDimensions();
+    const {widgetConfig} = useWidgetSelector();
     const {
         isChatEnded,
         chatId,
@@ -161,7 +163,7 @@ const Chat = (): JSX.Element => {
             lastActive = idleChat.lastActive;
           }
           const differenceInSeconds = getIdleTime(lastActive);
-          if (differenceInSeconds >= IDLE_CHAT_INTERVAL) {
+          if (differenceInSeconds >= widgetConfig.chatActiveDuration) {
             dispatch(setIdleChat({ isIdle: true }));
             if (showConfirmationModal) {
               dispatch(
@@ -172,7 +174,7 @@ const Chat = (): JSX.Element => {
               );
             }
           }
-        }, IDLE_CHAT_INTERVAL * 1000);
+        }, widgetConfig.chatActiveDuration * 1000);
         return () => {
           clearInterval(interval);
         };
@@ -201,8 +203,7 @@ const Chat = (): JSX.Element => {
           }
           const differenceInSeconds = getIdleTime(lastActive);
           if (
-            differenceInSeconds >=
-            IDLE_CHAT_INTERVAL + IDLE_CHAT_CHOICES_INTERVAL
+            differenceInSeconds >= widgetConfig.chatActiveDuration + IDLE_CHAT_CHOICES_INTERVAL
           ) {
             dispatch(
               endChat({
@@ -291,7 +292,7 @@ const Chat = (): JSX.Element => {
             !showContactForm &&
             !showUnavailableContactForm &&
             !showAskToForwardToCsaForm && <ChatContent />}
-          {idleChat.isIdle && <IdleChatNotification />}
+          {idleChat.isIdle && <IdleChatNotification displayMessage={widgetConfig.showIdleWarningMessage} />}
           {showResponseError && <ResponseErrorNotification />}
           {showFeedbackResult ? (
             <ChatFeedbackConfirmation />
