@@ -25,6 +25,8 @@ export interface WidgetState {
         isBurokrattActive: boolean | null;
         showIdleWarningMessage: boolean;
         chatActiveDuration: number;
+        autoCloseConversation: boolean;
+        autoCloseText: string;
     };
     chatId?: string | null;
 }
@@ -42,7 +44,9 @@ const initialState: WidgetState = {
         isLoaded: false,
         isBurokrattActive: null,
         showIdleWarningMessage: false,
-        chatActiveDuration: IDLE_CHAT_INTERVAL
+        chatActiveDuration: IDLE_CHAT_INTERVAL,
+        autoCloseConversation: true,
+        autoCloseText: 'Aitäh, et pöördusite, küsimuste korral võib alati uuesti ühendust võtta. Kena päeva jätku!'
     },
     chatId: null,
 };
@@ -86,6 +90,8 @@ export const widgetSlice = createSlice({
             state.widgetConfig.showIdleWarningMessage = action.payload?.showIdleWarningMessage === "true";
             const minutes = parseInt(action.payload?.chatActiveDuration ?? '');
             state.widgetConfig.chatActiveDuration = isNaN(minutes) ? IDLE_CHAT_INTERVAL : minutes * 60;
+            state.widgetConfig.autoCloseConversation = action.payload?.autoCloseConversation === "true";
+            state.widgetConfig.autoCloseText = action.payload?.autoCloseText ?? '';
             state.widgetConfig.isBurokrattActive = action.payload?.isBurokrattActive === 'true';
             if (state.chatId != null && state.widgetConfig.isBurokrattActive === false) {
                 state.burokrattOnlineStatus = true;

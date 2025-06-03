@@ -8,4 +8,6 @@ export interface WidgetConfigResponse {
     isBurokrattActive: string;
     showIdleWarningMessage: string;
     chatActiveDuration: string;
+    autoCloseConversation: string;
+    autoCloseText: string;
 }

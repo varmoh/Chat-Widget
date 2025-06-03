@@ -11,7 +11,6 @@ import {
     CHAT_WINDOW_WIDTH,
     FEEDBACK_CONFIRMATION_TIMEOUT,
     IDLE_CHAT_CHOICES_INTERVAL,
-    IDLE_CHAT_INTERVAL,
 } from "../../constants";
 import ChatContent from "../chat-content/chat-content";
 import ChatHeader from "../chat-header/chat-header";
@@ -152,7 +151,7 @@ const Chat = (): JSX.Element => {
   };
 
     useLayoutEffect(() => {
-        if (isChatEnded === false) {
+        if (isChatEnded === false && widgetConfig.autoCloseConversation) {
             if (messages.length > 0) {
                 const interval = setInterval(() => {
                     let lastActive;
@@ -191,7 +190,7 @@ const Chat = (): JSX.Element => {
   ]);
 
     useLayoutEffect(() => {
-        if (isChatEnded === false) {
+        if (isChatEnded === false  && widgetConfig.autoCloseConversation) {
             if (messages.length > 0) {
                 const interval = setInterval(() => {
                     let lastActive;

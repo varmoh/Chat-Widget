@@ -38,7 +38,9 @@ describe("Confirmation modal component", () => {
             isLoaded: false,
             isBurokrattActive: null,
             showIdleWarningMessage: false,
-            chatActiveDuration: IDLE_CHAT_INTERVAL
+            chatActiveDuration: IDLE_CHAT_INTERVAL,
+            autoCloseConversation: false,
+            autoCloseText: ''
           },
           chatId: null,
         },
