@@ -291,7 +291,7 @@ const Chat = (): JSX.Element => {
             !showContactForm &&
             !showUnavailableContactForm &&
             !showAskToForwardToCsaForm && <ChatContent />}
-          {idleChat.isIdle && <IdleChatNotification displayMessage={widgetConfig.showIdleWarningMessage} />}
+          {idleChat.isIdle && <IdleChatNotification displayMessage={widgetConfig.showIdleWarningMessage} customMessage={widgetConfig.autoCloseText} />}
           {showResponseError && <ResponseErrorNotification />}
           {showFeedbackResult ? (
             <ChatFeedbackConfirmation />

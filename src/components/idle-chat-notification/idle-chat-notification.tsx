@@ -9,10 +9,11 @@ import {FC} from "react";
 
 interface IdleChatNotificationProps {
     displayMessage?: boolean;
+    customMessage?: string;
 }
 
 
-const IdleChatNotification: FC<IdleChatNotificationProps> = ({displayMessage = false}) => {
+const IdleChatNotification: FC<IdleChatNotificationProps> = ({displayMessage = false, customMessage }) => {
     const {t} = useTranslation();
     const dispatch = useAppDispatch();
 
@@ -27,7 +28,7 @@ const IdleChatNotification: FC<IdleChatNotificationProps> = ({displayMessage = f
                     {displayMessage && (
                         <>
                         <h2 className="byk_title">
-                            {t("conversation.inactive-termination")}
+                            {customMessage || t("conversation.inactive-termination")}
                         </h2>
                         <div className="byk_actions">
                             <Button
