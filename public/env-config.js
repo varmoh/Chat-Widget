@@ -12,6 +12,7 @@ window._env_ = {
     DAYS: [1, 2, 3, 4, 5, 6, 7],
   },
   ENABLE_HIDDEN_FEATURES: "TRUE",
+  SMAX_INTEGRATION: { enabled: false },
   FEEDBACK_RATING_COLORS_ENABLED: "FALSE",
   IFRAME_TARGET_OIRGIN: "*",
 };
