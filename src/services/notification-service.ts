@@ -5,6 +5,7 @@ const notificationHttp = axios.create({
     baseURL: window._env_.NOTIFICATION_NODE_URL,
     headers: {
         'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
     },
     withCredentials: false,
 });

@@ -8,7 +8,7 @@ export const EMAIL_REGEX =
 export const PHONE_NR_REGEX = '^$|^[+]*[0-9]{1,4}[-\\s.0-9]{6,15}$';
 export const MESSAGE_MAX_CHAR_LIMIT = 3000;
 export const MESSAGE_FILE_SIZE_LIMIT = 10_000_000;
-export const MESSAGE_WARNING_LIMIT = 2900;
+export const MESSAGE_WARNING_LIMIT = 3000;
 export const MESSAGE_VISIBILITY_LIMIT = 500;
 export const MAXIMUM_MESSAGE_TEXT_LENGTH_FOR_ONE_ROW = 27;
 export const FEEDBACK_CONFIRMATION_TIMEOUT = 5000;
@@ -152,3 +152,7 @@ export enum RATING_TYPES {
 export const isHiddenFeatureEnabled = 
   window._env_.ENABLE_HIDDEN_FEATURES?.toLowerCase().trim() == 'true' ||
   window._env_.ENABLE_HIDDEN_FEATURES?.toLowerCase().trim() == '1';
+
+export const isFeedbackRatingColorsEnabled =
+  window._env_.FEEDBACK_RATING_COLORS_ENABLED?.toLowerCase().trim() == 'true' ||  
+  window._env_.FEEDBACK_RATING_COLORS_ENABLED?.toLowerCase().trim() == '1';

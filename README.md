@@ -51,6 +51,8 @@ Snippet can be embedded to any site using the following html:
       DAYS: [1, 2, 4, 5],
     },
     ENABLE_HIDDEN_FEATURES: 'FALSE',
+    IFRAME_TARGET_OIRGIN: "*",
+    FEEDBACK_RATING_COLORS_ENABLED: 'FALSE',
     other variables...
   };
 </script>

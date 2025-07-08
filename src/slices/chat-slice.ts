@@ -31,6 +31,14 @@ import {
   isChatAboutToBeTerminated,
   wasPageReloaded,
 } from "../utils/browser-utils";
+import {
+  browserName,
+  fullBrowserVersion,
+  osName,
+  osVersion,
+  parseUserAgent,
+} from "react-device-detect";
+import { getUserinfo } from "./authentication-slice";
 
 export interface EstimatedWaiting {
   positionInUnassignedChats: string;
@@ -184,11 +192,15 @@ export const initChat = createAsyncThunk(
   "chat/init",
   async (message: Message) => {
     const { holidays, holidayNames } = getHolidays();
+    const userAgent = parseUserAgent(navigator.userAgent);
+    const userDevice = userAgent.device.vendor ?? 'unknown';
+    const userDeviceModel = userAgent.device.model != undefined ? ` (${userAgent.device.model})` : '';
+    const agentInfo = `Agent: ${browserName} (v${fullBrowserVersion}), OS: ${osName} (v${osVersion}), device: ${userDevice}${userDeviceModel}`;
     return ChatService.init(
       message,
       {
         endUserUrl: window.location.href.toString(),
-        endUserOs: navigator.userAgent.toString(),
+        endUserOs: agentInfo,
       },
       holidays,
       holidayNames
@@ -265,17 +277,23 @@ export const endChat = createAsyncThunk(
       chatServiceStatus = "IDLE";
     }
 
-    return chatStatus === CHAT_STATUS.ENDED
-      ? null
-      : ChatService.endChat(
-          {
-            chatId,
-            authorTimestamp: new Date().toISOString(),
-            authorRole: AUTHOR_ROLES.END_USER,
-            event: endEvent,
-          },
-          chatServiceStatus ?? "ENDED"
-        );
+    if (chatStatus === CHAT_STATUS.ENDED) {
+      return null;
+    }
+
+    const result = await ChatService.endChat(
+      {
+        chatId,
+        authorTimestamp: new Date().toISOString(),
+        authorRole: AUTHOR_ROLES.END_USER,
+        event: endEvent,
+      },
+      chatServiceStatus ?? "ENDED"
+    );
+
+    thunkApi.dispatch(getUserinfo());
+
+    return result;
   }
 );
 

@@ -18,7 +18,7 @@ const useAuthentication = (): void => {
 
   useEffect(() => {
    redirectIfComeBackFromTim(() => {
-      dispatch(setIsAuthenticated());
+      dispatch(getUserinfo());
    });
     
     if (!isAuthenticated || loggedInWithTaraJwt) {
