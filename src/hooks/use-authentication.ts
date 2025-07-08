@@ -11,7 +11,8 @@ import authenticationService from "../services/authentication-service";
 
 const useAuthentication = (): void => {
   const dispatch = useAppDispatch();
-  const { isAuthenticated, fetchingUserInfo, loggedInWithTaraJwt } = useAuthenticationSelector();
+  const { isAuthenticated, fetchingUserInfo, loggedInWithTaraJwt } =
+    useAuthenticationSelector();
 
   useEffect(() => {
     const cookieFound = authenticationService.hasCookie();
@@ -41,7 +42,7 @@ const useAuthentication = (): void => {
     const lastCode = sessionStorage.getItem("last_auth_code");
 
     const shouldReauthenticate =
-      code && window._env_.SMAX_INTEGRATION.enabled && code !== lastCode;
+      code && window._env_?.SMAX_INTEGRATION?.enabled && code !== lastCode;
 
     if (shouldReauthenticate) {
       dispatch(authSmaxUser(code)).then((action) => {
