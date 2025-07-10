@@ -37,6 +37,7 @@
   "chatMessage.phone-only-template": "Minu telefon on {{phoneNr}}",
   "chatMessage.email-and-phone-template": "Minu e-posti aadress on {{email}} ja telefoninumber {{phoneNr}}",
   "chatMessage.comment-template": "Kasutaja küsimus:\n{{comment}}",
+  "chatMessage.edited-message": "Vestluse sisu on muudetud! {{date}}",
   "header.button.minimize.label": "Minimeeri",
   "header.button.close.label": "Sulge",
   "header.button.detail.label": "Detailid",
