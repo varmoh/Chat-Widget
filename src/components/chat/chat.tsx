@@ -292,7 +292,7 @@ const Chat = (): JSX.Element => {
             !showUnavailableContactForm &&
             !showAskToForwardToCsaForm && <ChatContent />}
           {idleChat.isIdle && <IdleChatNotification />}
-          {showResponseError && <ResponseErrorNotification />}
+          {showResponseError && !isChatEnded && <ResponseErrorNotification />}
           {showFeedbackResult ? (
             <ChatFeedbackConfirmation />
           ) : (

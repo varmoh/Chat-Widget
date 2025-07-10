@@ -19,6 +19,7 @@ import useChatSelector from "../../../hooks/use-chat-selector";
 import {useTranslation} from "react-i18next";
 import Markdownify from "./Markdownify";
 import {ChatMessageStyled} from "../ChatMessageStyled";
+import { format } from "date-fns";
 
 const leftAnimation = {
     animate: {opacity: 1, x: 0},
@@ -67,98 +68,81 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
         [message.authorFirstName, message.authorLastName]);
 
     return (
-        <motion.div
-            animate={leftAnimation.animate}
-            initial={leftAnimation.initial}
-            transition={leftAnimation.transition}
-            ref={messageRef}
-        >
-            <div>
-                <ChatMessageStyled className={messageClass}>
-                    {nameVisibility && csaName && message.event != CHAT_EVENTS.GREETING && (
-                        <div className="name">{csaName}</div>
-                    )}
-                    {titleVisibility &&
-                        message.csaTitle &&
-                        message.event != CHAT_EVENTS.GREETING && (
-                            <div className="name">{message.csaTitle}</div>
-                        )}
-                    <div className="main">
-                        <div className="icon">
-                            {message.event === CHAT_EVENTS.EMERGENCY_NOTICE ? (
-                                <div className="emergency">!</div>
-                            ) : (
-                                <img src={RobotIcon} alt="Robot icon"/>
-                            )}
-                        </div>
-                        <div
-                            className={`content ${
-                                message.event === CHAT_EVENTS.EMERGENCY_NOTICE &&
-                                'emergency_content'
-                            }`}
-                        >
-                            <Markdownify message={message.content ?? ""}/>
-                            {!message.content && (
-                                hasOptions || hasButtons
-                                    ? t('widget.action.select')
-                                    : <i>{t('widget.error.empty')}</i>
-                            )}
-                        </div>
-                        <div
-                            className={classNames(
-                                "feedback",
-                                message.content?.length !== undefined &&
-                                message.content?.length >
-                                MAXIMUM_MESSAGE_TEXT_LENGTH_FOR_ONE_ROW
-                                    ? "column"
-                                    : "row"
-                            )}
-                        >
-                            {![CHAT_EVENTS.GREETING, CHAT_EVENTS.EMERGENCY_NOTICE].includes(
-                                    message.event as CHAT_EVENTS
-                                ) &&
-                                !hasButtons && !hasOptions &&
-                                isHiddenFeatureEnabled && (
-                                    <div>
-                                        <button
-                                            type="button"
-                                            className={
-                                                message.rating === RATING_TYPES.LIKED
-                                                    ? "highlight"
-                                                    : "grey"
-                                            }
-                                            onClick={() => {
-                                                setNewFeedbackRating(RATING_TYPES.LIKED);
-                                            }}
-                                        >
-                                            <img src={Thumbs} alt="thumbs up icon"/>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className={
-                                                message.rating === RATING_TYPES.DISLIKED
-                                                    ? "highlight"
-                                                    : "grey"
-                                            }
-                                            onClick={() => {
-                                                setNewFeedbackRating(RATING_TYPES.DISLIKED);
-                                            }}
-                                        >
-                                            <img
-                                                className="thumbsDownImg"
-                                                src={Thumbs}
-                                                alt="thumbs down icon"
-                                            />
-                                        </button>
-                                    </div>
-                                )}
-                        </div>
+      <motion.div
+        animate={leftAnimation.animate}
+        initial={leftAnimation.initial}
+        transition={leftAnimation.transition}
+        ref={messageRef}
+      >
+        <div>
+          <ChatMessageStyled className={messageClass}>
+            {nameVisibility && csaName && message.event != CHAT_EVENTS.GREETING && (
+              <div className="name">{csaName}</div>
+            )}
+            {titleVisibility && message.csaTitle && message.event != CHAT_EVENTS.GREETING && (
+              <div className="name">{message.csaTitle}</div>
+            )}
+            <div className="main">
+              <div className="icon">
+                {message.event === CHAT_EVENTS.EMERGENCY_NOTICE ? (
+                  <div className="emergency">!</div>
+                ) : (
+                  <img src={RobotIcon} alt="Robot icon" />
+                )}
+              </div>
+              <div className={`content ${message.event === CHAT_EVENTS.EMERGENCY_NOTICE && "emergency_content"}`}>
+                <Markdownify message={message.content ?? ""} />
+                {!message.content &&
+                  (hasOptions || hasButtons ? t("widget.action.select") : <i>{t("widget.error.empty")}</i>)}
+              </div>
+              <div
+                className={classNames(
+                  "feedback",
+                  message.content?.length !== undefined &&
+                    message.content?.length > MAXIMUM_MESSAGE_TEXT_LENGTH_FOR_ONE_ROW
+                    ? "column"
+                    : "row"
+                )}
+              >
+                {![CHAT_EVENTS.GREETING, CHAT_EVENTS.EMERGENCY_NOTICE].includes(message.event as CHAT_EVENTS) &&
+                  !hasButtons &&
+                  !hasOptions &&
+                  isHiddenFeatureEnabled && (
+                    <div>
+                      <button
+                        type="button"
+                        className={message.rating === RATING_TYPES.LIKED ? "highlight" : "grey"}
+                        onClick={() => {
+                          setNewFeedbackRating(RATING_TYPES.LIKED);
+                        }}
+                      >
+                        <img src={Thumbs} alt="thumbs up icon" />
+                      </button>
+                      <button
+                        type="button"
+                        className={message.rating === RATING_TYPES.DISLIKED ? "highlight" : "grey"}
+                        onClick={() => {
+                          setNewFeedbackRating(RATING_TYPES.DISLIKED);
+                        }}
+                      >
+                        <img className="thumbsDownImg" src={Thumbs} alt="thumbs down icon" />
+                      </button>
                     </div>
-                    {hasButtons && <ChatButtonGroup message={message}/>}
-                    {hasOptions && <ChatOptionGroup message={message}/>}
-                </ChatMessageStyled>
+                  )}
+              </div>
             </div>
-        </motion.div>
+            {message.originalBaseId && (
+              <div className="edited-message">
+                {t("chatMessage.edited-message", {
+                  date: format(new Date(message?.updated ?? new Date()), "HH:mm:ss"),
+                })}
+              </div>
+            )}
+            {hasButtons && <ChatButtonGroup message={message} />}
+            {hasOptions && <ChatOptionGroup message={message} />}
+          </ChatMessageStyled>
+        </div>
+      </motion.div>
     );
 };
 

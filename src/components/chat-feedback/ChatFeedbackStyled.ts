@@ -2,6 +2,8 @@ import styled from "styled-components";
 import {colors, fontChat} from "../../styling/style_settings";
 
 export const ChatFeedbackStyled = styled.div`
+    margin: 0 0.8em;
+
     .downloadContainer {
         display: flex;
         flex-direction: column;
@@ -78,6 +80,6 @@ export const ChatFeedbackStyled = styled.div`
         justify-content: space-around;
         display: flex;
         flex-flow: row nowrap;
-        margin: 1rem 0.8em 2rem 0.8em;
+        margin: 1rem 0 2rem;
     }
 `

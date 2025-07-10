@@ -1,17 +1,17 @@
-import React, {ChangeEvent, useCallback, useEffect, useRef, useState} from "react";
-import {useTranslation} from "react-i18next";
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import {useAppDispatch} from "../../store";
+import { useAppDispatch } from "../../store";
 import {
-    addMessage,
-    clearMessageQueue,
-    initChat,
-    queueMessage,
-    sendFeedbackMessage,
-    sendMessagePreview,
-    sendNewMessage,
-    setFeedbackMessageGiven,
-    setFeedbackWarning,
+  addMessage,
+  clearMessageQueue,
+  initChat,
+  queueMessage,
+  sendFeedbackMessage,
+  sendMessagePreview,
+  sendNewMessage,
+  setFeedbackMessageGiven,
+  setFeedbackWarning,
 } from "../../slices/chat-slice";
 import Send from "../../static/icons/send.svg";
 import File from "../../static/icons/file.svg";
@@ -19,362 +19,402 @@ import useChatSelector from "../../hooks/use-chat-selector";
 import KeypadErrorMessage from "./keypad-error-message";
 import ChatKeypadCharCounter from "./chat-keypad-char-counter";
 import {
-    AUTHOR_ROLES,
-    CHAT_STATUS,
-    isHiddenFeatureEnabled,
-    MESSAGE_FILE_SIZE_LIMIT,
-    MESSAGE_MAX_CHAR_LIMIT,
-    MESSAGE_QUE_MAX_LENGTH,
-    StyledButtonType,
+  AUTHOR_ROLES,
+  CHAT_STATUS,
+  isHiddenFeatureEnabled,
+  MESSAGE_FILE_SIZE_LIMIT,
+  MESSAGE_MAX_CHAR_LIMIT,
+  MESSAGE_QUE_MAX_LENGTH,
+  StyledButtonType,
 } from "../../constants";
-import {Attachment, AttachmentTypes, Message,} from "../../model/message-model";
+import {
+  Attachment,
+  AttachmentTypes,
+  Message,
+} from "../../model/message-model";
 import StyledButton from "../styled-components/styled-button";
 import Close from "../../static/icons/close.svg";
 import formatBytes from "../../utils/format-bytes";
 import debounce from "../../utils/debounce";
-import {ChatKeypadStyled} from "./ChatKeypadStyled";
-import {Subject} from "rxjs";
-import {debounceTime, distinctUntilChanged, switchMap} from "rxjs/operators";
-import {isIphone} from "../../utils/browser-utils";
+import { ChatKeypadStyled } from "./ChatKeypadStyled";
+import { Subject } from "rxjs";
+import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
+import { isIphone } from "../../utils/browser-utils";
 import classNames from "classnames";
 
-const preventWindowScrolling = (e: Event) => {
-    // Allow scrolling if the target is inside ChatContent
-    const target = e.target as HTMLElement;
-    if (target.closest(".os-host-flexbox")) return;
+// Hacky workaround for iOS bug
+// Prevents unnecessary window scrolling when the on-screen keyboard is open
+const preventWindowScrolling = (e: TouchEvent, direction: "up" | "down") => {
+  const target = e.target as HTMLElement;
+  const contentElement = document.getElementsByClassName(
+    "os-content"
+  )[0] as HTMLElement;
+  const top = contentElement.getBoundingClientRect().top;
 
-    e.preventDefault();
+  if (
+    // Allow scrolling if the target is inside ChatContent
+    target.closest(".os-host-flexbox") &&
+    // AND the hack to prevent glitchy iOS scrolling
+    // 54 is the height of header
+    ((direction === "up" && top > 0) || (direction === "down" && top < 54))
+  ) {
+    return;
+  }
+
+  e.preventDefault();
 };
 
 const ChatKeyPad = (): JSX.Element => {
-    const [userInput, setUserInput] = useState<string>("");
-    const [userInputFile, setUserInputFile] = useState<Attachment>();
-    const [errorMessage, setErrorMessage] = useState("");
-    const [isKeypadDisabled, setIsKeypadDisabled] = useState(false);
-    const {
-      feedback,
-      chatId,
-      loading,
-      messageQueue,
-      chatStatus,
-      showResponseError,
-    } = useChatSelector();
-    const {t} = useTranslation();
-    const dispatch = useAppDispatch();
-    const hiddenFileInputRef = useRef<HTMLInputElement | null>(null);
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const [dynamicStyle, setdynamicStyle] = useState("");
+  const [userInput, setUserInput] = useState<string>("");
+  const [userInputFile, setUserInputFile] = useState<Attachment>();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isKeypadDisabled, setIsKeypadDisabled] = useState(false);
+  const {
+    feedback,
+    chatId,
+    loading,
+    messageQueue,
+    chatStatus,
+    showResponseError,
+  } = useChatSelector();
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const hiddenFileInputRef = useRef<HTMLInputElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [dynamicStyle, setdynamicStyle] = useState("");
+  const touchStartYRef = useRef<number>(0);
 
-    const handleUploadClick = () => {
-        hiddenFileInputRef.current?.click();
-    };
-    const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files) {
-            return;
-        }
-        const base64 = await handleFileRead(e.target.files[0]);
+  const handleUploadClick = () => {
+    hiddenFileInputRef.current?.click();
+  };
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) {
+      return;
+    }
+    const base64 = await handleFileRead(e.target.files[0]);
 
-        if (!base64) return;
+    if (!base64) return;
 
-        setUserInput(e.target.files[0].name);
-        setUserInputFile({
-            chatId: chatId!,
-            name: e.target.files[0].name,
-            type: e.target.files[0].type as AttachmentTypes,
-            size: e.target.files[0].size,
-            base64: base64,
-        });
-    };
-
-    const adjustHeight = () => {
-        const textarea = textareaRef.current;
-        if (textarea) {
-            textarea.style.height = "1em";
-            textarea.style.height = `${textarea.scrollHeight}px`;
-
-            const newHeight = textarea.scrollHeight;
-
-            setdynamicStyle((dynStyle) => {
-                if (newHeight >= 70 && newHeight <= 85) {
-                    return "threeLines";
-                } else if (newHeight > 85) {
-                    return "fourLines";
-                } else {
-                    return "";
-                }
-                return dynStyle;
-            });
-        }
-    };
-
-    useEffect(() => {
-        adjustHeight();
-    }, []);
-
-    const handleTextFeedback = () => {
-        if (!feedback.isFeedbackRatingGiven) {
-            dispatch(setFeedbackWarning(true));
-            return;
-        }
-        dispatch(setFeedbackWarning(false));
-        dispatch(sendFeedbackMessage({userInput}));
-        dispatch(setFeedbackMessageGiven(true));
-        setIsKeypadDisabled(true);
-    };
-    useEffect(() => {
-        if (messageQueue.length >= MESSAGE_QUE_MAX_LENGTH) {
-            setIsKeypadDisabled(true);
-        }
-    }, [messageQueue]);
-
-    useEffect(() => {
-        if (chatId && !loading && messageQueue.length > 0) {
-            messageQueue.forEach((message) => {
-                setTimeout(() => {
-                    dispatch(sendNewMessage({...message, chatId}));
-                }, 250);
-            });
-            dispatch(clearMessageQueue());
-            setIsKeypadDisabled(false);
-        }
-    }, [chatId, dispatch, loading, messageQueue]);
-
-    const isInputValid = () => {
-        if (!userInput.trim()) return false;
-
-        if (userInput.length > MESSAGE_MAX_CHAR_LIMIT) {
-            setErrorMessage(t("keypad.long-message-warning"));
-            return false;
-        }
-        return true;
-    };
-
-    const addNewMessageToState = (): void => {
-        if (!isInputValid()) return;
-        const message: Message = {
-            chatId: chatId ?? "",
-            content: userInput,
-            file: userInputFile,
-            authorTimestamp: new Date().toISOString(),
-            authorRole: AUTHOR_ROLES.END_USER,
-        };
-
-        dispatch(addMessage(message));
-        // dispatch(sendAttachment(userInputFile!)); // To be done: Send attachment
-        handleUploadClear();
-
-        if (!chatId && !loading) {
-            dispatch(initChat(message));
-        }
-        if (loading) {
-            dispatch(queueMessage(message));
-        }
-        if (chatId) {
-            dispatch(sendNewMessage(message));
-        }
-    };
-
-    const [previewSubject] = useState(() => new Subject<Message>());
-    useEffect(() => {
-        const subscription = previewSubject
-            .pipe(
-                distinctUntilChanged(),
-                debounceTime(1000),
-                switchMap((message: Message) => {
-                    return dispatch(sendMessagePreview(message));
-                })
-            )
-            .subscribe((_) => {
-            });
-
-        return () => {
-            subscription.unsubscribe();
-        };
-    }, []);
-
-    useEffect(() => {
-      if (showResponseError && chatId) {
-        const message: Message = {
-          chatId,
-          content: "",
-          authorTimestamp: new Date().toISOString(),
-        };
-        dispatch(sendMessagePreview(message));
-      }
-    }, [showResponseError, chatId, dispatch]);
-
-    const handleKeyUp = useCallback(
-        debounce(() => {
-            const message: Message = {
-                chatId,
-                content: userInput,
-                authorTimestamp: new Date().toISOString(),
-            };
-
-            if (chatId) {
-                previewSubject.next(message);
-            }
-        }),
-        [chatId, userInput]
-    );
-
-    const keypadClasses = classNames("keypad", {
-        "three_lines": dynamicStyle === "threeLines",
-        "four_lines": dynamicStyle === "fourLines",
+    setUserInput(e.target.files[0].name);
+    setUserInputFile({
+      chatId: chatId!,
+      name: e.target.files[0].name,
+      type: e.target.files[0].type as AttachmentTypes,
+      size: e.target.files[0].size,
+      base64: base64,
     });
+  };
 
-    // Workaround for iOS to prevent unnecessary window scrolling when the keyboard is open
-    const disableIosWindowScroll = () => {
-        if (isIphone()) {
-            window.addEventListener("touchmove", preventWindowScrolling, {
-                passive: false,
-            });
+  const adjustHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "1em";
+      textarea.style.height = `${textarea.scrollHeight}px`;
+
+      const newHeight = textarea.scrollHeight;
+
+      setdynamicStyle((dynStyle) => {
+        if (newHeight >= 70 && newHeight <= 85) {
+          return "threeLines";
+        } else if (newHeight > 85) {
+          return "fourLines";
+        } else {
+          return "";
         }
+        return dynStyle;
+      });
+    }
+  };
+
+  useEffect(() => {
+    adjustHeight();
+  }, []);
+
+  const handleTextFeedback = () => {
+    if (!feedback.isFeedbackRatingGiven) {
+      dispatch(setFeedbackWarning(true));
+      return;
+    }
+    dispatch(setFeedbackWarning(false));
+    dispatch(sendFeedbackMessage({ userInput }));
+    dispatch(setFeedbackMessageGiven(true));
+    setIsKeypadDisabled(true);
+  };
+  useEffect(() => {
+    if (messageQueue.length >= MESSAGE_QUE_MAX_LENGTH) {
+      setIsKeypadDisabled(true);
+    }
+  }, [messageQueue]);
+
+  useEffect(() => {
+    if (chatId && !loading && messageQueue.length > 0) {
+      messageQueue.forEach((message) => {
+        setTimeout(() => {
+          dispatch(sendNewMessage({ ...message, chatId }));
+        }, 250);
+      });
+      dispatch(clearMessageQueue());
+      setIsKeypadDisabled(false);
+    }
+  }, [chatId, dispatch, loading, messageQueue]);
+
+  const isInputValid = () => {
+    if (!userInput.trim()) return false;
+
+    if (userInput.length > MESSAGE_MAX_CHAR_LIMIT) {
+      setErrorMessage(t("keypad.long-message-warning"));
+      return false;
+    }
+    return true;
+  };
+
+  const addNewMessageToState = (): void => {
+    if (!isInputValid()) return;
+    const message: Message = {
+      chatId: chatId ?? "",
+      content: userInput,
+      file: userInputFile,
+      authorTimestamp: new Date().toISOString(),
+      authorRole: AUTHOR_ROLES.END_USER,
     };
 
-    const enableIosWindowScroll = () => {
-        if (isIphone()) {
-            window.removeEventListener("touchmove", preventWindowScrolling, false);
-        }
+    dispatch(addMessage(message));
+    // dispatch(sendAttachment(userInputFile!)); // To be done: Send attachment
+    handleUploadClear();
+
+    if (!chatId && !loading) {
+      dispatch(initChat(message));
+    }
+    if (loading) {
+      dispatch(queueMessage(message));
+    }
+    if (chatId) {
+      dispatch(sendNewMessage(message));
+    }
+  };
+
+  const [previewSubject] = useState(() => new Subject<Message>());
+  useEffect(() => {
+    const subscription = previewSubject
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(1000),
+        switchMap((message: Message) => {
+          return dispatch(sendMessagePreview(message));
+        })
+      )
+      .subscribe((_) => {});
+
+    return () => {
+      subscription.unsubscribe();
     };
+  }, []);
+
+  useEffect(() => {
+    if (showResponseError && chatId) {
+      const message: Message = {
+        chatId,
+        content: "",
+        authorTimestamp: new Date().toISOString(),
+      };
+      dispatch(sendMessagePreview(message));
+    }
+  }, [showResponseError, chatId, dispatch]);
+
+  const handleKeyUp = useCallback(
+    debounce(() => {
+      const message: Message = {
+        chatId,
+        content: userInput,
+        authorTimestamp: new Date().toISOString(),
+      };
+
+      if (chatId) {
+        previewSubject.next(message);
+      }
+    }),
+    [chatId, userInput]
+  );
+
+  const keypadClasses = classNames("keypad", {
+    three_lines: dynamicStyle === "threeLines",
+    four_lines: dynamicStyle === "fourLines",
+  });
+
+  // Create stable references to the event handlers
+  // So that we can remove them later with window.removeEventListener
+  const touchStartHandler = useCallback((e: TouchEvent) => {
+    touchStartYRef.current = e.touches[0].clientY;
+  }, []);
+
+  const touchMoveHandler = useCallback((e: TouchEvent) => {
+    const touchEndY = e.touches[0].clientY;
+    preventWindowScrolling(
+      e,
+      touchEndY > touchStartYRef.current ? "down" : "up"
+    );
+  }, []);
+
+  const disableIosWindowScroll = useCallback(() => {
+    if (isIphone()) {
+      window.addEventListener("touchstart", touchStartHandler);
+      // Passive is true by default in modern browsers
+      // Passive listeners do not allow event.preventDefault()
+      // So we need to set it to false to prevent the default behavior in preventWindowScrolling
+      // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#using_passive_listeners
+      window.addEventListener("touchmove", touchMoveHandler, {
+        passive: false,
+      });
+    }
+  }, [touchStartHandler, touchMoveHandler]);
+
+  const enableIosWindowScroll = useCallback(() => {
+    if (isIphone()) {
+      window.removeEventListener("touchstart", touchStartHandler);
+      window.removeEventListener("touchmove", touchMoveHandler, false);
+    }
+  }, [touchStartHandler, touchMoveHandler]);
+
+  return (
+    <ChatKeypadStyled>
+      <KeypadErrorMessage>{errorMessage}</KeypadErrorMessage>
+      <div className={`${keypadClasses}`}>
+        <textarea
+          ref={textareaRef}
+          disabled={userInputFile ? true : isKeypadDisabled}
+          aria-label={t("keypad.input.label")}
+          className="input"
+          value={userInputFile ? userInputFile.name : userInput}
+          placeholder={t("keypad.input.placeholder")}
+          onChange={(e) => {
+            setUserInput(e.target.value);
+            setErrorMessage("");
+            adjustHeight();
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              if (chatStatus === CHAT_STATUS.ENDED && !!chatId)
+                handleTextFeedback();
+              else {
+                event.preventDefault();
+                addNewMessageToState();
+              }
+            }
+          }}
+          onKeyUp={(e) => {
+            handleKeyUp();
+            adjustHeight();
+          }}
+          onFocus={disableIosWindowScroll}
+          onBlur={enableIosWindowScroll}
+        />
+        <input
+          type="file"
+          ref={hiddenFileInputRef}
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+        />
+
+        {chatStatus === CHAT_STATUS.ENDED && !!chatId ? (
+          <FeedbackButtonStyle
+            onClick={() => handleTextFeedback()}
+            styleType={StyledButtonType.GRAY}
+          >
+            {t("chat.feedback.button.label")}
+          </FeedbackButtonStyle>
+        ) : (
+          <>
+            <button
+              onKeyDown={addNewMessageToState}
+              onClick={addNewMessageToState}
+              className="button"
+              title={t("keypad.button.label")}
+              aria-label={t("keypad.button.label")}
+              tabIndex={0}
+            >
+              <img src={Send} alt="Send message icon" />
+            </button>
+
+            {isHiddenFeatureEnabled && renderSendFileButton()}
+          </>
+        )}
+      </div>
+      <ChatKeypadCharCounter userInput={userInput} />
+    </ChatKeypadStyled>
+  );
+
+  function renderSendFileButton() {
+    if (userInputFile) {
+      return (
+        <ChatKeypadStyled>
+          <button
+            onKeyDown={() => null}
+            onClick={handleUploadClear}
+            className="button_cancelUpload"
+            title={t("keypad.button.label")}
+            aria-label={t("keypad.button.label")}
+            tabIndex={0}
+          >
+            <img src={Close} alt="Close icon" />
+          </button>
+        </ChatKeypadStyled>
+      );
+    }
 
     return (
-        <ChatKeypadStyled>
-            <KeypadErrorMessage>{errorMessage}</KeypadErrorMessage>
-            <div className={`${keypadClasses}`}>
-        <textarea
-            ref={textareaRef}
-            disabled={userInputFile ? true : isKeypadDisabled}
-            aria-label={t("keypad.input.label")}
-            className="input"
-            value={userInputFile ? userInputFile.name : userInput}
-            placeholder={t("keypad.input.placeholder")}
-            onChange={(e) => {
-                setUserInput(e.target.value);
-                setErrorMessage("");
-                adjustHeight();
-            }}
-            onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                    if (chatStatus === CHAT_STATUS.ENDED && !!chatId)
-                        handleTextFeedback();
-                    else {
-                        event.preventDefault();
-                        addNewMessageToState();
-                    }
-                }
-            }}
-            onKeyUp={(e) => {
-                handleKeyUp();
-                adjustHeight();
-            }}
-            onFocus={disableIosWindowScroll}
-            onBlur={enableIosWindowScroll}
-        />
-                <input
-                    type="file"
-                    ref={hiddenFileInputRef}
-                    onChange={handleFileChange}
-                    style={{display: "none"}}
-                />
-
-                {chatStatus === CHAT_STATUS.ENDED && !!chatId ? (
-                    <FeedbackButtonStyle onClick={() => handleTextFeedback()} styleType={StyledButtonType.GRAY}>
-                        {t("chat.feedback.button.label")}
-                    </FeedbackButtonStyle>
-                ) : (
-                    <>
-                        <button
-                            onKeyDown={addNewMessageToState}
-                            onClick={addNewMessageToState}
-                            className="button"
-                            title={t("keypad.button.label")}
-                            aria-label={t("keypad.button.label")}
-                            tabIndex={0}
-                        >
-                            <img src={Send} alt="Send message icon"/>
-                        </button>
-
-                        {isHiddenFeatureEnabled && renderSendFileButton()}
-                    </>
-                )}
-            </div>
-            <ChatKeypadCharCounter userInput={userInput}/>
-        </ChatKeypadStyled>
+      <ChatKeypadStyled>
+        <button
+          onKeyDown={() => null}
+          onClick={handleUploadClick}
+          className="button"
+          title={t("keypad.button.label")}
+          aria-label={t("keypad.button.label")}
+          tabIndex={0}
+        >
+          <img src={File} alt="Send file icon" />
+        </button>
+      </ChatKeypadStyled>
     );
+  }
 
-    function renderSendFileButton() {
-        if (userInputFile) {
-            return (
-                <ChatKeypadStyled>
-                    <button
-                        onKeyDown={() => null}
-                        onClick={handleUploadClear}
-                        className="button_cancelUpload"
-                        title={t("keypad.button.label")}
-                        aria-label={t("keypad.button.label")}
-                        tabIndex={0}
-                    >
-                        <img src={Close} alt="Close icon"/>
-                    </button>
-                </ChatKeypadStyled>
-            );
-        }
-
-        return (
-            <ChatKeypadStyled>
-                <button
-                    onKeyDown={() => null}
-                    onClick={handleUploadClick}
-                    className="button"
-                    title={t("keypad.button.label")}
-                    aria-label={t("keypad.button.label")}
-                    tabIndex={0}
-                >
-                    <img src={File} alt="Send file icon"/>
-                </button>
-            </ChatKeypadStyled>
-        )
+  async function handleFileRead(file: File): Promise<string | null> {
+    if (!Object.values(AttachmentTypes).some((v) => v === file.type)) {
+      setErrorMessage(`${file.type} file type is not supported`);
+      return null;
     }
 
-    async function handleFileRead(file: File): Promise<string | null> {
-        if (!Object.values(AttachmentTypes).some((v) => v === file.type)) {
-            setErrorMessage(`${file.type} file type is not supported`);
-            return null;
-        }
-
-        if (file.size > MESSAGE_FILE_SIZE_LIMIT) {
-            setErrorMessage(
-                `Max allowed file size is ${formatBytes(MESSAGE_FILE_SIZE_LIMIT)}`
-            );
-            return null;
-        } else {
-            return await convertBase64(file);
-        }
+    if (file.size > MESSAGE_FILE_SIZE_LIMIT) {
+      setErrorMessage(
+        `Max allowed file size is ${formatBytes(MESSAGE_FILE_SIZE_LIMIT)}`
+      );
+      return null;
+    } else {
+      return await convertBase64(file);
     }
+  }
 
-    async function convertBase64(file: File): Promise<any> {
-        return await new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.onload = () => {
-                resolve(fileReader.result);
-            };
-            fileReader.onerror = (error) => {
-                reject(new Error("Error reading file"));
-            };
-        });
-    }
+  async function convertBase64(file: File): Promise<any> {
+    return await new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(new Error("Error reading file"));
+      };
+    });
+  }
 
-    function handleUploadClear() {
-        setUserInputFile(undefined);
-        setUserInput("");
-        setErrorMessage("");
-    }
+  function handleUploadClear() {
+    setUserInputFile(undefined);
+    setUserInput("");
+    setErrorMessage("");
+  }
 };
 
 const FeedbackButtonStyle = styled(StyledButton)`
-    padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem;
 `;
 
 export default ChatKeyPad;

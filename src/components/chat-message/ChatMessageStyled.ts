@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {colors, fontChat} from "../../styling/style_settings";
-import LinkIcon from "../../static/icons/link-external-white.svg";
+
+const LinkIcon = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16px' height='16px' viewBox='0 0 100 100' aria-hidden='true' role='img'%3E%3Cg fill='white'%3E%3Cpath d='M69.37 54.11v25.83a2.61 2.61 0 01-2.6 2.6H20a2.61 2.61 0 01-2.6-2.6v-46.8a2.61 2.61 0 012.6-2.6h31.49V24H14.12a3.26 3.26 0 00-3.25 3.25v58.5A3.26 3.26 0 0014.12 89h58.5a3.26 3.26 0 003.25-3.25V54.11z'/%3E%3Cpath d='M50.75 54.85l30.62-30.62V51a3.91 3.91 0 003.9 3.89A3.86 3.86 0 0089.13 51V14.88A3.86 3.86 0 0085.27 11H49.13a3.87 3.87 0 100 7.73h26.76L45.26 49.37a3.88 3.88 0 105.49 5.48z'/%3E%3C/g%3E%3C/svg%3E")`;
 
 export const MessageFailedWrapperStyled = styled.div`
     display: flex;
@@ -59,7 +60,7 @@ export const ChatMessageStyled = styled.div`
         white-space: pre-wrap;
 
         a {
-            background: url(${LinkIcon}) no-repeat right center;
+            background: ${LinkIcon} no-repeat right center;
             padding-right: 1.25em;
             color: white;
         }
@@ -70,6 +71,16 @@ export const ChatMessageStyled = styled.div`
         width: 2.8em;
         height: 2.8em;
         flex-shrink: 0;
+    }
+
+    .edited-message {
+      color: #9799a4;
+      font-size: 11px;
+      line-height: 20px;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      padding: 0.1rem 3.1rem;
     }
 
     .event-button {
@@ -297,7 +308,7 @@ export const ChatMessageStyled = styled.div`
 
         a {
             color: white;
-            background: url(${LinkIcon}) no-repeat right center;
+            background: ${LinkIcon} no-repeat right center;
             padding-right: 18px;
         }
     }
