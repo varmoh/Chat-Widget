@@ -69,8 +69,14 @@ const ChatKeyPad = (): JSX.Element => {
   const [userInputFile, setUserInputFile] = useState<Attachment>();
   const [errorMessage, setErrorMessage] = useState("");
   const [isKeypadDisabled, setIsKeypadDisabled] = useState(false);
-  const { feedback, chatId, loading, messageQueue, chatStatus } =
-    useChatSelector();
+  const {
+    feedback,
+    chatId,
+    loading,
+    messageQueue,
+    chatStatus,
+    showResponseError,
+  } = useChatSelector();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const hiddenFileInputRef = useRef<HTMLInputElement | null>(null);
@@ -203,6 +209,17 @@ const ChatKeyPad = (): JSX.Element => {
       subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    if (showResponseError && chatId) {
+      const message: Message = {
+        chatId,
+        content: "",
+        authorTimestamp: new Date().toISOString(),
+      };
+      dispatch(sendMessagePreview(message));
+    }
+  }, [showResponseError, chatId, dispatch]);
 
   const handleKeyUp = useCallback(
     debounce(() => {
