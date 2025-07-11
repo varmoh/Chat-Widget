@@ -13,6 +13,10 @@ const initialState: WidgetState = {
     animation: CHAT_BUBBLE_ANIMATION,
     isLoaded: false,
     isBurokrattActive: null,
+    feedbackActive: null,
+    feedbackQuestion: "",
+    feedbackNoticeActive: null,
+    feedbackNotice: "",
   },
   chatId: null,
 };
