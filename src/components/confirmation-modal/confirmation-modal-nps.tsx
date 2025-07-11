@@ -3,7 +3,7 @@ import Button, { ButtonColor } from "../button/button";
 import { useAppDispatch } from "../../store";
 import { endChat, sendChatNpmRating, sendFeedbackMessage, setFeedbackRatingGiven } from "../../slices/chat-slice";
 import { useTranslation } from "react-i18next";
-import { CHAT_EVENTS, StyledButtonType } from "../../constants";
+import {CHAT_EVENTS, isFeedbackRatingColorsEnabled, StyledButtonType} from "../../constants";
 import StyledButton from "../styled-components/styled-button";
 import { ConfirmationModalStyled, ConfirmationModalStyles } from "./ConfirmationModalStyled";
 import useWidgetSelector from "../../hooks/use-widget-selector";
@@ -45,17 +45,21 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
           {widgetConfig.feedbackActive && <p className="feedback-paragraph above">{widgetConfig.feedbackQuestion}</p>}
           {widgetConfig.feedbackActive && (
             <div className="feedback-box-input" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-              {Array.from(Array(11).keys()).map((val: number) => (
-                <StyledButton
-                  className={`feedback-btn ${val <= 6 ? "red" : val <= 8 ? "yellow" : "green"}`}
-                  onClick={(e) => handleFeedback(e.currentTarget.textContent)}
-                  styleType={StyledButtonType.GRAY}
-                  key={val}
-                  active={selectedFeedbackButtonValue === val.toString()}
-                >
-                  <span>{val}</span>
-                </StyledButton>
-              ))}
+              {Array.from(Array(11).keys()).map((val: number) => {
+                const isMediumCheck = val <= 8 ? "yellow" : "green";
+                const color = val <= 6 ? "red" : isMediumCheck;
+                return (
+                  <StyledButton
+                    className={`feedback-btn ${isFeedbackRatingColorsEnabled ? color : ""} ${val == 10 ? "last" : ""}`}
+                    onClick={(e) => handleFeedback(e.currentTarget.textContent)}
+                    styleType={StyledButtonType.GRAY}
+                    key={val}
+                    active={selectedFeedbackButtonValue === val.toString()}
+                  >
+                    <span>{val}</span>
+                  </StyledButton>
+                );
+              })}
             </div>
           )}
           {widgetConfig.feedbackNoticeActive && (

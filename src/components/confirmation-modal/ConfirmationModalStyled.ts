@@ -145,24 +145,30 @@ export const ConfirmationModalStyled = styled.div`
 
     .feedback-btn {
         padding: 0.5rem;
-        width: 32px;
+        width: 28px;
         vertical-align: baseline;
         margin: 0;
         border-radius: 5px;
-        color: white;
-        margin-left: 2px;
+        margin-left: 1px;
         margin-bottom: 2px;
 
         &.red {
+            color: white;
             background-color: #f25050;
         }
 
         &.yellow {
+            color: white;
             background-color: #f1d15a;
         }
 
         &.green {
+            color: white;
             background-color: #46ba45;
+        }
+
+        &.last {
+            padding-left: 6px;
         }
 
         :hover,
@@ -234,24 +240,30 @@ export const ConfirmationModalStyles = styled.div`
 
     .feedback-btn {
         padding: 0.5rem;
-        width: 32px;
+        width: 28px;
         vertical-align: baseline;
         margin: 0;
         border-radius: 5px;
-        color: white;
-        margin-left: 2px;
+        margin-left: 1px;
         margin-bottom: 2px;
 
         &.red {
+            color: white;
             background-color: #f25050;
         }
 
         &.yellow {
+            color: white;
             background-color: #f1d15a;
         }
 
         &.green {
+            color: white;
             background-color: #46ba45;
+        }
+
+        &.last {
+            padding-left: 6px;
         }
 
         :hover,

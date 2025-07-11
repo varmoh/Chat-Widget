@@ -2,6 +2,8 @@ import styled from "styled-components";
 import {colors, fontChat} from "../../styling/style_settings";
 
 export const ChatFeedbackStyled = styled.div`
+    margin: 0 0.8em;
+
     .downloadContainer {
         display: flex;
         flex-direction: column;
@@ -26,24 +28,30 @@ export const ChatFeedbackStyled = styled.div`
 
     .feedback-btn {
         padding: 0.5rem;
-        width: 32px;
+        width: 28px;
         vertical-align: baseline;
         margin: 0;
         border-radius: 5px;
-        color: white;
-        margin-left: 2px;
+        margin-left: 1px;
         margin-bottom: 2px;
 
         &.red {
+            color: white;
             background-color: #f25050;
         }
 
         &.yellow {
+            color: white;
             background-color: #f1d15a;
         }
 
         &.green {
+            color: white;
             background-color: #46ba45;
+        }
+
+        &.last {
+            padding-left: 6px;
         }
 
         :hover,
@@ -72,6 +80,6 @@ export const ChatFeedbackStyled = styled.div`
         justify-content: space-around;
         display: flex;
         flex-flow: row nowrap;
-        margin: 1rem 0.8em 2rem 0.8em;
+        margin: 1rem 0 2rem;
     }
 `

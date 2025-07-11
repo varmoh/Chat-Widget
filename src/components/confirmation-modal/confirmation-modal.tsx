@@ -1,6 +1,7 @@
-import React, {useEffect, useRef, useState} from "react";
+import {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useSelector} from "react-redux";
+import useChatSelector from "../../hooks/use-chat-selector";
 import {closeConfirmationModal} from "../../slices/widget-slice";
 import {RootState, useAppDispatch} from "../../store";
 import Button from "../button";
@@ -8,6 +9,7 @@ import ConfirmationModalNps from "./confirmation-modal-nps";
 import ConfirmationModalDownload from "./confirmation-modal-download";
 import {CHAT_EVENTS} from "../../constants";
 import {ConfirmationModalStyled} from "./ConfirmationModalStyled";
+import { endChat } from "../../slices/chat-slice";
 
 export default function ConfirmationModal(): JSX.Element {
     const {t} = useTranslation();
@@ -15,6 +17,7 @@ export default function ConfirmationModal(): JSX.Element {
     const isConfirmationModelOpen = useSelector(
         (state: RootState) => state.widget.showConfirmationModal
     );
+    const { isChatEnded } = useChatSelector();
     const [nps, setNps] = useState<{
         showNps: boolean;
         feedback: CHAT_EVENTS | null;
@@ -30,11 +33,15 @@ export default function ConfirmationModal(): JSX.Element {
             option === CHAT_EVENTS.CLIENT_LEFT_WITH_ACCEPTED ||
             CHAT_EVENTS.CLIENT_LEFT_WITH_NO_RESOLUTION
         ) {
-            setNps({
+            if (isChatEnded) {
+                dispatch(endChat({event: option, isUpperCase: true}))
+            } else {
+                setNps({
                 ...nps,
                 showNps: true,
                 feedback: option,
-            });
+                });
+            }
         }
     }
 
