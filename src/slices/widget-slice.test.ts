@@ -1,5 +1,16 @@
-import { CHAT_BUBBLE_PROACTIVE_SECONDS, CHAT_SHOW_BUBBLE_MESSAGE, CHAT_BUBBLE_MESSAGE_DELAY_SECONDS, CHAT_BUBBLE_COLOR, CHAT_BUBBLE_ANIMATION } from '../constants';
-import reducer, { closeConfirmationModal, showConfirmationModal, WidgetState } from './widget-slice';
+import {
+  CHAT_BUBBLE_PROACTIVE_SECONDS,
+  CHAT_SHOW_BUBBLE_MESSAGE,
+  CHAT_BUBBLE_MESSAGE_DELAY_SECONDS,
+  CHAT_BUBBLE_COLOR,
+  CHAT_BUBBLE_ANIMATION,
+  IDLE_CHAT_INTERVAL,
+} from "../constants";
+import reducer, {
+  closeConfirmationModal,
+  showConfirmationModal,
+  WidgetState,
+} from "./widget-slice";
 
 const initialState: WidgetState = {
   showConfirmationModal: false,
@@ -13,6 +24,8 @@ const initialState: WidgetState = {
     animation: CHAT_BUBBLE_ANIMATION,
     isLoaded: false,
     isBurokrattActive: null,
+    showIdleWarningMessage: false,
+    chatActiveDuration: IDLE_CHAT_INTERVAL,
     feedbackActive: null,
     feedbackQuestion: "",
     feedbackNoticeActive: null,
@@ -21,8 +34,8 @@ const initialState: WidgetState = {
   chatId: null,
 };
 
-describe('Widget slice', () => {
-  it('should showConfirmationModal', () => {
+describe("Widget slice", () => {
+  it("should showConfirmationModal", () => {
     expect(reducer(initialState, showConfirmationModal())).toEqual({
       showConfirmationModal: true,
       burokrattOnlineStatus: null,

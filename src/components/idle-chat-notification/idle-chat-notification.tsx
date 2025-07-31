@@ -5,8 +5,14 @@ import {endChat, setIdleChat} from '../../slices/chat-slice';
 import {CHAT_EVENTS} from '../../constants';
 import {customJwtExtend} from '../../slices/authentication-slice';
 import {IdleChatNotificationStyled} from "./IdleChatNotificationStyled";
+import {FC} from "react";
 
-const IdleChatNotification = () => {
+interface IdleChatNotificationProps {
+    displayMessage?: boolean;
+}
+
+
+const IdleChatNotification: FC<IdleChatNotificationProps> = ({displayMessage = false}) => {
     const {t} = useTranslation();
     const dispatch = useAppDispatch();
 
@@ -18,35 +24,61 @@ const IdleChatNotification = () => {
                     aria-modal="true"
                     aria-labelledby={t("notifications.idle-chat-notification")}
                 >
-                    <h2 className="byk_title">
-                        {t("notifications.idle-chat-notification")}
-                    </h2>
-                    <div className="byk_actions">
-                        <Button
-                            title={t("widget.action.yes")}
-                            onClick={() => {
-                                dispatch(
-                                    setIdleChat({isIdle: false, lastActive: new Date().getTime()})
-                                );
-                                dispatch(customJwtExtend());
-                            }}
-                        >
-                            {t("widget.action.yes")}
-                        </Button>
-                        <Button
-                            title={t("widget.action.no")}
-                            onClick={() =>
-                                dispatch(
-                                    endChat({
-                                        event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
-                                        isUpperCase: true,
-                                    })
-                                )
-                            }
-                        >
-                            {t("widget.action.no")}
-                        </Button>
-                    </div>
+                    {displayMessage && (
+                        <>
+                        <h2 className="byk_title">
+                            {t("conversation.inactive-termination")}
+                        </h2>
+                        <div className="byk_actions">
+                            <Button
+                                title={t("header.button.close.label")}
+                                onClick={() =>
+                                    dispatch(
+                                        endChat({
+                                            event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
+                                            isUpperCase: true,
+                                        })
+                                    )
+                                }
+                            >
+                                {t("header.button.close.label")}
+                            </Button>
+                        </div>
+                        </>
+                    )}
+                    {!displayMessage && (
+                        <>
+                            <h2 className="byk_title">
+                                {t("notifications.idle-chat-notification")}
+                            </h2>
+                            <div className="byk_actions">
+                                <Button
+                                    title={t("widget.action.yes")}
+                                    onClick={() => {
+                                        dispatch(
+                                            setIdleChat({isIdle: false, lastActive: new Date().getTime()})
+                                        );
+                                        dispatch(customJwtExtend());
+                                    }}
+                                >
+                                    {t("widget.action.yes")}
+                                </Button>
+                                <Button
+                                    title={t("widget.action.no")}
+                                    onClick={() =>
+                                        dispatch(
+                                            endChat({
+                                                event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
+                                                isUpperCase: true,
+                                            })
+                                        )
+                                    }
+                                >
+                                    {t("widget.action.no")}
+                                </Button>
+                            </div>
+                        </>
+                    )}
                 </dialog>
             </div>
         </IdleChatNotificationStyled>

@@ -1,5 +1,6 @@
 {
   "profile.button.open-chat": "Ava vestlus",
+  "conversation.inactive-termination": "Vestlus lõpetati, kuna me ei saanud teilt mõnda aega vastust. Kui vajate endiselt abi, alustage palun uut vestlust.",
   "notifications.chat-redirected": "Vestlus on üle antud teisele nõustajale",
   "notifications.chat-ended": "Teie vestlus on lõppenud",
   "notifications.chat-ended-new-chat": "Bürokratiga suhtlemiseks alustage uue vestlusega",
