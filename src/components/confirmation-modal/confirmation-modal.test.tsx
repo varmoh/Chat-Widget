@@ -40,6 +40,8 @@ describe("Confirmation modal component", () => {
             isBurokrattActive: null,
             showIdleWarningMessage: false,
             chatActiveDuration: IDLE_CHAT_INTERVAL,
+            autoCloseConversation: false,
+            autoCloseText: "",
             feedbackActive: null,
             feedbackQuestion: "",
             feedbackNoticeActive: null,

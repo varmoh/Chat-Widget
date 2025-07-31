@@ -25,6 +25,8 @@ export interface WidgetState {
     isBurokrattActive: boolean | null;
     showIdleWarningMessage: boolean;
     chatActiveDuration: number;
+    autoCloseConversation: boolean;
+    autoCloseText: string;
     feedbackActive: boolean | null;
     feedbackQuestion: string;
     feedbackNoticeActive: boolean | null;
@@ -47,6 +49,9 @@ const initialState: WidgetState = {
     isBurokrattActive: null,
     showIdleWarningMessage: false,
     chatActiveDuration: IDLE_CHAT_INTERVAL,
+    autoCloseConversation: true,
+    autoCloseText:
+      "Aitäh, et pöördusite, küsimuste korral võib alati uuesti ühendust võtta. Kena päeva jätku!",
     feedbackActive: null,
     feedbackQuestion: "",
     feedbackNoticeActive: null,
@@ -103,6 +108,14 @@ export const widgetSlice = createSlice({
         action.payload?.widgetAnimation ?? CHAT_BUBBLE_ANIMATION;
       state.widgetConfig.isBurokrattActive =
         action.payload?.isBurokrattActive === "true";
+      state.widgetConfig.showIdleWarningMessage =
+        action.payload?.showIdleWarningMessage === "true";
+      state.widgetConfig.chatActiveDuration = parseInt(
+        action.payload?.chatActiveDuration ?? IDLE_CHAT_INTERVAL.toString()
+      );
+      state.widgetConfig.autoCloseConversation =
+        action.payload?.autoCloseConversation === "true";
+      state.widgetConfig.autoCloseText = action.payload?.autoCloseText ?? "";
       state.widgetConfig.feedbackActive =
         action.payload?.feedbackActive === "true";
       state.widgetConfig.feedbackQuestion =
