@@ -24,6 +24,7 @@ window._env_ = {
   ENABLE_HIDDEN_FEATURES: "TRUE",
   FEEDBACK_RATING_COLORS_ENABLED: "FALSE",
   IFRAME_TARGET_OIRGIN: "*",
+  SMAX_INTEGRATION: { enabled: false },
 };
 
 beforeAll(() => {
