@@ -11,7 +11,8 @@ import {
   CHAT_SHOW_BUBBLE_MESSAGE,
   CHAT_BUBBLE_MESSAGE_DELAY_SECONDS,
   CHAT_BUBBLE_COLOR,
-  CHAT_BUBBLE_ANIMATION, IDLE_CHAT_INTERVAL,
+  CHAT_BUBBLE_ANIMATION,
+  IDLE_CHAT_INTERVAL,
 } from "../../constants";
 
 let store: EnhancedStore;
@@ -40,7 +41,11 @@ describe("Confirmation modal component", () => {
             showIdleWarningMessage: false,
             chatActiveDuration: IDLE_CHAT_INTERVAL,
             autoCloseConversation: false,
-            autoCloseText: ''
+            autoCloseText: "",
+            feedbackActive: null,
+            feedbackQuestion: "",
+            feedbackNoticeActive: null,
+            feedbackNotice: "",
           },
           chatId: null,
         },

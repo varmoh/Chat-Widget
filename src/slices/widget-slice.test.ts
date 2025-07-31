@@ -4,9 +4,13 @@ import {
   CHAT_BUBBLE_MESSAGE_DELAY_SECONDS,
   CHAT_BUBBLE_COLOR,
   CHAT_BUBBLE_ANIMATION,
-  IDLE_CHAT_INTERVAL
-} from '../constants';
-import reducer, { closeConfirmationModal, showConfirmationModal, WidgetState } from './widget-slice';
+  IDLE_CHAT_INTERVAL,
+} from "../constants";
+import reducer, {
+  closeConfirmationModal,
+  showConfirmationModal,
+  WidgetState,
+} from "./widget-slice";
 
 const initialState: WidgetState = {
   showConfirmationModal: false,
@@ -23,13 +27,17 @@ const initialState: WidgetState = {
     showIdleWarningMessage: false,
     chatActiveDuration: IDLE_CHAT_INTERVAL,
     autoCloseConversation: false,
-    autoCloseText: ''
+    autoCloseText: "",
+    feedbackActive: null,
+    feedbackQuestion: "",
+    feedbackNoticeActive: null,
+    feedbackNotice: "",
   },
   chatId: null,
 };
 
-describe('Widget slice', () => {
-  it('should showConfirmationModal', () => {
+describe("Widget slice", () => {
+  it("should showConfirmationModal", () => {
     expect(reducer(initialState, showConfirmationModal())).toEqual({
       showConfirmationModal: true,
       burokrattOnlineStatus: null,

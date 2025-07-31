@@ -3,6 +3,10 @@ import { UserInfo } from '../model/user-info-model';
 import { RUUTER_ENDPOINTS } from '../constants';
 
 class AuthenticationService {
+  authSmaxUser(code: string): Promise<void> {
+    return http.post(RUUTER_ENDPOINTS.AUTHENTICATE_SMAX_USER, { code });
+  }
+
   loginWithTaraJwt(chatId: string): Promise<void> {
     return http.post(RUUTER_ENDPOINTS.LOGIN_WITH_TARA, { chatId });
   }
