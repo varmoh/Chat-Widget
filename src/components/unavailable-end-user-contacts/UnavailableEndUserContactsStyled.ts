@@ -22,8 +22,11 @@ export const UnavailableEndUserContactsStyle = styled.div`{
         width: 100%;
     }
 
-    h5 {
+    .h5-style {
         margin: 0.5rem 0 0 0;
+        display: block;
+        font-size: .83em;
+        font-weight: bold;
     }
 
     .form-header {

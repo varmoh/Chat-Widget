@@ -88,7 +88,7 @@ const UnavailableEndUserContacts = (): JSX.Element => {
                     {askForContacts && (
                         <div className="form-body">
                             <div className="email-group">
-                                <h5> {t("widget.contacts.contact.mail.label")}</h5>
+                                <div className="h5-style" role="heading" aria-level={5}> {t("widget.contacts.contact.mail.label")}</div>
                                 <InputText
                                     id="email-input"
                                     className="email-input"
@@ -98,7 +98,7 @@ const UnavailableEndUserContacts = (): JSX.Element => {
                                 />
                             </div>
                             <div className="phone-nr-group">
-                                <h5>{t("widget.contacts.contact.phone.label")}</h5>
+                                <div className="h5-style" role="heading" aria-level={5}>{t("widget.contacts.contact.phone.label")}</div>
                                 <InputText
                                     className="phone-nr-input"
                                     id="phone-nr-input"
