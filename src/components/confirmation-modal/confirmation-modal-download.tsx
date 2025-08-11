@@ -90,7 +90,7 @@ const ConfirmationModalDownload = () => {
                             />
                             <hr className="divider"/>
                             {invalidMessage && (
-                                <p className="missingFeedback">{invalidMessage}</p>
+                                <div className="missingFeedback p-style">{invalidMessage}</div>
                             )}
                         </div>
                         <div className="downloadActions">

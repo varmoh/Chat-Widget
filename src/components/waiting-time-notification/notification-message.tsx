@@ -21,7 +21,7 @@ const NotificationMessage: FC<Props> = ({showIcon, children}) => {
                     <InfoIcon/>
                 </div>
                 <div className="message">
-                    <p>{children}</p>
+                    <div className="p-style">{children}</div>
                 </div>
             </div>
         </WaitingTimeNotificationStyles>

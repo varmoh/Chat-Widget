@@ -19,9 +19,30 @@ export const EndUserContactsStyle = styled.div`
         padding-bottom: 5px;
         width: 100%;
     }
+    
+    .p-style {
+        display: block;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .h3-style {
+        display: block;
+        font-size: 1.17em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 0;
+        margin-right: 0;
+        font-weight: bold;
+    }
 
-    h5 {
+    .h5-style {
+        display: block;
+        font-size: .83em;
         margin: 0.5rem 0 0 0;
+        font-weight: bold;
     }
 
     .form-header {

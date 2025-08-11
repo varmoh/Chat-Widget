@@ -42,7 +42,7 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
     <ConfirmationModalStyled>
       <div className="npsContainer">
         <ConfirmationModalStyles>
-          {widgetConfig.feedbackActive && <p className="feedback-paragraph above">{widgetConfig.feedbackQuestion}</p>}
+          {widgetConfig.feedbackActive && <div className="feedback-paragraph above p-style">{widgetConfig.feedbackQuestion}</div>}
           {widgetConfig.feedbackActive && (
             <div className="feedback-box-input" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
               {Array.from(Array(11).keys()).map((val: number) => {
@@ -63,7 +63,7 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
             </div>
           )}
           {widgetConfig.feedbackNoticeActive && (
-            <p className="feedback-paragraph-secondary below">{widgetConfig.feedbackNotice}</p>
+            <div className="feedback-paragraph-secondary below p-style">{widgetConfig.feedbackNotice}</div>
           )}
           {widgetConfig.feedbackNoticeActive && (
             <input

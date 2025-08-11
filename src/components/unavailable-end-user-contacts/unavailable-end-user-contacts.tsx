@@ -83,8 +83,8 @@ const UnavailableEndUserContacts = (): JSX.Element => {
         <UnavailableEndUserContactsStyle>
             <form>
                 <div className="container">
-                    <h3 className="form-header"><Markdownify message={contactContentMessage}></Markdownify></h3>
-                    {invalidMessage && <p className="missing-feeback">{invalidMessage}</p>}
+                    <div className="form-header h3-style" role="heading" aria-level={3}><Markdownify message={contactContentMessage}></Markdownify></div>
+                    {invalidMessage && <div className="missing-feeback p-style">{invalidMessage}</div>}
                     {askForContacts && (
                         <div className="form-body">
                             <div className="email-group">
@@ -108,7 +108,7 @@ const UnavailableEndUserContacts = (): JSX.Element => {
                                 />
                             </div>
                             <div className="comment-group">
-                                <h5>{t("widget.contacts.contact.comment.label")}</h5>
+                                <div className="h5-style" role="heading" aria-level={5}>{t("widget.contacts.contact.comment.label")}</div>
                                 <TextAreaStyle
                                     rows={3}
                                     id="comment-input"

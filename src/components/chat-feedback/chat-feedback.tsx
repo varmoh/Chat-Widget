@@ -45,9 +45,9 @@ const ChatFeedback = (): JSX.Element => {
 
     return (
       <ChatFeedbackStyled>
-        {widgetConfig.feedbackActive && <p className="feedback-paragraph above">{widgetConfig.feedbackQuestion}</p>}
+        {widgetConfig.feedbackActive && <div className="feedback-paragraph above p-style">{widgetConfig.feedbackQuestion}</div>}
         {widgetConfig.feedbackActive && feedback.showFeedbackWarning && (
-          <p className="missing-feeback">{t("feedback.warningText")}</p>
+          <div className="missing-feeback p-style">{t("feedback.warningText")}</div>
         )}
         {widgetConfig.feedbackActive && (
           <div className="feedback-box-input" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
@@ -74,7 +74,7 @@ const ChatFeedback = (): JSX.Element => {
             {loading ? <span className="spinner"></span> : t("widget.action.download-chat")}
           </a>
         </div>
-        {widgetConfig.feedbackNoticeActive && <p className="feedback-paragraph below">{widgetConfig.feedbackNotice}</p>}
+        {widgetConfig.feedbackNoticeActive && <div className="feedback-paragraph below p-style">{widgetConfig.feedbackNotice}</div>}
       </ChatFeedbackStyled>
     );
 };

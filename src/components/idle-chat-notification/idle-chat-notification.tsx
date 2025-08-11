@@ -27,9 +27,9 @@ const IdleChatNotification: FC<IdleChatNotificationProps> = ({displayMessage = f
                 >
                     {displayMessage && (
                         <>
-                        <h2 className="byk_title">
+                        <div className="byk_title h2-style" role="heading" aria-level={2}>
                             {customMessage || t("conversation.inactive-termination")}
-                        </h2>
+                        </div>
                         <div className="byk_actions">
                             <Button
                                 title={t("header.button.close.label")}
@@ -49,9 +49,9 @@ const IdleChatNotification: FC<IdleChatNotificationProps> = ({displayMessage = f
                     )}
                     {!displayMessage && (
                         <>
-                            <h2 className="byk_title">
+                            <div className="byk_title h2-style" role="heading" aria-level={2}>
                                 {t("notifications.idle-chat-notification")}
-                            </h2>
+                            </div>
                             <div className="byk_actions">
                                 <Button
                                     title={t("widget.action.yes")}
