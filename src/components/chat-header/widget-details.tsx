@@ -23,8 +23,8 @@ const WidgetDetails = (): JSX.Element => {
                     </TermsAndConditionsStyles>
                 </div>
                 <div className="detail-text">
-                    <h4>{t('widget.details-header')}</h4>
-                    <p>{t('widget.details-body')}</p>
+                    <div className="h4-style" role="heading" aria-level={4}>{t('widget.details-header')}</div>
+                    <div className="p-style">{t('widget.details-body')}</div>
                 </div>
                 <div className="flags center">
                     <img className="eu-sf-logo" src={EU_SF_logo_src} alt={t('alt.label.EU_SF')} height="90"

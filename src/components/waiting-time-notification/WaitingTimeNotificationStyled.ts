@@ -8,6 +8,14 @@ export const WaitingTimeNotificationStyles = styled.div`
         gap: 10px;
         margin-right: 10px;
     }
+    
+    .p-style {
+        display: block;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 0;
+        margin-right: 0;
+    }
 
     .form {
         grid-area: form;

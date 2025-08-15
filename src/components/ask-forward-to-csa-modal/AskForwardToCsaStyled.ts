@@ -21,4 +21,14 @@ export const AskForwardToCsaModalStyles = styled.div`
         align-items: center;
         gap: 0.5rem;
     }
+    
+    .h3-style {
+        display: block;
+        font-size: 1.17em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 0;
+        margin-right: 0;
+        font-weight: bold;
+    }
 `;

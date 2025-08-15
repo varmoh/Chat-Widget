@@ -17,6 +17,16 @@ export const IdleChatNotificationStyled = styled.div`
         align-items: center;
         gap: 2px;
     }
+    
+    .h2-style {
+        display: block;
+        font-size: 1.5em;
+        margin-top: 0.83em;
+        margin-bottom: 0.83em;
+        margin-left: 0;
+        margin-right: 0;
+        font-weight: bold;
+    }
 
     .byk_content {
         background-color: #fff;

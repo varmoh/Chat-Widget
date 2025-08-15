@@ -82,6 +82,14 @@ export const ChatMessageStyled = styled.div`
       user-select: none;
       padding: 0.1rem 3.1rem;
     }
+    
+    .p-style {
+        display: block;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 0;
+        margin-right: 0;
+    }
 
     .event-button {
         cursor: pointer;

@@ -13,6 +13,24 @@ export const ChatFeedbackStyled = styled.div`
         right: 0;
         left: 0;
     }
+    
+    .p-style {
+        display: block;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .h2-style {
+        display: block;
+        font-size: 1.5em;
+        margin-top: 0.83em;
+        margin-bottom: 0.83em;
+        margin-left: 0;
+        margin-right: 0;
+        font-weight: bold;
+    }
 
     .downloadLink {
         font-family: ${fontChat};

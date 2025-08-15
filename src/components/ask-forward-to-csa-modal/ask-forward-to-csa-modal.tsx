@@ -16,7 +16,7 @@ const AskForwardToCsaModal = (): JSX.Element => {
     return (
         <AskForwardToCsaModalStyles style={{ height: "100%" }}>
             <div className="container">
-                <h3 className="header">{forwardToCsaMessage}</h3>
+                <div className="h3-style header" role="heading" aria-level={3}>{forwardToCsaMessage}</div>
                 <div className="buttons">
                     <StyledButton styleType={StyledButtonType.GRAY} onClick={() => {
                         dispatch(setShowAskToForwardToCsaForm(false));

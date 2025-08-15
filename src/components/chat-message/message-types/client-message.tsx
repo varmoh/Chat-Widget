@@ -61,10 +61,10 @@ const ClientMessage = (props: {
                         </div>
                         <div className="content file">
                             <img className="fileIcon" src={File} alt="File icon"/>
-                            <p className="fileName">{props.message?.file.name}</p>
-                            <p className="fileData">{`${props.message?.file.type
+                            <div className="fileName p-style">{props.message?.file.name}</div>
+                            <div className="fileData p-style">{`${props.message?.file.type
                                 .split("/")[1]
-                                .toUpperCase()}, ${formatBytes(props.message?.file.size)}`}</p>
+                                .toUpperCase()}, ${formatBytes(props.message?.file.size)}`}</div>
                         </div>
                     </ChatMessageStyled>
                 </div>

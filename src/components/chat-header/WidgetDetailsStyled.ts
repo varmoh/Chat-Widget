@@ -8,6 +8,24 @@ export const WidgetDetailsStyles = styled(motion.div)`
   gap: 0.5rem;
   align-items: center;
   margin: auto;
+    
+  .h4-style {
+      display: block;
+      margin-top: 1.33em;
+      margin-bottom: 1.33em;
+      margin-left: 0;
+      margin-right: 0;
+      font-weight: bold;
+  }  
+    
+  .p-style {
+      display: block;
+      margin-bottom: 1em;
+      margin-left: 0;
+      margin-right: 0;
+      font-size: small;
+      margin-top: -1rem;
+  }  
 
   .eu-sf-logo {
     margin-top: 3px;

@@ -55,9 +55,9 @@ export default function ConfirmationModal(): JSX.Element {
                 >
                     {nps.showNps === false ? (
                         <>
-                            <h2 className="title">
+                            <div className="title h2-style" role="heading" aria-level={2}>
                                 {t("widget.action.close-confirmation")}
-                            </h2>
+                            </div>
                             <div className="actions">
                                 <Button
                                     title={t("header.button.confirmation.yes")}
