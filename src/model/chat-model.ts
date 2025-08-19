@@ -7,4 +7,5 @@ export interface Chat {
   updated?: string;
   ended?: string;
   externalId?: string;
+  domain?: string;
 }

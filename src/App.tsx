@@ -53,6 +53,7 @@ declare global {
       };
       ENABLE_HIDDEN_FEATURES: string;
       FEEDBACK_RATING_COLORS_ENABLED: string;
+      ENABLE_MULTI_DOMAIN: string;
       IFRAME_TARGET_OIRGIN: string;
       SMAX_INTEGRATION: { enabled: boolean };
     };

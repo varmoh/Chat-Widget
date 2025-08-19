@@ -1,12 +1,12 @@
-import { UserContacts } from "./../model/user-contacts-model";
+import {UserContacts} from "./../model/user-contacts-model";
 import http from "./http-service";
-import { Attachment, Message } from "../model/message-model";
-import { Chat } from "../model/chat-model";
-import { RUUTER_ENDPOINTS } from "../constants";
-import { EndUserTechnicalData } from "../model/chat-ini-model";
-import { EmergencyNoticeResponse } from "../model/emergency-notice-response-model";
-import { EstimatedWaiting } from "../slices/chat-slice";
-import notificationHttp from "./notification-service";
+import {Attachment, Message} from "../model/message-model";
+import {Chat} from "../model/chat-model";
+import {RUUTER_ENDPOINTS} from "../constants";
+import {EndUserTechnicalData} from "../model/chat-ini-model";
+import {EmergencyNoticeResponse} from "../model/emergency-notice-response-model";
+import {EstimatedWaiting} from "../slices/chat-slice";
+import {getMultiDomainPath, getMultiDomainUrl} from "./multidomain-service";
 
 interface Document {
   _id: string;
@@ -30,7 +30,7 @@ class ChatService {
     holidays: string[],
     holidayNames: string
   ): Promise<Chat> {
-    return http.post(RUUTER_ENDPOINTS.INIT_CHAT, { message, endUserTechnicalData, holidays, holidayNames });
+    return http.post(RUUTER_ENDPOINTS.INIT_CHAT, { message, endUserTechnicalData, holidays, holidayNames , domain: getMultiDomainPath()});
   }
 
   getChatById(): Promise<Chat> {
@@ -38,11 +38,11 @@ class ChatService {
   }
 
   sendNewMessage(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, { message, holidays, holidayNames });
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, { message, holidays, holidayNames, domain: getMultiDomainPath()});
   }
 
   sendNewSilentMessage(message: Message, holidays: string[], holidayNames: string): Promise<Document> {
-    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, { message, holidays, holidayNames, silent: true });
+    return http.post(RUUTER_ENDPOINTS.POST_MESSAGE, { message, holidays, holidayNames, silent: true, domain: getMultiDomainPath() });
   }
 
   sendMessagePreview({ chatId, content }: Message): Promise<void> {
@@ -66,11 +66,11 @@ class ChatService {
   }
 
   getGreeting(): Promise<{ eng: string; est: string; isActive: boolean }> {
-    return http.get(RUUTER_ENDPOINTS.GET_GREETING);
+    return http.get(RUUTER_ENDPOINTS.GET_GREETING + getMultiDomainUrl());
   }
 
   getEmergencyNotice(): Promise<EmergencyNoticeResponse> {
-    return http.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
+    return http.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE + getMultiDomainUrl());
   }
 
   getNewMessages(timeRangeBegin: string): Promise<Message[]> {
@@ -78,7 +78,7 @@ class ChatService {
   }
 
   get(): Promise<EmergencyNoticeResponse> {
-    return http.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE);
+    return http.get(RUUTER_ENDPOINTS.GET_EMERGENCY_NOTICE + getMultiDomainUrl());
   }
 
   sendNpmRating({

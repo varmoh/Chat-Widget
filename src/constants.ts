@@ -156,3 +156,7 @@ export const isHiddenFeatureEnabled =
 export const isFeedbackRatingColorsEnabled =
   window._env_.FEEDBACK_RATING_COLORS_ENABLED?.toLowerCase().trim() == 'true' ||  
   window._env_.FEEDBACK_RATING_COLORS_ENABLED?.toLowerCase().trim() == '1';
+
+export const isMultiDomainEnabled =
+    window._env_.ENABLE_MULTI_DOMAIN?.toLowerCase().trim() == 'true' ||
+    window._env_.ENABLE_MULTI_DOMAIN?.toLowerCase().trim() == '1';
