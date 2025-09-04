@@ -161,8 +161,9 @@ const Chat = (): JSX.Element => {
           } else {
             lastActive = idleChat.lastActive;
           }
+
           const differenceInSeconds = getIdleTime(lastActive);
-          if (differenceInSeconds >= widgetConfig.chatActiveDuration) {
+          if (differenceInSeconds >= (widgetConfig.chatActiveDuration * 60)) {
             dispatch(setIdleChat({ isIdle: true }));
             if (showConfirmationModal) {
               dispatch(
@@ -173,7 +174,7 @@ const Chat = (): JSX.Element => {
               );
             }
           }
-        }, widgetConfig.chatActiveDuration * 1000);
+        }, widgetConfig.chatActiveDuration * 60 * 1000);
         return () => {
           clearInterval(interval);
         };
@@ -203,7 +204,7 @@ const Chat = (): JSX.Element => {
           const differenceInSeconds = getIdleTime(lastActive);
           if (
             differenceInSeconds >=
-            widgetConfig.chatActiveDuration + IDLE_CHAT_CHOICES_INTERVAL
+              (widgetConfig.chatActiveDuration * 60) + IDLE_CHAT_CHOICES_INTERVAL
           ) {
             dispatch(
               endChat({
