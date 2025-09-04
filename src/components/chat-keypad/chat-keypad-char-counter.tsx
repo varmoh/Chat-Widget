@@ -53,7 +53,7 @@ const ChatKeypadCharCounterStyle = styled.div<{ warning: boolean; isVisible: boo
     ${(props) => (props.warning ? orangeVariant : grayVariant)}
     visibility: ${(props) => (props.isVisible ? 'visible' : 'hidden')};
     font-size: 0.7rem;
-    margin: -0.5rem 3.5rem 0.25rem 0;
+    margin: -0.4rem 3.5rem 0.25rem 0;
     display: flex;
     justify-content: flex-end;
 `;
