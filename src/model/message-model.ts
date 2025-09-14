@@ -24,6 +24,8 @@ export interface Message {
   preview?: string;
   updated?: string;
   csaTitle?: string;
+  isStreaming?: boolean;
+  streamId?: string;
   data?: {
     forwarding_validation?: string;
   };

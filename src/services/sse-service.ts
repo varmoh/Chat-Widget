@@ -7,7 +7,7 @@ const sse = <T>(url: string, onMessage: (data: T) => void): EventSource => {
     const response = JSON.parse(event.data);
 
     if (response != undefined) {
-      onMessage(Object.values(response)[0] as T);
+      onMessage(response);
     }
   };
 
