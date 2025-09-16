@@ -21,12 +21,6 @@ import Markdownify from "./Markdownify";
 import {ChatMessageStyled} from "../ChatMessageStyled";
 import { format } from "date-fns";
 
-const leftAnimation = {
-    animate: {opacity: 1, x: 0},
-    initial: {opacity: 0, x: -20},
-    transition: {duration: 0.25, delay: 0.25},
-};
-
 const AdminMessage = ({message}: { message: Message }): JSX.Element => {
     const {t} = useTranslation();
     const dispatch = useAppDispatch();
@@ -69,9 +63,6 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
 
     return (
       <motion.div
-        animate={leftAnimation.animate}
-        initial={leftAnimation.initial}
-        transition={leftAnimation.transition}
         ref={messageRef}
       >
         <div>

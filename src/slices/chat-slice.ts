@@ -669,6 +669,7 @@ export const chatSlice = createSlice({
       state.messages[estimatedMsgIndex].content = "hidden";
     },
     updateStreamingMessage: (state, action: PayloadAction<Message>) => {
+      state.showLoadingMessage = false;
       const streamMessage = action.payload;
 
       const existingStreamIndex = state.messages.findIndex(
@@ -695,6 +696,7 @@ export const chatSlice = createSlice({
       }
     },
     clearStreamingMessage: (state, action: PayloadAction<string | undefined>) => {
+      state.showLoadingMessage = false;
       if (action.payload) {
         state.messages = state.messages.filter((msg) => !(msg.isStreaming && msg.streamId === action.payload));
       } else {
@@ -702,6 +704,7 @@ export const chatSlice = createSlice({
       }
     },
     finalizeStreamingMessage: (state, action: PayloadAction<{ streamId: string; finalContent: string }>) => {
+      state.showLoadingMessage = false;
       const { streamId, finalContent } = action.payload;
 
       state.messages = state.messages.map((message) => {
