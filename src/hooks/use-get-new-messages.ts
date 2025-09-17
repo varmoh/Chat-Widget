@@ -6,7 +6,6 @@ import { Message } from "../model/message-model";
 import {
   addMessagesToDisplay,
   clearStreamingMessage,
-  finalizeStreamingMessage,
   handleStateChangingEventMessages,
   sendNewLlmMessage,
   updateStreamingMessage,
@@ -22,6 +21,7 @@ const useGetNewMessages = (): void => {
   const [lastReadMessageTimestampValue, setLastReadMessageTimestampValue] = useState("");
   const currentStreamContent = useRef("");
   const currentStreamId = useRef("");
+  const currentStreamUuid = useRef("");
 
   useEffect(() => {
     if (lastReadMessageTimestamp && !lastReadMessageTimestampValue) {
@@ -53,12 +53,12 @@ const useGetNewMessages = (): void => {
         } else if (type === "stream_start") {
           currentStreamContent.current = "";
           currentStreamId.current = data.streamId;
-
+          currentStreamUuid.current = uuidv4();
         } else if (type === "stream_chunk" && data.channelId === chatId) {
           currentStreamContent.current += data.content;
 
           const updatedMessage: Message = {
-            id: `stream-${data.channelId}`,
+            id: currentStreamUuid.current,
             content: currentStreamContent.current,
             authorRole: "assistant",
             created: new Date().toISOString(),
@@ -70,19 +70,33 @@ const useGetNewMessages = (): void => {
 
           dispatch(updateStreamingMessage(updatedMessage));
         } else if (type === "stream_complete" && data.channelId === chatId) {
+          const finalMessage: Message = {
+            id: currentStreamUuid.current,
+            content: currentStreamContent.current,
+            authorRole: "assistant",
+            created: new Date().toISOString(),
+            isStreaming: false,
+            streamId: data.channelId,
+            chatId: chatId,
+            authorTimestamp: new Date().toISOString(),
+          };
+
           dispatch(
-            finalizeStreamingMessage({
-              streamId: data.channelId,
-              finalContent: currentStreamContent.current,
+            sendNewLlmMessage({
+              message: finalMessage,
+              context: data.context,
+              uuid: currentStreamUuid.current,
             })
           );
 
           currentStreamContent.current = "";
           currentStreamId.current = "";
+          currentStreamUuid.current = "";
         } else if (type === "stream_error" && data.channelId === chatId) {
           dispatch(clearStreamingMessage(data.channelId));
           currentStreamContent.current = "";
           currentStreamId.current = "";
+          currentStreamUuid.current = "";
         } else if (type === "complete_response") {
           const uuid = uuidv4();
           const message: Message = {

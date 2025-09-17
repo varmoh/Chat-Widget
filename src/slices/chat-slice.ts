@@ -707,23 +707,6 @@ export const chatSlice = createSlice({
         state.messages = state.messages.filter((msg) => !msg.isStreaming);
       }
     },
-    finalizeStreamingMessage: (state, action: PayloadAction<{ streamId: string; finalContent: string }>) => {
-      state.showLoadingMessage = false;
-      const { streamId, finalContent } = action.payload;
-
-      state.messages = state.messages.map((message) => {
-        if (message.isStreaming && message.streamId === streamId) {
-          return {
-            ...message,
-            content: finalContent,
-            isStreaming: false,
-            id: `message-${Date.now()}`,
-          };
-        }
-        return message;
-      });
-    },
-
     addStreamError: (state, action: PayloadAction<Message>) => {
       const errorMessage = action.payload;
       state.messages = filterDuplicatMessages([...state.messages, errorMessage]);
@@ -902,7 +885,6 @@ export const {
   removeEstimatedWaitingMessage,
   updateStreamingMessage,
   clearStreamingMessage,
-  finalizeStreamingMessage,
   addStreamError,
 } = chatSlice.actions;
 
