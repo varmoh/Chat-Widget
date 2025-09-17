@@ -115,6 +115,7 @@ export enum RUUTER_ENDPOINTS {
   GET_NEW_MESSAGES = '/chats/messages/new',
   POST_MESSAGE = '/chats/messages/add',
   POST_MESSAGE_PREVIEW = '/chats/messages/preview',
+  POST_LLM_MESSAGE = '/chats/messages/llm',
   GET_MESSAGES_BY_CHAT_ID = '/chats/messages/all',
   END_CHAT = '/chats/end',
   GET_GREETING = '/chats/greeting',

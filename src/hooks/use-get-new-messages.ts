@@ -8,10 +8,12 @@ import {
   clearStreamingMessage,
   finalizeStreamingMessage,
   handleStateChangingEventMessages,
+  sendNewLlmMessage,
   updateStreamingMessage,
 } from "../slices/chat-slice";
 import { isDisplayableMessages, isStateChangingEventMessage } from "../utils/state-management-utils";
 import chatService from "../services/chat-service";
+import { v4 as uuidv4 } from "uuid";
 
 const useGetNewMessages = (): void => {
   const { lastReadMessageTimestamp, isChatEnded, chatId } = useChatSelector();
@@ -63,7 +65,7 @@ const useGetNewMessages = (): void => {
             isStreaming: true,
             streamId: data.channelId,
             chatId: chatId,
-            authorTimestamp: "",
+            authorTimestamp: new Date().toISOString(),
           };
 
           dispatch(updateStreamingMessage(updatedMessage));
@@ -82,16 +84,18 @@ const useGetNewMessages = (): void => {
           currentStreamContent.current = "";
           currentStreamId.current = "";
         } else if (type === "complete_response") {
+          const uuid = uuidv4();
           const message: Message = {
-            id: `message-${Date.now()}`,
+            id: uuid,
             content: data.content,
             authorRole: "assistant",
             created: new Date().toISOString(),
             isStreaming: false,
             chatId: chatId,
-            authorTimestamp: "",
+            authorTimestamp: new Date().toISOString(),
           };
           dispatch(addMessagesToDisplay([message]));
+          dispatch(sendNewLlmMessage({ message, context: data.context, uuid }));
         }
       };
 

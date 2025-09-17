@@ -1,6 +1,6 @@
 import { UserContacts } from "./../model/user-contacts-model";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Attachment, Message } from "../model/message-model";
+import { Attachment, Message, SendLLMMessagePayload } from "../model/message-model";
 import ChatService from "../services/chat-service";
 import {
   AUTHOR_ROLES,
@@ -393,6 +393,10 @@ export const sendNewMessage = createAsyncThunk(
   }
 );
 
+export const sendNewLlmMessage = createAsyncThunk("chat/sendNewLlmMessage", (payload: SendLLMMessagePayload) => {
+  const { holidays, holidayNames } = getHolidays();
+  return ChatService.sendNewLlmMessage(payload.message, holidays, holidayNames, payload.context, payload.uuid);
+});
 export const sendNewSilentMessage = createAsyncThunk(
   "chat/sendNewSilentMessage",
   (message: Message) => {

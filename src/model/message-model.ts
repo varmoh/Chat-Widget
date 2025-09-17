@@ -57,3 +57,9 @@ export interface MessageButton {
   title: string;
   payload: string;
 }
+
+export interface SendLLMMessagePayload {
+  message: Message;
+  context: any;
+  uuid: string;
+}
