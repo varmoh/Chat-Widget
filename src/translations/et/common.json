@@ -81,6 +81,7 @@
   "widget.action.no-dont-close": "Ei soovi sulgeda",
   "widget.action.skip": "Jäta vahele",
   "widget.action.confirm": "Kinnita",
+  "widget.action.continue": "Jatka",
   "widget.action.download-chat": "Laadi vestlus alla",
   "widget.action.forward-chat": "Edasta vestlus e-posti",
   "widget.action.forward-email": "Teie e-posti aadress",

@@ -1,24 +1,23 @@
 import {useTranslation} from 'react-i18next';
 import Button from '../button/button';
 import {useAppDispatch} from '../../store';
-import {setIdleChat} from '../../slices/chat-slice';
-import {customJwtExtend} from '../../slices/authentication-slice';
-import {IdleChatNotificationStyled} from "./IdleChatNotificationStyled";
+import {resetChatState, setIdleChat} from '../../slices/chat-slice';
+import {PostChatMessageStyled} from "./PostChatMessageStyled";
 import {FC} from "react";
 
-interface IdleChatNotificationProps {
+interface PostChatMessageProps {
     customMessage?: string;
 }
 
 
-const IdleChatNotification: FC<IdleChatNotificationProps> = ({customMessage}) => {
+const PostChatMessage: FC<PostChatMessageProps> = ({customMessage}) => {
     const {t} = useTranslation();
     const dispatch = useAppDispatch();
 
     // {customMessage || t("conversation.inactive-termination")}
 
     return (
-        <IdleChatNotificationStyled>
+        <PostChatMessageStyled>
             <div className="byk_container">
                 <dialog
                     className="byk_content"
@@ -31,22 +30,21 @@ const IdleChatNotification: FC<IdleChatNotificationProps> = ({customMessage}) =>
                         </div>
                         <div className="byk_actions">
                             <Button
-                                title={t("widget.action.yes")}
+                                title={t("header.button.close.label")}
                                 onClick={() => {
                                     dispatch(
-                                        setIdleChat({isIdle: false, lastActive: new Date().getTime()})
+                                        setIdleChat(resetChatState)
                                     );
-                                    dispatch(customJwtExtend());
                                 }}
                             >
-                                {t("widget.action.continue")}
+                                {t("header.button.close.label")}
                             </Button>
                         </div>
                     </>
                 </dialog>
             </div>
-        </IdleChatNotificationStyled>
+        </PostChatMessageStyled>
     );
 };
 
-export default IdleChatNotification;
+export default PostChatMessage;
