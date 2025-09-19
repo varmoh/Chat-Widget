@@ -127,7 +127,7 @@ class ChatService {
     chatId: string,
     email: string | null
   ): Promise<string> {
-    return http.post(RUUTER_ENDPOINTS.DOWNLOAD_CHAT, { chatId, email });
+    return http.post(RUUTER_ENDPOINTS.DOWNLOAD_CHAT, { chatId, email: email ?? "" });
   }
 
   sendAttachment(attachment: Attachment): Promise<void> {
