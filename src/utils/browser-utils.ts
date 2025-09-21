@@ -26,7 +26,7 @@ export const isChatAboutToBeTerminated = () => {
 
   if (!terminationTime) return false;
 
-  return 4000 > Date.now() - parseInt(terminationTime);
+  return 9500 > Date.now() - parseInt(terminationTime);
 };
 
 export const isMobileWidth = () => {

@@ -155,14 +155,16 @@ class ChatService {
     // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
     navigator.sendBeacon(
       `${window._env_.NOTIFICATION_NODE_URL}${RUUTER_ENDPOINTS.ADD_CHAT_TO_TERMINATION_QUEUE}`,
-      JSON.stringify({ chatId })
+      JSON.stringify({ chatId, timeout: 10 })
     );
   }
 
-  removeChatFromTerminationQueue(chatId: string): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.REMOVE_CHAT_FROM_TERMINATION_QUEUE, {
-      chatId,
-    });
+  removeChatFromTerminationQueue(chatId: string): void {
+    // i made it same as add to termination que
+    navigator.sendBeacon(
+        `${window._env_.NOTIFICATION_NODE_URL}${RUUTER_ENDPOINTS.REMOVE_CHAT_FROM_TERMINATION_QUEUE}`,
+        JSON.stringify({ chatId })
+    );
   }
 }
 
