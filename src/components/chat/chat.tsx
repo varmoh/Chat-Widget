@@ -42,9 +42,10 @@ import useWindowDimensions from "../../hooks/useWindowDimensions";
 import ResponseErrorNotification from "../response-error-notification/response-error-notification";
 import useTabActive from "../../hooks/useTabActive";
 import AskForwardToCsa from "../ask-forward-to-csa-modal/ask-forward-to-csa-modal";
-import { isIphone, isMobileWidth } from "../../utils/browser-utils";
+import { isIphone } from "../../utils/browser-utils";
 import { ChatStyles } from "./ChatStyled";
 import useWidgetSelector from "../../hooks/use-widget-selector";
+import PostChatMessage from "../post-chat-message/post-chat-message";
 
 const RESIZABLE_HANDLES = {
   topLeft: true,
@@ -79,6 +80,8 @@ const Chat = (): JSX.Element => {
     chatMode,
     showResponseError,
   } = useChatSelector();
+  const [ idleTimerSelection, setIdleTimerSelection ] = useState<number>(IDLE_CHAT_CHOICES_INTERVAL)
+  const [ displayEndMessage, setDisplayEndMessage ] = useState<boolean>(false)
 
   const isTabActive = useTabActive();
 
@@ -106,6 +109,14 @@ const Chat = (): JSX.Element => {
 
     return () => vv?.removeEventListener("resize", setChatHeight);
   }, []);
+
+  useEffect(() => {
+    if(!widgetConfig.showIdleWarningMessage) {
+      setIdleTimerSelection(0);
+    } else {
+      setIdleTimerSelection(IDLE_CHAT_CHOICES_INTERVAL)
+    }
+  }, [widgetConfig]);
 
   useEffect(() => {
     if (
@@ -151,7 +162,7 @@ const Chat = (): JSX.Element => {
   };
 
   useLayoutEffect(() => {
-    if (isChatEnded === false && widgetConfig.autoCloseConversation) {
+    if (!isChatEnded) {
       if (messages.length > 0) {
         const interval = setInterval(() => {
           let lastActive;
@@ -165,14 +176,6 @@ const Chat = (): JSX.Element => {
           const differenceInSeconds = getIdleTime(lastActive);
           if (differenceInSeconds >= (widgetConfig.chatActiveDuration * 60)) {
             dispatch(setIdleChat({ isIdle: true }));
-            if (showConfirmationModal) {
-              dispatch(
-                endChat({
-                  event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
-                  isUpperCase: true,
-                })
-              );
-            }
           }
         }, widgetConfig.chatActiveDuration * 60 * 1000);
         return () => {
@@ -191,7 +194,7 @@ const Chat = (): JSX.Element => {
   ]);
 
   useLayoutEffect(() => {
-    if (isChatEnded === false && widgetConfig.autoCloseConversation) {
+    if (!isChatEnded && !displayEndMessage) {
       if (messages.length > 0) {
         const interval = setInterval(() => {
           let lastActive;
@@ -204,16 +207,21 @@ const Chat = (): JSX.Element => {
           const differenceInSeconds = getIdleTime(lastActive);
           if (
             differenceInSeconds >=
-              (widgetConfig.chatActiveDuration * 60) + IDLE_CHAT_CHOICES_INTERVAL
+              (widgetConfig.chatActiveDuration * 60) + idleTimerSelection
           ) {
+            if(widgetConfig.showAutoCloseText) {
+              setDisplayEndMessage(true);
+            }
+            dispatch(setIdleChat({ isIdle: false }));
             dispatch(
               endChat({
                 event: CHAT_EVENTS.CLIENT_LEFT_FOR_UNKNOWN_REASONS,
                 isUpperCase: true,
+                keepChatOpen: widgetConfig.showAutoCloseText ?? false
               })
-            );
+            )
           }
-        }, IDLE_CHAT_CHOICES_INTERVAL * 1000);
+        }, idleTimerSelection * 1000);
         return () => {
           clearInterval(interval);
         };
@@ -291,11 +299,15 @@ const Chat = (): JSX.Element => {
               !showContactForm &&
               !showUnavailableContactForm &&
               !showAskToForwardToCsaForm && <ChatContent />}
-            {idleChat.isIdle && (
+            {idleChat.isIdle && !displayEndMessage && widgetConfig.showIdleWarningMessage && (
               <IdleChatNotification
-                displayMessage={widgetConfig.showIdleWarningMessage}
-                customMessage={widgetConfig.autoCloseText}
+                customMessage={widgetConfig.idleMessage}
               />
+            )}
+            {displayEndMessage && (
+                <PostChatMessage
+                    customMessage={widgetConfig.autoCloseText}
+                />
             )}
             {showResponseError && !isChatEnded && <ResponseErrorNotification />}
             {showFeedbackResult ? (

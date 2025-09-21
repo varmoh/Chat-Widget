@@ -17,6 +17,7 @@
   "notifications.queue-number": "All customer service agents are currently busy. You are {{number}} in the queue",
   "notifications.waiting-time": "Estimated waiting time in minutes: {{time}}",
   "notifications.idle-chat-notification": "Do you want to continue the conversation?",
+  "notifications.post-chat-notification": "Chat has ended. If need assistance, start conversation again.",
   "notifications.offline": "Service currently not available!",
   "notifications.ask-contact-information": "Would you like to leave your contact information, so customer support can get back to you?",
   "notifications.human-took-over": "A human took the conversation over",

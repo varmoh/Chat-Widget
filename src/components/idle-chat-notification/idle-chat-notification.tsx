@@ -15,8 +15,6 @@ const IdleChatNotification: FC<IdleChatNotificationProps> = ({customMessage}) =>
     const {t} = useTranslation();
     const dispatch = useAppDispatch();
 
-    // {customMessage || t("conversation.inactive-termination")}
-
     return (
         <IdleChatNotificationStyled>
             <div className="byk_container">

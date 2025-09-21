@@ -188,6 +188,72 @@ const initialState: ChatState = {
   failedMessages: [],
 };
 
+const initialStateOpen: ChatState = {
+    chatId: null,
+    isChatOpen: true,
+    chatStatus: null,
+    chatDimensions: getInitialChatDimensions(),
+    customerSupportId: "",
+    lastReadMessageTimestamp: null,
+    messages: [],
+    messageQueue: [],
+    newMessagesAmount: 0,
+    eventMessagesToHandle: [],
+    errorMessage: "",
+    showContactForm: false,
+    showUnavailableContactForm: false,
+    showAskToForwardToCsaForm: false,
+    forwardToCsaMessageId: "",
+    askForContacts: true,
+    forwardToCsaMessage: "",
+    contactContentMessage: "",
+    isChatRedirected: false,
+    estimatedWaiting: initialEstimatedTime,
+    idleChat: {
+        isIdle: false,
+        lastActive: "",
+    },
+    loading: false,
+    endUserContacts: {
+        idCode: "",
+        mailAddress: "",
+        phoneNr: "",
+        comment: "",
+    },
+    contactMsgId: "",
+    feedback: {
+        isFeedbackConfirmationShown: false,
+        isFeedbackMessageGiven: false,
+        isFeedbackRatingGiven: false,
+        showFeedbackWarning: false,
+    },
+    downloadChat: {
+        isLoading: false,
+        error: false,
+        data: null,
+    },
+    emergencyNotice: null,
+    contactForm: {
+        data: {
+            chatId: null,
+            endUserEmail: null,
+            endUserPhone: null,
+        },
+        state: {
+            isLoading: false,
+            isSubmitted: false,
+            isFailed: false,
+        },
+    },
+    chatMode: CHAT_MODES.FREE,
+    nameVisibility: false,
+    titleVisibility: false,
+    showLoadingMessage: false,
+    showResponseError: false,
+    responseErrorMessage: "",
+    failedMessages: [],
+};
+
 export const initChat = createAsyncThunk(
   "chat/init",
   async (message: Message) => {
@@ -261,13 +327,13 @@ export const sendFeedbackMessage = createAsyncThunk(
 export const endChat = createAsyncThunk(
   "chat/endChat",
   async (
-    args: { event: CHAT_EVENTS | null; isUpperCase: boolean },
+    args: { event: CHAT_EVENTS | null; isUpperCase: boolean; keepChatOpen?: boolean },
     thunkApi
   ) => {
     const {
       chat: { chatStatus, chatId },
     } = thunkApi.getState() as { chat: ChatState };
-    thunkApi.dispatch(resetState());
+    thunkApi.dispatch(args.keepChatOpen ? resetStateOpen() : resetState());
 
     const endEvent = args.isUpperCase
       ? args.event?.toUpperCase()
@@ -468,6 +534,7 @@ export const chatSlice = createSlice({
   initialState,
   reducers: {
     resetState: () => initialState,
+    resetStateOpen: () => initialStateOpen,
     resetStateWithValue: (state, action: PayloadAction<string>) => {
       state.chatId = action.payload;
     },
@@ -852,6 +919,7 @@ export const {
   setIsChatOpen,
   setChatDimensions,
   resetState,
+  resetStateOpen,
   clearMessageQueue,
   queueMessage,
   updateMessage,
