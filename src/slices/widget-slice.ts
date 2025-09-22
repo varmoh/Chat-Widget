@@ -25,7 +25,8 @@ export interface WidgetState {
     isBurokrattActive: boolean | null;
     showIdleWarningMessage: boolean;
     chatActiveDuration: number;
-    autoCloseConversation: boolean;
+    idleMessage: string;
+    showAutoCloseText: boolean;
     autoCloseText: string;
     feedbackActive: boolean | null;
     feedbackQuestion: string;
@@ -47,9 +48,10 @@ const initialState: WidgetState = {
     animation: CHAT_BUBBLE_ANIMATION,
     isLoaded: false,
     isBurokrattActive: null,
-    showIdleWarningMessage: false,
+    idleMessage: "",
+    showIdleWarningMessage: true,
     chatActiveDuration: IDLE_CHAT_INTERVAL,
-    autoCloseConversation: true,
+    showAutoCloseText: true,
     autoCloseText:
       "Aitäh, et pöördusite, küsimuste korral võib alati uuesti ühendust võtta. Kena päeva jätku!",
     feedbackActive: null,
@@ -92,6 +94,7 @@ export const widgetSlice = createSlice({
       state.burokrattOnlineStatus = false;
     });
     builder.addCase(getWidgetConfig.fulfilled, (state, action) => {
+      console.log('state', action.payload)
       state.widgetConfig.isLoaded = true;
       state.widgetConfig.proactiveSeconds =
         action.payload?.widgetProactiveSeconds ?? CHAT_BUBBLE_PROACTIVE_SECONDS;
@@ -109,12 +112,13 @@ export const widgetSlice = createSlice({
       state.widgetConfig.isBurokrattActive =
         action.payload?.isBurokrattActive === "true";
       state.widgetConfig.showIdleWarningMessage =
-        action.payload?.showIdleWarningMessage === "true";
+        action.payload?.showIdleWarning === "true";
       state.widgetConfig.chatActiveDuration = parseInt(
         action.payload?.chatActiveDuration ?? IDLE_CHAT_INTERVAL.toString()
       );
-      state.widgetConfig.autoCloseConversation =
-        action.payload?.autoCloseConversation === "true";
+      state.widgetConfig.idleMessage = action.payload?.idleMessage ?? "";
+      state.widgetConfig.showAutoCloseText =
+          action.payload?.showAutoCloseText === "true";
       state.widgetConfig.autoCloseText = action.payload?.autoCloseText ?? "";
       state.widgetConfig.feedbackActive =
         action.payload?.feedbackActive === "true";
