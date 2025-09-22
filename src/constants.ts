@@ -113,6 +113,7 @@ export enum RUUTER_ENDPOINTS {
   SEND_CONTACT_INFO = '/chats/users/contact',
   AUTHENTICATE_USER = '/chats/users/name',
   GET_NEW_MESSAGES = '/chats/messages/new',
+  ADD_TIM = "/tim/add-key",
   POST_MESSAGE = '/chats/messages/add',
   POST_MESSAGE_PREVIEW = '/chats/messages/preview',
   GET_MESSAGES_BY_CHAT_ID = '/chats/messages/all',
