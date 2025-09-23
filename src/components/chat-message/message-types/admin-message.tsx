@@ -20,6 +20,7 @@ import {useTranslation} from "react-i18next";
 import Markdownify from "./Markdownify";
 import {ChatMessageStyled} from "../ChatMessageStyled";
 import { format } from "date-fns";
+import SmoothStreamingMessage from "./smooth-streaming-message";
 
 const AdminMessage = ({message}: { message: Message }): JSX.Element => {
     const {t} = useTranslation();
@@ -62,9 +63,7 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
         [message.authorFirstName, message.authorLastName]);
 
     return (
-      <motion.div
-        ref={messageRef}
-      >
+      <motion.div ref={messageRef}>
         <div>
           <ChatMessageStyled className={messageClass}>
             {nameVisibility && csaName && message.event != CHAT_EVENTS.GREETING && (
@@ -82,7 +81,11 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
                 )}
               </div>
               <div className={`content ${message.event === CHAT_EVENTS.EMERGENCY_NOTICE && "emergency_content"}`}>
-                <Markdownify message={message.content ?? ""} />
+                {message.isStreaming ? (
+                  <SmoothStreamingMessage message={message.content ?? ""} isStreaming={message.isStreaming} />
+                ) : (
+                  <Markdownify message={message.content ?? ""} />
+                )}
                 {!message.content &&
                   (hasOptions || hasButtons ? t("widget.action.select") : <i>{t("widget.error.empty")}</i>)}
               </div>
