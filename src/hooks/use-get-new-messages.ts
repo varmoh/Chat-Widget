@@ -6,6 +6,7 @@ import { Message } from "../model/message-model";
 import {
   addMessagesToDisplay,
   clearStreamingMessage,
+  getNewMessages,
   handleStateChangingEventMessages,
   sendNewLlmMessage,
   updateStreamingMessage,
@@ -14,7 +15,6 @@ import {
   isDisplayableMessages,
   isStateChangingEventMessage,
 } from "../utils/state-management-utils";
-import chatService from "../services/chat-service";
 import { v4 as uuidv4 } from "uuid";
 
 const useGetNewMessages = (): void => {
@@ -49,22 +49,18 @@ const useGetNewMessages = (): void => {
         if (!data) return;
         const type = data.type;
         if (type === "message") {
-          const messages: Message[] = await chatService.getNewMessages(
-            lastReadMessageTimestampValue.split("+")[0]
+          const result = await dispatch(
+            getNewMessages({ timeRangeBegin: lastReadMessageTimestampValue.split("+")[0] })
           );
-          if (messages.length != 0) {
-            setLastReadMessageTimestampValue(
-              messages[messages.length - 1].created ??
-                `${lastReadMessageTimestamp}`
-            );
-            dispatch(
-              addMessagesToDisplay(messages.filter(isDisplayableMessages))
-            );
-            dispatch(
-              handleStateChangingEventMessages(
-                messages.filter(isStateChangingEventMessage)
-              )
-            );
+
+          if (result.payload && Array.isArray(result.payload)) {
+            const messages: Message[] = result.payload;
+
+            if (messages.length !== 0) {
+              setLastReadMessageTimestampValue(messages[messages.length - 1].created ?? `${lastReadMessageTimestamp}`);
+              dispatch(addMessagesToDisplay(messages.filter(isDisplayableMessages)));
+              dispatch(handleStateChangingEventMessages(messages.filter(isStateChangingEventMessage)));
+            }
           }
         } else if (type === "stream_start") {
           currentStreamContent.current = "";

@@ -8,8 +8,8 @@ export const LoadingAnimationStyles = styled.div`
     }
 
     .bouncing-loader > div {
-        width: 8px;
-        height: 8px;
+        width: 4.5px;
+        height: 4.5px;
         margin: 2px 4px;
         border-radius: 50%;
         background-color: #ffffff;
@@ -20,7 +20,7 @@ export const LoadingAnimationStyles = styled.div`
     @keyframes bouncing-loader {
         to {
             opacity: 0.1;
-            transform: translateY(-8px);
+            transform: translateY(-5px);
         }
     }
 

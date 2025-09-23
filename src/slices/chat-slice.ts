@@ -722,7 +722,6 @@ export const chatSlice = createSlice({
       state.chatId = action.payload.id;
       state.loading = false;
       state.chatStatus = CHAT_STATUS.OPEN;
-      state.showLoadingMessage = false;
     });
     builder.addCase(initChat.rejected, (state, action) => {
       state.showLoadingMessage = false;
@@ -738,9 +737,6 @@ export const chatSlice = createSlice({
       if (state.customerSupportId === "chatbot") {
         state.showLoadingMessage = true;
       }
-    });
-    builder.addCase(sendNewMessage.fulfilled, (state) => {
-      state.showLoadingMessage = false;
     });
     builder.addCase(sendNewMessage.rejected, (state, action) => {
       state.showLoadingMessage = false;
@@ -763,6 +759,9 @@ export const chatSlice = createSlice({
       state.messages = filterDuplicatMessages(action.payload);
 
       state.chatMode = getChatModeBasedOnLastMessage(state.messages);
+    });
+    builder.addCase(getNewMessages.fulfilled, (state, action) => {
+      state.showLoadingMessage = false; 
     });
     builder.addCase(getGreeting.fulfilled, (state, action) => {
       if (!action.payload.isActive) return;

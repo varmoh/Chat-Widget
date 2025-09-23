@@ -22,7 +22,7 @@ const useGetChat = (): void => {
     let events: EventSource | undefined;
     if (sseUrl) {  
       const onMessage = async (data: any) => {   
-        if (data.messageId === chatId) {
+        if (data.chatId) {
           const chat = await chatService.getChatById();
           dispatch(setChat(chat));
         } 
