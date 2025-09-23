@@ -515,6 +515,9 @@ export const chatSlice = createSlice({
     setShowAskToForwardToCsaForm: (state, action: PayloadAction<boolean>) => {
       state.showAskToForwardToCsaForm = action.payload;
     },
+    setShowLoadingMessage: (state, action: PayloadAction<boolean>) => {
+      state.showLoadingMessage = action.payload;
+    },
     queueMessage: (state, action: PayloadAction<Message>) => {
       state.messageQueue.push(action.payload);
     },
@@ -760,9 +763,6 @@ export const chatSlice = createSlice({
 
       state.chatMode = getChatModeBasedOnLastMessage(state.messages);
     });
-    builder.addCase(getNewMessages.fulfilled, (state, action) => {
-      state.showLoadingMessage = false; 
-    });
     builder.addCase(getGreeting.fulfilled, (state, action) => {
       if (!action.payload.isActive) return;
       state.messages.push({
@@ -874,6 +874,7 @@ export const {
   setShowContactForm,
   setShowUnavailableContactForm,
   setShowAskToForwardToCsaForm,
+  setShowLoadingMessage,
   setEstimatedWaitingTimeToZero,
   setIdleChat,
   setChat,

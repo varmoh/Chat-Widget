@@ -9,6 +9,7 @@ import {
   getNewMessages,
   handleStateChangingEventMessages,
   sendNewLlmMessage,
+  setShowLoadingMessage,
   updateStreamingMessage,
 } from "../slices/chat-slice";
 import {
@@ -61,6 +62,7 @@ const useGetNewMessages = (): void => {
               dispatch(addMessagesToDisplay(messages.filter(isDisplayableMessages)));
               dispatch(handleStateChangingEventMessages(messages.filter(isStateChangingEventMessage)));
             }
+            setTimeout(() => { dispatch(setShowLoadingMessage(false)); }, 0);
           }
         } else if (type === "stream_start") {
           currentStreamContent.current = "";
@@ -116,10 +118,11 @@ const useGetNewMessages = (): void => {
             content: data.content,
             authorRole: "assistant",
             created: currentTime,
-            isStreaming: false,
+            isStreaming: undefined,
             chatId: chatId,
             authorTimestamp: currentTime,
           };
+          setTimeout(() => { dispatch(setShowLoadingMessage(false)); }, 0);
           dispatch(addMessagesToDisplay([message]));
           dispatch(sendNewLlmMessage({ message, context: data.context, uuid }));
         }
