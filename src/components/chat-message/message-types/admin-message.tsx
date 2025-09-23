@@ -10,7 +10,7 @@ import {
     RATING_TYPES,
 } from "../../../constants";
 import Thumbs from "../../../static/icons/thumbs.svg";
-import {sendMessageWithRating, updateMessage,} from "../../../slices/chat-slice";
+import {sendMessageWithRating, sendNewLlmMessage, updateMessage,} from "../../../slices/chat-slice";
 import {useAppDispatch} from "../../../store";
 import ChatButtonGroup from "./chat-button-group";
 import ChatOptionGroup from "./chat-option-group";
@@ -81,8 +81,25 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
                 )}
               </div>
               <div className={`content ${message.event === CHAT_EVENTS.EMERGENCY_NOTICE && "emergency_content"}`}>
-                {message.isStreaming ? (
-                  <SmoothStreamingMessage message={message.content ?? ""} isStreaming={message.isStreaming} />
+                {message.isStreaming != undefined ? (
+                  <SmoothStreamingMessage
+                    message={message.content ?? ""}
+                    isStreaming={message.isStreaming}
+                    onComplete={() => {
+                      if (message.isStreaming === false) {
+                        const updatedMessage = { ...message, isStreaming: undefined };
+                        if (updatedMessage.id) {
+                          dispatch(
+                            sendNewLlmMessage({
+                              message: updatedMessage,
+                              context: updatedMessage.context,
+                              uuid: updatedMessage.id,
+                            })
+                          );
+                        }
+                      }
+                    }}
+                  />
                 ) : (
                   <Markdownify message={message.content ?? ""} />
                 )}

@@ -83,6 +83,7 @@ const useGetNewMessages = (): void => {
             streamId: data.channelId,
             chatId: chatId,
             authorTimestamp: currentStreamStartTime.current,
+            context: data.context,
           };
 
           dispatch(updateStreamingMessage(updatedMessage));
@@ -96,15 +97,10 @@ const useGetNewMessages = (): void => {
             streamId: data.channelId,
             chatId: chatId,
             authorTimestamp: currentStreamStartTime.current,
+            context: data.context,
           };
 
-          dispatch(
-            sendNewLlmMessage({
-              message: finalMessage,
-              context: data.context,
-              uuid: currentStreamUuid.current,
-            })
-          );
+          dispatch(updateStreamingMessage(finalMessage));
 
           currentStreamContent.current = "";
           currentStreamId.current = "";

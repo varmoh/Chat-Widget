@@ -7,6 +7,7 @@ interface SmoothStreamingMessageProps {
   sanitizeLinks?: boolean;
   typingSpeed?: number;
   batchSize?: number;
+  onComplete?: () => void;
 }
 
 const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
@@ -15,6 +16,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
   sanitizeLinks = false,
   typingSpeed = 30,
   batchSize = 2,
+  onComplete,
 }) => {
   const [displayedText, setDisplayedText] = useState("");
   const tokenBuffer = useRef("");
@@ -87,6 +89,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
       if (nextIndex >= buffer.length && !isStreaming) {
         clearInterval(typewriterInterval.current!);
         typewriterInterval.current = null;
+        
       }
     }, typingSpeed);
   }, [isStreaming, batchSize, typingSpeed]);
@@ -99,6 +102,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
     ) {
       clearInterval(typewriterInterval.current);
       typewriterInterval.current = null;
+      onComplete?.();
     }
   }, [isStreaming, displayedText.length, message.length]);
 

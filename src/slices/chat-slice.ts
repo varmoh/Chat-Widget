@@ -686,7 +686,7 @@ export const chatSlice = createSlice({
           ...state.messages[existingStreamIndex],
           ...streamMessage,
           content: streamMessage.content,
-          isStreaming: true,
+          isStreaming: streamMessage.isStreaming,
         };
       } else {
         // Add new streaming message
@@ -694,7 +694,7 @@ export const chatSlice = createSlice({
           ...state.messages,
           {
             ...streamMessage,
-            isStreaming: true,
+            isStreaming: streamMessage.isStreaming,
           },
         ]);
       }
