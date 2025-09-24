@@ -4,6 +4,7 @@ import chatReducer from '../slices/chat-slice';
 import widgetReducer from '../slices/widget-slice';
 import authenticationReducer from '../slices/authentication-slice';
 import sessionStorageMiddleware from './middlewares/session-storage-middleware';
+import chatApiMiddleware from "./middlewares/chatApiListener";
 
 export const store = configureStore({
   reducer: {
@@ -13,7 +14,7 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({
     serializableCheck: false,
-  }).prepend(sessionStorageMiddleware),
+  }).prepend(chatApiMiddleware).concat(sessionStorageMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
