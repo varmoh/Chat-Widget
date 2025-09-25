@@ -24,6 +24,9 @@ export interface Message {
   preview?: string;
   updated?: string;
   csaTitle?: string;
+  isStreaming?: boolean;
+  streamId?: string;
+  context?: any;
   data?: {
     forwarding_validation?: string;
   };
@@ -54,4 +57,10 @@ export enum AttachmentTypes {
 export interface MessageButton {
   title: string;
   payload: string;
+}
+
+export interface SendLLMMessagePayload {
+  message: Message;
+  context: any;
+  uuid: string;
 }

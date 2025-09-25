@@ -10,7 +10,7 @@ import {
     RATING_TYPES,
 } from "../../../constants";
 import Thumbs from "../../../static/icons/thumbs.svg";
-import {sendMessageWithRating, updateMessage,} from "../../../slices/chat-slice";
+import {sendMessageWithRating, sendNewLlmMessage, updateMessage,} from "../../../slices/chat-slice";
 import {useAppDispatch} from "../../../store";
 import ChatButtonGroup from "./chat-button-group";
 import ChatOptionGroup from "./chat-option-group";
@@ -20,12 +20,7 @@ import {useTranslation} from "react-i18next";
 import Markdownify from "./Markdownify";
 import {ChatMessageStyled} from "../ChatMessageStyled";
 import { format } from "date-fns";
-
-const leftAnimation = {
-    animate: {opacity: 1, x: 0},
-    initial: {opacity: 0, x: -20},
-    transition: {duration: 0.25, delay: 0.25},
-};
+import SmoothStreamingMessage from "./smooth-streaming-message";
 
 const AdminMessage = ({message}: { message: Message }): JSX.Element => {
     const {t} = useTranslation();
@@ -68,12 +63,7 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
         [message.authorFirstName, message.authorLastName]);
 
     return (
-      <motion.div
-        animate={leftAnimation.animate}
-        initial={leftAnimation.initial}
-        transition={leftAnimation.transition}
-        ref={messageRef}
-      >
+      <motion.div ref={messageRef}>
         <div>
           <ChatMessageStyled className={messageClass}>
             {nameVisibility && csaName && message.event != CHAT_EVENTS.GREETING && (
@@ -91,7 +81,28 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
                 )}
               </div>
               <div className={`content ${message.event === CHAT_EVENTS.EMERGENCY_NOTICE && "emergency_content"}`}>
-                <Markdownify message={message.content ?? ""} />
+                {message.isStreaming != undefined ? (
+                  <SmoothStreamingMessage
+                    message={message.content ?? ""}
+                    isStreaming={message.isStreaming}
+                    onComplete={() => {
+                      if (message.isStreaming === false) {
+                        const updatedMessage = { ...message, isStreaming: undefined };
+                        if (updatedMessage.id) {
+                          dispatch(
+                            sendNewLlmMessage({
+                              message: updatedMessage,
+                              context: updatedMessage.context,
+                              uuid: updatedMessage.id,
+                            })
+                          );
+                        }
+                      }
+                    }}
+                  />
+                ) : (
+                  <Markdownify message={message.content ?? ""} />
+                )}
                 {!message.content &&
                   (hasOptions || hasButtons ? t("widget.action.select") : <i>{t("widget.error.empty")}</i>)}
               </div>

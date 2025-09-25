@@ -18,12 +18,6 @@ import { useAppDispatch } from "../../../store";
 import useChatSelector from "../../../hooks/use-chat-selector";
 import {ChatMessageStyled, MessageFailedWrapperStyled} from "../ChatMessageStyled";
 
-const rightAnimation = {
-  animate: { opacity: 1, x: 0 },
-  initial: { opacity: 0, x: 20 },
-  transition: { duration: 0.25, delay: 0.25 },
-};
-
 const ClientMessage = (props: {
   message?: Message;
   content?: string;
@@ -49,9 +43,6 @@ const ClientMessage = (props: {
     if (props.message?.file) {
         return (
             <motion.div
-                animate={rightAnimation.animate}
-                initial={rightAnimation.initial}
-                transition={rightAnimation.transition}
                 ref={messageRef}
             >
                 <div>
@@ -74,9 +65,6 @@ const ClientMessage = (props: {
 
     return (
         <motion.div
-            animate={rightAnimation.animate}
-            initial={rightAnimation.initial}
-            transition={rightAnimation.transition}
             ref={messageRef}
         >
             <div>
