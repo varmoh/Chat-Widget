@@ -116,7 +116,12 @@ class ChatService {
   }
 
   sendMessageWithNewEvent(message: Message): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.SEND_MESSAGE_WITH_NEW_EVENT, message);
+    let updatedMessage = {
+      ...message,
+      rating: message.rating ?? ""
+    };
+
+    return http.post(RUUTER_ENDPOINTS.SEND_MESSAGE_WITH_NEW_EVENT, updatedMessage);
   }
 
   removeChatForwardingValue(): Promise<void> {
