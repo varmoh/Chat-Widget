@@ -8,10 +8,16 @@ import 'overlayscrollbars/css/OverlayScrollbars.css';
 import './os-custom-theme.scss';
 import LoadingMessage from '../chat-message/message-types/loading-message';
 import {ChatContentStyles} from "./ChatContentStyled";
+import { useScroll } from '../../contexts/ScrollContext';
 
 const ChatContent = (): JSX.Element => {
     const OSref = useRef<OverlayScrollbarsComponent>(null);
     const {messages, failedMessages, showLoadingMessage} = useChatSelector();
+    const { setScrollRef } = useScroll();
+
+    useEffect(() => {
+        setScrollRef(OSref.current);
+    }, [setScrollRef]);
 
     useEffect(() => {
         if (OSref.current) {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Markdownify from "./Markdownify";
+import { useScroll } from "../../../contexts/ScrollContext";
 
 interface SmoothStreamingMessageProps {
   message: string;
@@ -24,6 +25,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
   const typewriterInterval = useRef<NodeJS.Timeout | null>(null);
   const previousMessage = useRef("");
   const isNewStream = useRef(true);
+  const { scrollToBottom } = useScroll();
 
   useEffect(() => {
     if (isNewStream.current || !message.startsWith(previousMessage.current)) {
@@ -53,6 +55,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
       if (displayIndex.current > message.length) {
         displayIndex.current = message.length;
         setDisplayedText(message);
+        scrollToBottom();
       }
     }
 
@@ -85,6 +88,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
 
       setDisplayedText(newText);
       displayIndex.current = nextIndex;
+      scrollToBottom();
 
       if (nextIndex >= buffer.length && !isStreaming) {
         clearInterval(typewriterInterval.current!);
@@ -92,7 +96,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
         
       }
     }, typingSpeed);
-  }, [isStreaming, batchSize, typingSpeed]);
+  }, [isStreaming, batchSize, typingSpeed, scrollToBottom]);
 
   useEffect(() => {
     if (

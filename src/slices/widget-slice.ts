@@ -94,7 +94,6 @@ export const widgetSlice = createSlice({
       state.burokrattOnlineStatus = false;
     });
     builder.addCase(getWidgetConfig.fulfilled, (state, action) => {
-      console.log('state', action.payload)
       state.widgetConfig.isLoaded = true;
       state.widgetConfig.proactiveSeconds =
         action.payload?.widgetProactiveSeconds ?? CHAT_BUBBLE_PROACTIVE_SECONDS;
