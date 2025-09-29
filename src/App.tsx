@@ -34,6 +34,7 @@ import { getFromLocalStorage } from "./utils/local-storage-utils";
 import useNameAndTitleVisibility from "./hooks/use-name-title-visibility";
 import { generateUEID } from "./utils/generators";
 import { isMobileWidth } from "./utils/browser-utils";
+import { ScrollProvider } from "./contexts/ScrollContext";
 
 declare global {
   interface Window {
@@ -224,7 +225,11 @@ const App: FC = () => {
 
   if (burokrattOnlineStatus !== true) return <></>;
   if (displayWidget && widgetConfig.isLoaded)
-    return isChatOpen ? <Chat /> : <Profile />;
+    return (
+      <ScrollProvider>
+        {isChatOpen ? <Chat /> : <Profile />}
+      </ScrollProvider>
+    );
   return <></>;
 };
 
