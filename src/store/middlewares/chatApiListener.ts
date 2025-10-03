@@ -15,7 +15,6 @@ const chatApiMiddleware: Middleware = (storeAPI) => (next) => async (action) => 
                 chatId: action.payload.id,
                 timeout: widgetConfig?.chatActiveDuration ?? 30,
             });
-            console.log('added new key', newKey)
         } catch (err) {
             console.error("Failed to call add id to TIM:", err);
         }
