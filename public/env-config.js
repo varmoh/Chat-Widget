@@ -2,8 +2,7 @@ window._env_ = {
   RUUTER_API_URL: "http://localhost:8086/backoffice",
   NOTIFICATION_NODE_URL: "http://localhost:4040",
   ENVIRONMENT: "development", // 'developement | production'
-  TIM_AUTHENTICATION_URL:
-    "http://localhost:8085/oauth2/authorization/tara?callback_url=http://localhost:3000/auth/callback",
+  TIM_AUTHENTICATION_URL: "http://localhost:8085/oauth2/authorization/tara",
   ORGANIZATION_NAME: "TTJA",
   OFFICE_HOURS: {
     TIMEZONE: "Europe/Tallinn",

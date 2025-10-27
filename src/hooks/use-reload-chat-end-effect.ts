@@ -5,7 +5,6 @@ import {
   removeChatFromTerminationQueue,
 } from "../slices/chat-slice";
 import useChatSelector from "./use-chat-selector";
-import {isRedirectPathEmpty} from "../utils/auth-utils";
 import {isLastSession} from "../utils/browser-utils";
 
 const useReloadChatEndEffect = () => {
@@ -18,11 +17,7 @@ const useReloadChatEndEffect = () => {
 
   useEffect(() => {
     const handleBeforeUnload = () => {
-      if (
-        chatId &&
-        isRedirectPathEmpty() &&
-        isLastSession()
-      ) {
+      if (chatId && isLastSession()) {
         dispatch(addChatToTerminationQueue());
       }
     };
