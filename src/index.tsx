@@ -6,7 +6,6 @@ import App from "./App";
 import { store } from "./store";
 import "./i18n";
 import "./index.scss";
-import AuthCallback from "./AuthCallback";
 
 const getBasePath = () => {
   const { pathname } = window.location;
@@ -21,7 +20,6 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter basename={baseName}>
       <Routes>
-        <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/*" element={<App />} />
       </Routes>
     </BrowserRouter>

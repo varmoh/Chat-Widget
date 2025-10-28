@@ -10,7 +10,7 @@ window._env_ = {
   NOTIFICATION_NODE_URL: "http://localhost:4040",
   ENVIRONMENT: "development",
   TIM_AUTHENTICATION_URL:
-    "http://localhost:8085/oauth2/authorization/tara?callback_url=http://localhost:3000/auth/callback",
+    "http://localhost:8085/oauth2/authorization/tara",
   TERMS_AND_CONDITIONS_LINK: "https://www.kratid.ee/kasutustingimused",
   ORGANIZATION_NAME: "TEST",
   OFFICE_HOURS: {

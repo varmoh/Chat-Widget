@@ -1,6 +1,5 @@
 /* eslint-disable */
 export const SESSION_STORAGE_CHAT_ID_KEY = 'byk-va-cid';
-export const LOCAL_STORAGE_TARA_LOGIN_REDIRECT = 'byk-va-tara-login-redirect';
 export const OFFICE_HOURS_INTERVAL_TIMEOUT = 60000;
 // BYK-648 enable to show customer service agent name in chat window
 export const EMAIL_REGEX =
