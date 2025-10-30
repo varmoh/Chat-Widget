@@ -7,10 +7,6 @@ class AuthenticationService {
     return http.post(RUUTER_ENDPOINTS.AUTHENTICATE_SMAX_USER, { code });
   }
 
-  loginWithTaraJwt(chatId: string): Promise<void> {
-    return http.post(RUUTER_ENDPOINTS.LOGIN_WITH_TARA, { chatId });
-  }
-
   customJwtUserinfo(): Promise<UserInfo> {
     return http.get(RUUTER_ENDPOINTS.CUSTOM_JWT_USERINFO);
   }

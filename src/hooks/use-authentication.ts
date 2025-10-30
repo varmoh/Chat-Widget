@@ -3,7 +3,6 @@ import { useAppDispatch } from "../store";
 import {
   authSmaxUser,
   getUserinfo,
-  loginWithTaraJwt,
 } from "../slices/authentication-slice";
 import useAuthenticationSelector from "./use-authentication-selector";
 import { redirectIfComeBackFromTim } from "../utils/auth-utils";
@@ -30,12 +29,6 @@ const useAuthentication = (): void => {
       dispatch(getUserinfo());
     }
   }, [isAuthenticated, loggedInWithTaraJwt]);
-
-  useEffect(() => {
-    if (!isAuthenticated && !fetchingUserInfo) {
-      dispatch(loginWithTaraJwt());
-    }
-  }, [isAuthenticated, fetchingUserInfo]);
 
   useEffect(() => {
     const code = new URLSearchParams(window.location.search).get("auth_code");
