@@ -1,4 +1,4 @@
-import reducer, { setIsAuthenticated, setIsNotAuthenticated, getUserinfo, loginWithTaraJwt } from './authentication-slice';
+import reducer, { setIsAuthenticated, setIsNotAuthenticated, getUserinfo } from './authentication-slice';
 import { initialAuthState } from '../test-initial-states';
 import { endChat } from './chat-slice';
 import { UserInfo } from '../model/user-info-model';
@@ -63,18 +63,6 @@ describe('Authentication Slice', () => {
       const action = { type: getUserinfo.rejected.type };
       const state = reducer(initialAuthState, action);
       expect(state).toEqual({ ...initialAuthState, fetchingUserInfo: false });
-    });
-
-    it('should set loggedInWithTaraJwt false when loginWithTaraJwt is pending', () => {
-      const action = { type: loginWithTaraJwt.pending.type };
-      const state = reducer({ ...initialAuthState, loggedInWithTaraJwt: true }, action);
-      expect(state).toEqual({ ...initialAuthState, loggedInWithTaraJwt: false });
-    });
-
-    it('should set loggedInWithTaraJwt true when loginWithTaraJwt is fulfilled', () => {
-      const action = { type: loginWithTaraJwt.fulfilled.type };
-      const state = reducer(initialAuthState, action);
-      expect(state).toEqual({ ...initialAuthState, loggedInWithTaraJwt: true });
     });
 
     it('should set isAuthenticated false when endChat is fulfilled', () => {
