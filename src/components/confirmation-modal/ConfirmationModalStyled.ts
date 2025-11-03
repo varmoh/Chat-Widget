@@ -210,6 +210,7 @@ export const ConfirmationModalStyled = styled.div`
         border-radius: 5px;
         border: 1px solid #ccc;
         margin-bottom: 5px;
+        resize: none;
     }
 
     .spinner {
@@ -305,5 +306,6 @@ export const ConfirmationModalStyles = styled.div`
         border-radius: 5px;
         border: 1px solid #ccc;
         margin-bottom: 5px;
+        resize: none;
     }
 `;

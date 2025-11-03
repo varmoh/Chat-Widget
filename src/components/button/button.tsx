@@ -21,7 +21,7 @@ const Button: FC<Props> = (props) => {
     const {color = ButtonColor.BLUE, title = '', onClick, ...rest} = props;
 
     return (
-        <ButtonStyles>
+        <ButtonStyles isDisabled={props.disabled}>
             <button
                 className={`button ${
                     color === ButtonColor.BLUE ? "blue" : "gray"
