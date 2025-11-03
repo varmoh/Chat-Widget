@@ -22,6 +22,7 @@ import ChatKeypadCharCounter from "./chat-keypad-char-counter";
 import {
   AUTHOR_ROLES,
   CHAT_STATUS,
+  FEEDBACK_MESSAGE_MAX_CHAR_LIMIT,
   isHiddenFeatureEnabled,
   MESSAGE_FILE_SIZE_LIMIT,
   MESSAGE_MAX_CHAR_LIMIT,
@@ -303,9 +304,13 @@ const ChatKeyPad = (): JSX.Element => {
           }}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
-              if (chatStatus === CHAT_STATUS.ENDED && !!chatId)
+              if (chatStatus === CHAT_STATUS.ENDED && !!chatId) {
+                if (userInput.trim().length > FEEDBACK_MESSAGE_MAX_CHAR_LIMIT) {
+                  event.preventDefault();
+                  return;
+                }
                 handleTextFeedback();
-              else {
+              } else {
                 event.preventDefault();
                 addNewMessageToState();
               }
@@ -329,6 +334,7 @@ const ChatKeyPad = (): JSX.Element => {
           <FeedbackButtonStyle
             onClick={() => handleTextFeedback()}
             styleType={StyledButtonType.GRAY}
+            disabled={userInput.trim().length > FEEDBACK_MESSAGE_MAX_CHAR_LIMIT}
           >
             {t("chat.feedback.button.label")}
           </FeedbackButtonStyle>
