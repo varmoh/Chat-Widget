@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {rem} from "../../styling/rem";
 import {colors} from "../../styling/style_settings";
 
-export const ButtonStyles = styled.div`
+export const ButtonStyles = styled.div<{isDisabled?: boolean}>`
     .button {
         padding: 12px 18px;
         gap: ${rem(8)};
@@ -10,7 +10,7 @@ export const ButtonStyles = styled.div`
         border-radius: 100px;
         border: none;
         outline: none;
-        cursor: pointer;
+        cursor: ${props => props.isDisabled ? 'not-allowed' : 'pointer'};
         text-transform: uppercase;
         font-size: ${rem(12)};
         font-weight: 700;

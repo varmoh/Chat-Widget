@@ -3,10 +3,11 @@ import Button, { ButtonColor } from "../button/button";
 import { useAppDispatch } from "../../store";
 import { endChat, sendChatNpmRating, sendFeedbackMessage, setFeedbackRatingGiven } from "../../slices/chat-slice";
 import { useTranslation } from "react-i18next";
-import {CHAT_EVENTS, isFeedbackRatingColorsEnabled, StyledButtonType} from "../../constants";
+import {CHAT_EVENTS, FEEDBACK_MESSAGE_MAX_CHAR_LIMIT, isFeedbackRatingColorsEnabled, StyledButtonType} from "../../constants";
 import StyledButton from "../styled-components/styled-button";
 import { ConfirmationModalStyled, ConfirmationModalStyles } from "./ConfirmationModalStyled";
 import useWidgetSelector from "../../hooks/use-widget-selector";
+import ChatKeypadCharCounter from "../chat-keypad/chat-keypad-char-counter";
 
 interface Props {
   readonly npsFeedback: {
@@ -28,7 +29,6 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
   const [feedbackText, setFeedbackText] = useState<string>("");
 
   const handleFeedback = (feedbackRating: string | null) => {
-    console.log(feedbackRating);
     if (feedbackRating === null) return;
     setSelectedFeedbackButtonValue(feedbackRating);
     dispatch(
@@ -42,7 +42,9 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
     <ConfirmationModalStyled>
       <div className="npsContainer">
         <ConfirmationModalStyles>
-          {widgetConfig.feedbackActive && <div className="feedback-paragraph above p-style">{widgetConfig.feedbackQuestion}</div>}
+          {widgetConfig.feedbackActive && (
+            <div className="feedback-paragraph above p-style">{widgetConfig.feedbackQuestion}</div>
+          )}
           {widgetConfig.feedbackActive && (
             <div className="feedback-box-input" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
               {Array.from(Array(11).keys()).map((val: number) => {
@@ -66,20 +68,23 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
             <div className="feedback-paragraph-secondary below p-style">{widgetConfig.feedbackNotice}</div>
           )}
           {widgetConfig.feedbackNoticeActive && (
-            <input
-              className="feedbackInput"
-              aria-label={t("keypad.input.label")}
-              placeholder={t("keypad.input.feedbackPlaceholder")}
-              onChange={(e) => {
-                setFeedbackText(e.target.value);
-              }}
-            />
+            <>
+              <textarea
+                className="feedbackInput"
+                aria-label={t("keypad.input.label")}
+                placeholder={t("keypad.input.feedbackPlaceholder")}
+                onChange={(e) => {
+                  setFeedbackText(e.target.value);
+                }}
+              />
+              <ChatKeypadCharCounter userInput={feedbackText} isFeedback isConfirmationFeedback />
+            </>
           )}
         </ConfirmationModalStyles>
         <div className="npsActions">
           <Button
             onClick={() => {
-              if (feedbackText !== "") {
+              if (feedbackText !== "" && feedbackText.trim().length <= FEEDBACK_MESSAGE_MAX_CHAR_LIMIT) {
                 dispatch(sendFeedbackMessage({ userInput: feedbackText }));
               }
               dispatch(endChat(endChatParams));
@@ -91,13 +96,14 @@ const ConfirmationModalNps = ({ npsFeedback }: Props) => {
           </Button>
           <Button
             onClick={() => {
-              if (feedbackText !== "") {
+              if (feedbackText !== "" && feedbackText.trim().length <= FEEDBACK_MESSAGE_MAX_CHAR_LIMIT) {
                 dispatch(sendFeedbackMessage({ userInput: feedbackText }));
               }
               dispatch(endChat(endChatParams));
             }}
             title={t("widget.action.confirm")}
-            color={ButtonColor.BLUE}
+            color={feedbackText.trim().length > FEEDBACK_MESSAGE_MAX_CHAR_LIMIT ? ButtonColor.GRAY : ButtonColor.BLUE}
+            disabled={feedbackText.trim().length > FEEDBACK_MESSAGE_MAX_CHAR_LIMIT}
           >
             {t("widget.action.confirm")}
           </Button>

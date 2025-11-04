@@ -13,6 +13,8 @@ import useChatSelector from '../../hooks/use-chat-selector';
 
 interface ChatKeypadCharCounterType {
     userInput: string;
+    isFeedback?: boolean;
+    isConfirmationFeedback?: boolean;
 }
 
 const ChatKeypadCharCounter = (props: ChatKeypadCharCounterType): ReactElement => {
@@ -21,7 +23,7 @@ const ChatKeypadCharCounter = (props: ChatKeypadCharCounterType): ReactElement =
     let charWarningLimit;
     let charVisibilityLimit;
 
-    if (chatStatus === CHAT_STATUS.ENDED) {
+    if (chatStatus === CHAT_STATUS.ENDED || props.isFeedback) {
         maxCharLimit = FEEDBACK_MESSAGE_MAX_CHAR_LIMIT;
         charWarningLimit = FEEDBACK_MESSAGE_LIMIT_WARNING_AT;
         charVisibilityLimit = FEEDBACK_MESSAGE_LIMIT_VISIBILE_AT;
@@ -35,10 +37,13 @@ const ChatKeypadCharCounter = (props: ChatKeypadCharCounterType): ReactElement =
     const currentCount = userInput.length;
 
     return (
-        <ChatKeypadCharCounterStyle warning={currentCount > charWarningLimit}
-                                    isVisible={currentCount > charVisibilityLimit}>
-            {currentCount}/{maxCharLimit}
-        </ChatKeypadCharCounterStyle>
+      <ChatKeypadCharCounterStyle
+        warning={currentCount > charWarningLimit}
+        isVisible={currentCount > charVisibilityLimit}
+        isConfirmationFeedback={props.isConfirmationFeedback}
+      >
+        {currentCount}/{maxCharLimit}
+      </ChatKeypadCharCounterStyle>
     );
 };
 
@@ -49,13 +54,17 @@ const orangeVariant = css`
     color: #ff4800;
 `;
 
-const ChatKeypadCharCounterStyle = styled.div<{ warning: boolean; isVisible: boolean }>`
-    ${(props) => (props.warning ? orangeVariant : grayVariant)}
-    visibility: ${(props) => (props.isVisible ? 'visible' : 'hidden')};
-    font-size: 0.7rem;
-    margin: -0.4rem 3.5rem 0.25rem 0;
-    display: flex;
-    justify-content: flex-end;
+const ChatKeypadCharCounterStyle = styled.div<{
+  warning: boolean;
+  isVisible: boolean;
+  isConfirmationFeedback?: boolean;
+}>`
+  ${(props) => (props.warning ? orangeVariant : grayVariant)}
+  visibility: ${(props) => (props.isVisible ? "visible" : "hidden")};
+  font-size: 0.7rem;
+  margin: ${props => props.isConfirmationFeedback ? "0" : "-0.4rem 3.5rem 0.25rem 0"};
+  display: flex;
+  justify-content: flex-end;
 `;
 
 export default ChatKeypadCharCounter;
