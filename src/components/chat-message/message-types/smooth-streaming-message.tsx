@@ -6,7 +6,6 @@ interface SmoothStreamingMessageProps {
   message: string;
   isStreaming: boolean;
   sanitizeLinks?: boolean;
-  typingSpeed?: number;
   batchSize?: number;
   onComplete?: () => void;
 }
@@ -15,7 +14,6 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
   message,
   isStreaming,
   sanitizeLinks = false,
-  typingSpeed = 30,
   batchSize = 2,
   onComplete,
 }) => {
@@ -25,6 +23,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
   const typewriterInterval = useRef<NodeJS.Timeout | null>(null);
   const previousMessage = useRef("");
   const isNewStream = useRef(true);
+  const typingSpeed = window._env_.STREAM_TYPING_SPEED ?? 30;
   const { scrollToBottom } = useScroll();
 
   useEffect(() => {

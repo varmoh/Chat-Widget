@@ -13,6 +13,7 @@ window._env_ = {
   ENABLE_HIDDEN_FEATURES: "TRUE",
   SMAX_INTEGRATION: { enabled: false },
   FEEDBACK_RATING_COLORS_ENABLED: "FALSE",
-  ENABLE_MULTI_DOMAIN: "TRUE",
+  ENABLE_MULTI_DOMAIN: "FALSE",
+  STREAM_TYPING_SPEED: 30, // in milliseconds - lower is faster
   IFRAME_TARGET_OIRGIN: "*",
 };
