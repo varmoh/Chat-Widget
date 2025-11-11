@@ -6,9 +6,9 @@ import useChatSelector from "../../hooks/use-chat-selector";
 import {
   AUTHOR_ROLES,
   CHAT_EVENTS,
+  CHAT_MIN_WINDOW_HEIGHT,
+  CHAT_MIN_WINDOW_WIDTH,
   CHAT_MODES,
-  CHAT_WINDOW_HEIGHT,
-  CHAT_WINDOW_WIDTH,
   FEEDBACK_CONFIRMATION_TIMEOUT,
   IDLE_CHAT_CHOICES_INTERVAL,
 } from "../../constants";
@@ -265,8 +265,8 @@ const Chat = (): JSX.Element => {
       <div className="chatWrapper">
         <Resizable
           size={chatDimensions}
-          minWidth={CHAT_WINDOW_WIDTH}
-          minHeight={CHAT_WINDOW_HEIGHT}
+          minWidth={CHAT_MIN_WINDOW_WIDTH}
+          minHeight={CHAT_MIN_WINDOW_HEIGHT}
           maxHeight={height - 50}
           maxWidth={width - 50}
           enable={RESIZABLE_HANDLES}

@@ -55,6 +55,8 @@ declare global {
       ENABLE_HIDDEN_FEATURES: string;
       FEEDBACK_RATING_COLORS_ENABLED: string;
       ENABLE_MULTI_DOMAIN: string;
+      WIDGET_HEIGHT: number;
+      WIDGET_WIDTH: number;
       STREAM_TYPING_SPEED: number;
       IFRAME_TARGET_OIRGIN: string;
       SMAX_INTEGRATION: { enabled: boolean };
