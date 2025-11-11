@@ -54,6 +54,8 @@ Snippet can be embedded to any site using the following html:
     IFRAME_TARGET_OIRGIN: "*",
     FEEDBACK_RATING_COLORS_ENABLED: 'FALSE',
     ENABLE_MULTI_DOMAIN: 'FALSE',
+    WIDGET_HEIGHT: 450;
+    WIDGET_WIDTH: 400;
     STREAM_TYPING_SPEED: 30,
     other variables...
   };

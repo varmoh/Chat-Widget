@@ -1,3 +1,6 @@
+export const externalWidgetHeight = window._env_.WIDGET_HEIGHT;
+export const externalWidgetWidth = window._env_.WIDGET_WIDTH;
+
 /* eslint-disable */
 export const SESSION_STORAGE_CHAT_ID_KEY = 'byk-va-cid';
 export const LOCAL_STORAGE_TARA_LOGIN_REDIRECT = 'byk-va-tara-login-redirect';
@@ -19,8 +22,10 @@ export const MESSAGE_QUE_MAX_LENGTH = 5;
 export const TERMS_AND_CONDITIONS_LINK =
   'https://www.kratid.ee/kasutustingimused';
 export const ERROR_MESSAGE = 'An error has occured';
-export const CHAT_WINDOW_WIDTH = 400;
-export const CHAT_WINDOW_HEIGHT = 460;
+export const CHAT_WINDOW_WIDTH = externalWidgetWidth ?? 400;
+export const CHAT_MIN_WINDOW_WIDTH = 400;
+export const CHAT_WINDOW_HEIGHT = externalWidgetHeight ?? 460;
+export const CHAT_MIN_WINDOW_HEIGHT = 460;
 export const LOCAL_STORAGE_CHAT_DIMENSIONS_KEY = 'chat-dimensions';
 export const IDLE_CHAT_INTERVAL = 15 * 60;
 export const IDLE_CHAT_CHOICES_INTERVAL = 60;
