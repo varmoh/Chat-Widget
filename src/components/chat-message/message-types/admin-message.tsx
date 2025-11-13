@@ -39,11 +39,21 @@ const AdminMessage = ({message}: { message: Message }): JSX.Element => {
     };
 
     useEffect(() => {
-        if (messageRef.current) {
-            const height = messageRef.current.offsetHeight;
-            setIsTall(height > 42);
-        }
-    }, [message]);
+        if (!messageRef.current) return;
+
+        const resizeObserver = new ResizeObserver(() => {
+            if (messageRef.current) {
+                const height = messageRef.current.offsetHeight;
+                setIsTall(height > 42);
+            }
+        });
+
+        resizeObserver.observe(messageRef.current);
+
+        return () => {
+            resizeObserver.disconnect();
+        };
+    }, []);
 
     const messageClass = `admin  ${isTall ? "tall" : ""}`;
 
