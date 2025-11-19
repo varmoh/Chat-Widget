@@ -24,7 +24,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
   const previousMessage = useRef("");
   const isNewStream = useRef(true);
   const typingSpeed = window._env_.STREAM_TYPING_SPEED ?? 30;
-  const { scrollToBottom } = useScroll();
+  const { scrollToBottom, resetAutoScroll } = useScroll();
 
   useEffect(() => {
     if (isNewStream.current || !message.startsWith(previousMessage.current)) {
@@ -33,13 +33,14 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
       displayIndex.current = 0;
       isNewStream.current = false;
 
+      resetAutoScroll();
+
       if (typewriterInterval.current) {
         clearInterval(typewriterInterval.current);
         typewriterInterval.current = null;
       }
       startTypewriting();
-    }
-    else if (message.length > tokenBuffer.current.length) {
+    } else if (message.length > tokenBuffer.current.length) {
       tokenBuffer.current = message;
 
       if (
@@ -48,8 +49,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
       ) {
         startTypewriting();
       }
-    }
-    else if (message.length < tokenBuffer.current.length) {
+    } else if (message.length < tokenBuffer.current.length) {
       tokenBuffer.current = message;
       if (displayIndex.current > message.length) {
         displayIndex.current = message.length;
@@ -59,7 +59,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
     }
 
     previousMessage.current = message;
-  }, [message]);
+  }, [message, resetAutoScroll]);
 
   useEffect(() => {
     if (!isStreaming) {
