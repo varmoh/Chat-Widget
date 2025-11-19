@@ -51,6 +51,11 @@ const UnavailableEndUserContacts = (): JSX.Element => {
         dispatch(setShowUnavailableContactForm(false));
     };
 
+    const closeForm = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        dispatch(setShowUnavailableContactForm(false));
+    };
+
     const submitForm = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (validateInput(endUserContacts)) {
@@ -135,6 +140,9 @@ const UnavailableEndUserContacts = (): JSX.Element => {
                         <div className="form-footer">
                             <StyledButton styleType={StyledButtonType.GRAY} onClick={skipForm}>
                                 {t("header.button.close.label")}
+                            </StyledButton>
+                            <StyledButton styleType={StyledButtonType.GRAY} onClick={closeForm}>
+                                {t("widget.contacts.contact.skip.label")}
                             </StyledButton>
                         </div>
                     )}
