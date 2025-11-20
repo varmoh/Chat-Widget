@@ -12,7 +12,6 @@ const ScrollContext = createContext<ScrollContextType | undefined>(undefined);
 export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const scrollRef = useRef<OverlayScrollbarsComponent | null>(null);
   const userHasScrolledUp = useRef(false);
-  const scrollThreshold = 1;
   const cleanupRef = useRef<(() => void) | null>(null);
 
   const setScrollRef = useCallback((ref: OverlayScrollbarsComponent | null) => {
@@ -29,11 +28,20 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (instance) {
         const viewport = instance.getElements().viewport;
 
+        let lastScrollTop = 0;
+
         const handleScroll = () => {
           const { scrollTop, scrollHeight, clientHeight } = viewport;
-          const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
 
-          userHasScrolledUp.current = distanceFromBottom > scrollThreshold;
+          if (scrollTop < lastScrollTop) {
+            userHasScrolledUp.current = true;
+          }
+
+          if (scrollHeight - scrollTop <= clientHeight + 2) {
+            userHasScrolledUp.current = false;
+          }
+
+          lastScrollTop = scrollTop;
         };
 
         viewport.addEventListener("scroll", handleScroll);
@@ -50,9 +58,13 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, []);
 
   const scrollToBottom = useCallback(() => {
-    if (scrollRef.current && !userHasScrolledUp.current) {
-      const instance = scrollRef.current.osInstance();
-      instance?.scroll({ y: '100%' }, 200);
+    if (!scrollRef.current) return;
+
+    const instance = scrollRef.current.osInstance();
+    if (!instance) return;
+
+    if (!userHasScrolledUp.current) {
+      instance.scroll({ y: "100%" }, 200);
     }
   }, []);
 
@@ -64,7 +76,7 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   useEffect(() => {
     return () => {
-      if (cleanupRef.current) cleanupRef.current();
+      cleanupRef.current?.();
     };
   }, []);
 
