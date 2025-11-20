@@ -142,7 +142,7 @@ const UnavailableEndUserContacts = (): JSX.Element => {
                                 {t("header.button.close.label")}
                             </StyledButton>
                             <StyledButton styleType={StyledButtonType.GRAY} onClick={closeForm}>
-                                {t("widget.contacts.contact.skip.label")}
+                                {t("widget.action.continue")}
                             </StyledButton>
                         </div>
                     )}
