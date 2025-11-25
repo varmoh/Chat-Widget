@@ -52,8 +52,19 @@ const UnavailableEndUserContacts = (): JSX.Element => {
     };
 
     const closeForm = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        dispatch(setShowUnavailableContactForm(false));
+      e.preventDefault();
+      const newMsg: Message = {
+        id: contactMsgId,
+        chatId,
+        content: "",
+        preview: "",
+        authorRole: AUTHOR_ROLES.END_USER,
+        authorTimestamp: new Date().toISOString(),
+        event: CHAT_EVENTS.CONTINUE_CHATTING_WITH_BOT,
+      };
+      dispatch(sendMessageWithNewEvent(newMsg));
+      dispatch(sendMessagePreview(newMsg));
+      dispatch(setShowUnavailableContactForm(false));
     };
 
     const submitForm = async (e: React.MouseEvent<HTMLButtonElement>) => {
