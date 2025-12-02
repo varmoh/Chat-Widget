@@ -1,12 +1,10 @@
 import { useEffect } from "react";
 import { useAppDispatch } from "../store";
-import {
-  authSmaxUser,
-  getUserinfo,
-} from "../slices/authentication-slice";
+import { authSmaxUser, getUserinfo } from "../slices/authentication-slice";
 import useAuthenticationSelector from "./use-authentication-selector";
 import { redirectIfComeBackFromTim } from "../utils/auth-utils";
 import authenticationService from "../services/authentication-service";
+import { setIsChatOpen } from "../slices/chat-slice";
 
 const useAuthentication = (): void => {
   const dispatch = useAppDispatch();
@@ -41,7 +39,10 @@ const useAuthentication = (): void => {
       dispatch(authSmaxUser(code)).then((action) => {
         if (action.meta.requestStatus === "fulfilled") {
           sessionStorage.setItem("last_auth_code", code);
-        } else console.error("Failed to authenticate with SMAX");
+          dispatch(setIsChatOpen(true));
+        } else {
+          console.error("Failed to authenticate with SMAX");
+        }
       });
     }
   }, []);
