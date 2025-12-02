@@ -44,6 +44,7 @@ import useTabActive from "../../hooks/useTabActive";
 import AskForwardToCsa from "../ask-forward-to-csa-modal/ask-forward-to-csa-modal";
 import { isIphone } from "../../utils/browser-utils";
 import { ChatStyles } from "./ChatStyled";
+import ResizeHandleIcon from "../../static/icons/resize-handle.svg";
 import useWidgetSelector from "../../hooks/use-widget-selector";
 import PostChatMessage from "../post-chat-message/post-chat-message";
 
@@ -56,6 +57,14 @@ const RESIZABLE_HANDLES = {
   bottom: false,
   bottomLeft: false,
   left: true,
+};
+
+const RESIZE_HANDLE_COMPONENTS = {
+  topLeft: (
+    <div className="chat-resize-handle chat-resize-handle-top-left">
+      <img src={ResizeHandleIcon} alt="Resize chat window" />
+    </div>
+  ),
 };
 
 const Chat = (): JSX.Element => {
@@ -270,6 +279,7 @@ const Chat = (): JSX.Element => {
           maxHeight={height - 50}
           maxWidth={width - 50}
           enable={RESIZABLE_HANDLES}
+          handleComponent={RESIZE_HANDLE_COMPONENTS}
           onResizeStop={handleChatResize}
         >
           <motion.div

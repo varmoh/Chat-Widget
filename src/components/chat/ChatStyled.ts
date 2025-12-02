@@ -10,6 +10,22 @@ export const ChatStyles = styled.div`
         bottom: 0;
     }
 
+    .chat-resize-handle {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: nwse-resize;
+        z-index: 100;
+    }
+
+    .chat-resize-handle-top-left {
+        top: 11px;
+        left: 10px;
+    }
+
     @media screen and (max-width: 480px) {
         .chatWrapper {
             display: flex;
