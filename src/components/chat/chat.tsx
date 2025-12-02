@@ -122,12 +122,6 @@ const Chat = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    if (isFullScreen) {
-      dispatch(setChatDimensions({ width: window.innerWidth, height: window.innerHeight }));
-    }
-  }, [width, height]);
-
-  useEffect(() => {
     if(!widgetConfig.showIdleWarningMessage) {
       setIdleTimerSelection(0);
     } else {
@@ -284,7 +278,7 @@ const Chat = (): JSX.Element => {
   };
 
   return (
-    <ChatStyles isFullScreen>
+    <ChatStyles isFullScreen={isFullScreen}>
       <div className="chatWrapper">
         <Resizable
           size={chatDimensions}

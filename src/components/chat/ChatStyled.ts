@@ -42,7 +42,7 @@ export const ChatStyles = styled.div<{isFullScreen?: boolean}>`
         background: #ffffff;
         box-shadow: 0 4px 4px ${colors.gray};
         height: 100%;
-        border-radius: 8px;
+        border-radius: ${props => props.isFullScreen ? '0' : '8px'};
         font-size: 14px;
         line-height: 1.5;
 

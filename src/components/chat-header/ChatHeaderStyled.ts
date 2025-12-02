@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import {colors, fontTitle} from "../../styling/style_settings";
 
-export const ChatHeaderStyles = styled.div `
+export const ChatHeaderStyles = styled.div<{isFullScreen?: boolean}> `
     display: flex;
     background: ${colors.primary};
-    border-radius: 8px 8px 0 0;
+    border-radius: ${props => props.isFullScreen ? '0' : '8px 8px 0 0'};
     padding: 0.5em;
     justify-content: space-between;
     align-items: center;

@@ -30,7 +30,7 @@ const ChatHeader = (props: ChatHeaderType): JSX.Element => {
 
     return (
         <ChatHeaderInitialStyles>
-            <ChatHeaderStyles>
+            <ChatHeaderStyles isFullScreen={isFullScreen}>
                 <motion.button
                     whileHover={{scale: 1.2}}
                     className={`close_button hamburger-icon ${isDetailSelected ? 'active' : ''}`}
