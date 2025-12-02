@@ -8,6 +8,10 @@ export const ChatStyles = styled.div<{isFullScreen?: boolean}>`
         margin: ${props => props.isFullScreen ? '0' : '1em'};
         right: 0;
         bottom: 0;
+        top: ${props => props.isFullScreen ? '0' : 'auto'};
+        left: ${props => props.isFullScreen ? '0' : 'auto'};
+        width: ${props => props.isFullScreen ? '100vw' : 'auto'};
+        height: ${props => props.isFullScreen ? '100vh' : 'auto'};
     }
 
     .chat-resize-handle {
@@ -41,7 +45,8 @@ export const ChatStyles = styled.div<{isFullScreen?: boolean}>`
         font-family: ${fontChat};
         background: #ffffff;
         box-shadow: 0 4px 4px ${colors.gray};
-        height: 100%;
+        height: ${props => props.isFullScreen ? '100vh' : '100%'};
+        width: ${props => props.isFullScreen ? '100vw' : '100%'};
         border-radius: ${props => props.isFullScreen ? '0' : '8px'};
         font-size: 14px;
         line-height: 1.5;
