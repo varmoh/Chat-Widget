@@ -18,6 +18,7 @@ import ChatKeyPad from "../chat-keypad/chat-keypad";
 import ConfirmationModal from "../confirmation-modal/confirmation-modal";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
+  closeFullScreen,
   endChat,
   getGreeting,
   resetChatState,
@@ -73,6 +74,7 @@ const Chat = (): JSX.Element => {
   const [showFeedbackResult, setShowFeedbackResult] = useState(false);
   const { t } = useTranslation();
   const { isAuthenticated } = useAuthenticationSelector();
+  const { isFullScreen } = useChatSelector();
   const { height, width } = useWindowDimensions();
   const { widgetConfig } = useWidgetSelector();
   const {
@@ -120,6 +122,12 @@ const Chat = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
+    if (isFullScreen) {
+      dispatch(setChatDimensions({ width: window.innerWidth, height: window.innerHeight }));
+    }
+  }, [width, height]);
+
+  useEffect(() => {
     if(!widgetConfig.showIdleWarningMessage) {
       setIdleTimerSelection(0);
     } else {
@@ -156,6 +164,12 @@ const Chat = (): JSX.Element => {
       dispatch(getGreeting());
     }
   }, [dispatch, chatId, feedback.isFeedbackConfirmationShown, messages]);
+
+  const handleResizeStart = () => {
+    if (isFullScreen) {
+      dispatch(closeFullScreen());
+    }
+  }
 
   const handleChatResize: ResizeCallback = (
     event,
@@ -280,6 +294,7 @@ const Chat = (): JSX.Element => {
           maxWidth={width - 50}
           enable={RESIZABLE_HANDLES}
           handleComponent={RESIZE_HANDLE_COMPONENTS}
+          onResizeStart={handleResizeStart}
           onResizeStop={handleChatResize}
         >
           <motion.div

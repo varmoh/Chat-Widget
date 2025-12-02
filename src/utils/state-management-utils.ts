@@ -5,6 +5,7 @@ import {
   CHAT_WINDOW_HEIGHT,
   CHAT_WINDOW_WIDTH,
   LOCAL_STORAGE_CHAT_DIMENSIONS_KEY,
+  LOCAL_STORAGE_IS_FULL_SCREEN_KEY,
   SESSION_STORAGE_CHAT_ID_KEY,
   TERMINATE_STATUS
 } from '../constants';
@@ -71,15 +72,20 @@ export const clearStateVariablesFromLocalStorage = (): void => {
   setToLocalStorage("newMessagesAmount", 0);
 };
 
-export const getInitialChatDimensions = (): { width: number, height: number } => {
-  const storedDimensions = getFromLocalStorage(LOCAL_STORAGE_CHAT_DIMENSIONS_KEY)
+export const getInitialChatDimensions = (): { width: number; height: number } => {
+  const storedDimensions = getFromLocalStorage(LOCAL_STORAGE_CHAT_DIMENSIONS_KEY);
 
   const isValiedValue = !isNaN(storedDimensions?.width) && !isNaN(storedDimensions?.height);
-
-  return isValiedValue
+  const dimensionsCheck = isValiedValue
     ? storedDimensions
     : {
-      width: CHAT_WINDOW_WIDTH,
-      height: CHAT_WINDOW_HEIGHT
-    };
+        width: CHAT_WINDOW_WIDTH,
+        height: CHAT_WINDOW_HEIGHT,
+      };
+  return getInitialIsFullScreen() ? { width: window.innerWidth, height: window.innerHeight } : dimensionsCheck;
+};
+
+export const getInitialIsFullScreen = (): boolean => {
+  const storedIsFullScreen = getFromLocalStorage(LOCAL_STORAGE_IS_FULL_SCREEN_KEY);
+  return storedIsFullScreen === true;
 }

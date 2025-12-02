@@ -1,7 +1,7 @@
 import React, {memo, MouseEventHandler} from 'react';
 import {useTranslation} from 'react-i18next';
 import {motion} from 'framer-motion';
-import {setIsChatOpen} from '../../slices/chat-slice';
+import {setIsChatOpen, setIsFullScreen} from '../../slices/chat-slice';
 import {showConfirmationModal} from '../../slices/widget-slice';
 import Close from '../../static/icons/close.svg';
 import FullScreen from '../../static/icons/full-screen.svg';
@@ -24,6 +24,8 @@ const ChatHeader = (props: ChatHeaderType): JSX.Element => {
     const {chatId} = useChatSelector();
     const {isAuthenticated} = useAuthenticationSelector();
     const minimizeChat = () => dispatch(setIsChatOpen(false));
+    const { isFullScreen } = useChatSelector();
+    const setFullScreen = (value: boolean) => dispatch(setIsFullScreen(value));
     const dispatch = useAppDispatch();
 
     return (
@@ -53,14 +55,12 @@ const ChatHeader = (props: ChatHeaderType): JSX.Element => {
                         <img src={Minimize} alt="Minimize icon"/>
                     </button>
                     <button
-                        title={t('header.button.fullscreen.label')}
-                        onClick={() => {
-                            
-                        }}
-                        aria-label={t('header.button.fullscreen.label')}
+                        title={t(`header.button.${isFullScreen ? 'close-' : ''}fullscreen.label`)}
+                        onClick={() => setFullScreen(!isFullScreen)}
+                        aria-label={t(`header.button.${isFullScreen ? 'close-' : ''}fullscreen.label`)}
                         type="button"
                     >
-                        <img src={FullScreen} alt={t('header.button.fullscreen.label')}/>
+                        <img src={isFullScreen ? CloseFullScreen : FullScreen} alt={t(`header.button.${isFullScreen ? 'close-' : ''}fullscreen.label`)}/>
                     </button>
                     <button
                         title={t('header.button.close.label')}
