@@ -4,7 +4,9 @@ import {motion} from 'framer-motion';
 import {setIsChatOpen} from '../../slices/chat-slice';
 import {showConfirmationModal} from '../../slices/widget-slice';
 import Close from '../../static/icons/close.svg';
+import FullScreen from '../../static/icons/full-screen.svg';
 import Minimize from '../../static/icons/minimize.svg';
+import CloseFullScreen from '../../static/icons/close-full-screen.svg';
 import Shield from '../../static/icons/shield.svg';
 import {useAppDispatch} from '../../store';
 import useChatSelector from '../../hooks/use-chat-selector';
@@ -49,6 +51,16 @@ const ChatHeader = (props: ChatHeaderType): JSX.Element => {
                     <button title={t('header.button.minimize.label')} onClick={minimizeChat}
                             aria-label={t('header.button.minimize.label')} type="button">
                         <img src={Minimize} alt="Minimize icon"/>
+                    </button>
+                    <button
+                        title={t('header.button.fullscreen.label')}
+                        onClick={() => {
+                            
+                        }}
+                        aria-label={t('header.button.fullscreen.label')}
+                        type="button"
+                    >
+                        <img src={FullScreen} alt={t('header.button.fullscreen.label')}/>
                     </button>
                     <button
                         title={t('header.button.close.label')}
