@@ -284,14 +284,14 @@ const Chat = (): JSX.Element => {
   };
 
   return (
-    <ChatStyles>
+    <ChatStyles isFullScreen>
       <div className="chatWrapper">
         <Resizable
           size={chatDimensions}
           minWidth={CHAT_MIN_WINDOW_WIDTH}
           minHeight={CHAT_MIN_WINDOW_HEIGHT}
-          maxHeight={height - 50}
-          maxWidth={width - 50}
+          maxHeight={isFullScreen ? height : height - 50}
+          maxWidth={isFullScreen ? width : width - 50}
           enable={RESIZABLE_HANDLES}
           handleComponent={RESIZE_HANDLE_COMPONENTS}
           onResizeStart={handleResizeStart}
