@@ -11,12 +11,14 @@ import {
   LOCAL_STORAGE_CHAT_DIMENSIONS_KEY,
   TERMINATE_STATUS,
   CHAT_MODES,
+  LOCAL_STORAGE_IS_FULL_SCREEN_KEY,
 } from "../constants";
 import { Chat } from "../model/chat-model";
 import {
   clearStateVariablesFromLocalStorage,
   findMatchingMessageFromMessageList,
   getInitialChatDimensions,
+  getInitialIsFullScreen,
 } from "../utils/state-management-utils";
 import {
   getFromLocalStorage,
@@ -60,6 +62,7 @@ export interface ChatState {
     width: number;
     height: number;
   };
+  isFullScreen: boolean;
   customerSupportId: string;
   lastReadMessageTimestamp: string | null;
   messages: Message[];
@@ -127,6 +130,7 @@ const initialState: ChatState = {
   isChatOpen: false,
   chatStatus: null,
   chatDimensions: getInitialChatDimensions(),
+  isFullScreen: getInitialIsFullScreen(),
   customerSupportId: "",
   lastReadMessageTimestamp: null,
   messages: [],
@@ -193,6 +197,7 @@ const initialStateOpen: ChatState = {
     isChatOpen: true,
     chatStatus: null,
     chatDimensions: getInitialChatDimensions(),
+    isFullScreen: getInitialIsFullScreen(),
     customerSupportId: "",
     lastReadMessageTimestamp: null,
     messages: [],
@@ -560,6 +565,22 @@ export const chatSlice = createSlice({
       state.chatDimensions = action.payload;
       setToLocalStorage(LOCAL_STORAGE_CHAT_DIMENSIONS_KEY, action.payload);
     },
+    setIsFullScreen: (state, action: PayloadAction<boolean>) => {
+      state.isFullScreen = action.payload;
+      setToLocalStorage(LOCAL_STORAGE_IS_FULL_SCREEN_KEY, action.payload);
+      if (action.payload) {
+        state.chatDimensions = {
+          width: window.innerWidth,
+          height: window.innerHeight,
+        };
+      } else {
+        state.chatDimensions = getInitialChatDimensions();
+      }
+    },
+    closeFullScreen: (state) => {
+      state.isFullScreen = false;
+      setToLocalStorage(LOCAL_STORAGE_IS_FULL_SCREEN_KEY, false);
+    },
     clearMessageQueue: (state) => {
       state.messageQueue = [];
     },
@@ -924,6 +945,8 @@ export const {
   setChatId,
   setIsChatOpen,
   setChatDimensions,
+  setIsFullScreen,
+  closeFullScreen,
   resetState,
   resetStateOpen,
   clearMessageQueue,

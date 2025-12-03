@@ -1,13 +1,33 @@
 import styled from "styled-components";
 import {colors, fontChat, fontChatBold} from "../../styling/style_settings";
 
-export const ChatStyles = styled.div`
+export const ChatStyles = styled.div<{isFullScreen?: boolean}>`
     .chatWrapper {
         z-index: 99;
         position: fixed;
-        margin: 1em;
+        margin: ${props => props.isFullScreen ? '0' : '1em'};
         right: 0;
         bottom: 0;
+        top: ${props => props.isFullScreen ? '0' : 'auto'};
+        left: ${props => props.isFullScreen ? '0' : 'auto'};
+        width: ${props => props.isFullScreen ? '100vw' : 'auto'};
+        height: ${props => props.isFullScreen ? '100vh' : 'auto'};
+    }
+
+    .chat-resize-handle {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: nwse-resize;
+        z-index: 100;
+    }
+
+    .chat-resize-handle-top-left {
+        top: 11px;
+        left: 10px;
     }
 
     @media screen and (max-width: 480px) {
@@ -25,8 +45,9 @@ export const ChatStyles = styled.div`
         font-family: ${fontChat};
         background: #ffffff;
         box-shadow: 0 4px 4px ${colors.gray};
-        height: 100%;
-        border-radius: 8px;
+        height: ${props => props.isFullScreen ? '100vh' : '100%'};
+        width: ${props => props.isFullScreen ? '100vw' : '100%'};
+        border-radius: ${props => props.isFullScreen ? '0' : '8px'};
         font-size: 14px;
         line-height: 1.5;
 

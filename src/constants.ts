@@ -27,6 +27,7 @@ export const CHAT_MIN_WINDOW_WIDTH = 400;
 export const CHAT_WINDOW_HEIGHT = externalWidgetHeight ?? 460;
 export const CHAT_MIN_WINDOW_HEIGHT = 460;
 export const LOCAL_STORAGE_CHAT_DIMENSIONS_KEY = 'chat-dimensions';
+export const LOCAL_STORAGE_IS_FULL_SCREEN_KEY = "is-full-screen";
 export const IDLE_CHAT_INTERVAL = 15 * 60;
 export const IDLE_CHAT_CHOICES_INTERVAL = 60;
 export const EXTEND_JWT_COOKIE_IN_MS = 30000;

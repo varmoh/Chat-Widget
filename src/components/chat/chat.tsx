@@ -18,6 +18,7 @@ import ChatKeyPad from "../chat-keypad/chat-keypad";
 import ConfirmationModal from "../confirmation-modal/confirmation-modal";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
+  closeFullScreen,
   endChat,
   getGreeting,
   resetChatState,
@@ -44,6 +45,7 @@ import useTabActive from "../../hooks/useTabActive";
 import AskForwardToCsa from "../ask-forward-to-csa-modal/ask-forward-to-csa-modal";
 import { isIphone } from "../../utils/browser-utils";
 import { ChatStyles } from "./ChatStyled";
+import ResizeHandleIcon from "../../static/icons/resize-handle.svg";
 import useWidgetSelector from "../../hooks/use-widget-selector";
 import PostChatMessage from "../post-chat-message/post-chat-message";
 
@@ -58,12 +60,21 @@ const RESIZABLE_HANDLES = {
   left: true,
 };
 
+const RESIZE_HANDLE_COMPONENTS = {
+  topLeft: (
+    <div className="chat-resize-handle chat-resize-handle-top-left">
+      <img src={ResizeHandleIcon} alt="Resize chat window" />
+    </div>
+  ),
+};
+
 const Chat = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const [showWidgetDetails, setShowWidgetDetails] = useState(false);
   const [showFeedbackResult, setShowFeedbackResult] = useState(false);
   const { t } = useTranslation();
   const { isAuthenticated } = useAuthenticationSelector();
+  const { isFullScreen } = useChatSelector();
   const { height, width } = useWindowDimensions();
   const { widgetConfig } = useWidgetSelector();
   const {
@@ -147,6 +158,12 @@ const Chat = (): JSX.Element => {
       dispatch(getGreeting());
     }
   }, [dispatch, chatId, feedback.isFeedbackConfirmationShown, messages]);
+
+  const handleResizeStart = () => {
+    if (isFullScreen) {
+      dispatch(closeFullScreen());
+    }
+  }
 
   const handleChatResize: ResizeCallback = (
     event,
@@ -261,15 +278,17 @@ const Chat = (): JSX.Element => {
   };
 
   return (
-    <ChatStyles>
+    <ChatStyles isFullScreen={isFullScreen}>
       <div className="chatWrapper">
         <Resizable
-          size={chatDimensions}
+          size={isFullScreen ? { width: window.innerWidth, height: window.innerHeight } : chatDimensions}
           minWidth={CHAT_MIN_WINDOW_WIDTH}
           minHeight={CHAT_MIN_WINDOW_HEIGHT}
-          maxHeight={height - 50}
-          maxWidth={width - 50}
-          enable={RESIZABLE_HANDLES}
+          maxHeight={isFullScreen ? window.innerHeight : height - 50}
+          maxWidth={isFullScreen ? window.innerWidth : width - 50}
+          enable={isFullScreen ? {} : RESIZABLE_HANDLES}
+          handleComponent={RESIZE_HANDLE_COMPONENTS}
+          onResizeStart={handleResizeStart}
           onResizeStop={handleChatResize}
         >
           <motion.div
@@ -282,33 +301,21 @@ const Chat = (): JSX.Element => {
               isDetailSelected={showWidgetDetails}
               detailHandler={() => setShowWidgetDetails(!showWidgetDetails)}
             />
-            {messageQueue.length >= 5 && (
-              <WarningNotification warningMessage={t("chat.error-message")} />
-            )}
+            {messageQueue.length >= 5 && <WarningNotification warningMessage={t("chat.error-message")} />}
             {burokrattOnlineStatus !== true && <OnlineStatusNotification />}
             {showWidgetDetails && <WidgetDetails />}
             {!showWidgetDetails && showContactForm && <EndUserContacts />}
-            {!showWidgetDetails && showUnavailableContactForm && (
-              <UnavailableEndUserContacts />
+            {!showWidgetDetails && showUnavailableContactForm && <UnavailableEndUserContacts />}
+            {!showWidgetDetails && !showContactForm && !showUnavailableContactForm && showAskToForwardToCsaForm && (
+              <AskForwardToCsa />
             )}
-            {!showWidgetDetails &&
-              !showContactForm &&
-              !showUnavailableContactForm &&
-              showAskToForwardToCsaForm && <AskForwardToCsa />}
-            {!showWidgetDetails &&
-              !showContactForm &&
-              !showUnavailableContactForm &&
-              !showAskToForwardToCsaForm && <ChatContent />}
+            {!showWidgetDetails && !showContactForm && !showUnavailableContactForm && !showAskToForwardToCsaForm && (
+              <ChatContent />
+            )}
             {idleChat.isIdle && !displayEndMessage && widgetConfig.showIdleWarningMessage && (
-              <IdleChatNotification
-                customMessage={widgetConfig.idleMessage}
-              />
+              <IdleChatNotification customMessage={widgetConfig.idleMessage} />
             )}
-            {displayEndMessage && (
-                <PostChatMessage
-                    customMessage={widgetConfig.autoCloseText}
-                />
-            )}
+            {displayEndMessage && <PostChatMessage customMessage={widgetConfig.autoCloseText} />}
             {showResponseError && !isChatEnded && <ResponseErrorNotification />}
             {showFeedbackResult ? (
               <ChatFeedbackConfirmation />
