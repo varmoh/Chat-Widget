@@ -12,6 +12,7 @@ import {useAppDispatch} from '../../store';
 import useChatSelector from '../../hooks/use-chat-selector';
 import useAuthenticationSelector from '../../hooks/use-authentication-selector';
 import {ChatHeaderInitialStyles, ChatHeaderStyles} from "./ChatHeaderStyled";
+import { useScroll } from '../../contexts/ScrollContext';
 
 interface ChatHeaderType {
     detailHandler: MouseEventHandler<HTMLButtonElement>;
@@ -22,10 +23,16 @@ const ChatHeader = (props: ChatHeaderType): JSX.Element => {
     const {detailHandler, isDetailSelected} = props;
     const {t} = useTranslation();
     const {chatId} = useChatSelector();
+    const { scrollToBottom } = useScroll();
     const {isAuthenticated} = useAuthenticationSelector();
     const minimizeChat = () => dispatch(setIsChatOpen(false));
     const { isFullScreen } = useChatSelector();
-    const setFullScreen = (value: boolean) => dispatch(setIsFullScreen(value));
+    const setFullScreen = (value: boolean) => {
+      dispatch(setIsFullScreen(value));
+      setTimeout(() => {
+        scrollToBottom();
+      }, 0);
+    };
     const dispatch = useAppDispatch();
 
     return (
