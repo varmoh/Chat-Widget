@@ -765,7 +765,6 @@ export const chatSlice = createSlice({
       state.messages[estimatedMsgIndex].content = "hidden";
     },
     updateStreamingMessage: (state, action: PayloadAction<Message>) => {
-      console.log("Updating streaming message:", action.payload);
       state.showLoadingMessage = false;
       const streamMessage = action.payload;
 
