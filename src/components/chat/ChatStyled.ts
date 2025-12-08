@@ -50,6 +50,7 @@ export const ChatStyles = styled.div<{isFullScreen?: boolean}>`
         border-radius: ${props => props.isFullScreen ? '0' : '8px'};
         font-size: 14px;
         line-height: 1.5;
+        transition: none !important;
 
         b, strong {
             font-family: ${fontChatBold};
