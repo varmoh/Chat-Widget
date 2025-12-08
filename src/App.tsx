@@ -66,7 +66,7 @@ declare global {
 
 const App: FC = () => {
   const dispatch = useAppDispatch();
-  const { isChatOpen, messages, chatId, emergencyNotice } = useChatSelector();
+  const { isChatOpen, messages, chatId, emergencyNotice, isFullScreen } = useChatSelector();
   const { widgetConfig } = useWidgetSelector();
   const [displayWidget, setDisplayWidget] = useState(
     !!getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()
@@ -102,11 +102,8 @@ const App: FC = () => {
         : "auto";
     }
 
-    window.parent.postMessage(
-      { isOpened: isChatOpen },
-      window._env_.IFRAME_TARGET_OIRGIN
-    );
-  }, [isChatOpen]);
+    window.parent.postMessage({ isOpened: isChatOpen, isFullScreen: isFullScreen }, window._env_.IFRAME_TARGET_OIRGIN);
+  }, [isChatOpen, isFullScreen]);
 
   useGetEmergencyNotice();
   useAuthentication();

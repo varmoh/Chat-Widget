@@ -22,16 +22,16 @@ interface ChatHeaderType {
 const ChatHeader = (props: ChatHeaderType): JSX.Element => {
     const {detailHandler, isDetailSelected} = props;
     const {t} = useTranslation();
-    const {chatId} = useChatSelector();
+    const { chatId, isChatOpen, isFullScreen } = useChatSelector();
     const { scrollToBottom } = useScroll();
     const {isAuthenticated} = useAuthenticationSelector();
     const minimizeChat = () => dispatch(setIsChatOpen(false));
-    const { isFullScreen } = useChatSelector();
     const setFullScreen = (value: boolean) => {
       dispatch(setIsFullScreen(value));
       setTimeout(() => {
         scrollToBottom();
       }, 0);
+      window.parent.postMessage({ isOpened: isChatOpen, isFullScreen: value }, window._env_.IFRAME_TARGET_OIRGIN);
     };
     const dispatch = useAppDispatch();
 
