@@ -4,7 +4,7 @@ import {colors, fontChat, fontChatBold} from "../../styling/style_settings";
 export const ChatStyles = styled.div<{isFullScreen?: boolean}>`
     .chatWrapper {
         z-index: 99;
-        position: fixed;
+        position: fixed !important;
         margin: ${props => props.isFullScreen ? '0' : '1em'};
         right: 0;
         bottom: 0;
@@ -15,7 +15,7 @@ export const ChatStyles = styled.div<{isFullScreen?: boolean}>`
     }
 
     .chat-resize-handle {
-        position: absolute;
+        position: absolute !important;
         width: 14px;
         height: 14px;
         display: flex;
