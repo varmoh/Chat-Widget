@@ -83,10 +83,13 @@ If you want to use the widget inside an Iframe use the following snippet or refe
         "message",
         (e) => {
           const isOpened = e.data.isOpened;
+          const isFullScreen = e.data.isFullScreen;
           if (isOpened != undefined) {
-            const iframe = window.document.getElementById("YOUR_IFRAME_ID");
-            iframe.width = isOpened ? "OPENED_WIDTH" : "CLOSED_WIDTH";
-            iframe.height = isOpened ? "OPENED_HEIGHT" : "CLOSED_HEIGHT";
+            const iframe = window.document.getElementById("byk-widget-iframe");
+            const checkWidth =  isOpened ? "430" : "270";
+            const checkHeight = isOpened ? "480" : "120";
+            iframe.width = isFullScreen ? window.innerWidth : checkWidth;
+            iframe.height = isFullScreen ? window.innerHeight : checkHeight;
           }
         },
         false
