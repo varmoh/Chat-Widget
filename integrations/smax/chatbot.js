@@ -113,26 +113,30 @@ class BykChatbot extends HTMLElement {
 
   _handleWindowMessage(e) {
     const isOpened = e.data?.isOpened;
+    const isFullScreen = e.data?.isFullScreen;
     if (isOpened === undefined || !this._iframe) return;
 
     if (isOpened) {
-      if (this._authDone) {
-        this._iframe.width = "480";
-        this._iframe.height = "510";
-      } else {
-        this.handleAuthentication();
-        this._iframe.width = "0";
-        this._iframe.height = "0";
-      }
+      this._checkAuth(isFullScreen);
     } else {
-      this._iframe.width = "270";
-      this._iframe.height = "120";
+      this._iframe.width = isFullScreen ? window.innerWidth : "270";
+      this._iframe.height = isFullScreen ? window.innerHeight : "120";
+    }
+  }
+
+  _checkAuth(isFullScreen) {
+    if (this._authDone) {
+      this._iframe.width = isFullScreen ? window.innerWidth : "480";
+      this._iframe.height = isFullScreen ? window.innerHeight : "510";
+    } else {
+      this.handleAuthentication();
+      this._iframe.width = "0";
+      this._iframe.height = "0";
     }
   }
 
   generateStateToken() {
-    const charset =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     return Array.from(crypto.getRandomValues(new Uint8Array(32)))
       .map((x) => charset[x % charset.length])
       .join("");
