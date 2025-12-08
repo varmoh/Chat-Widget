@@ -12,6 +12,7 @@ export const ChatStyles = styled.div<{isFullScreen?: boolean}>`
         left: ${props => props.isFullScreen ? '0' : 'auto'};
         width: ${props => props.isFullScreen ? '100vw' : 'auto'};
         height: ${props => props.isFullScreen ? '100vh' : 'auto'};
+        transition: none !important;
     }
 
     .chat-resize-handle {
@@ -36,6 +37,7 @@ export const ChatStyles = styled.div<{isFullScreen?: boolean}>`
             margin: 0.5em;
             top: 0;
             left: 0;
+            transition: none !important;
         }
     }
 
