@@ -33,7 +33,9 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         lastScrollTopRef.current = viewport.scrollTop;
 
         const handleScroll = () => {
+        console.log('scrolling');
           const { scrollTop, scrollHeight, clientHeight } = viewport;
+          console.log("scrollTop:", scrollTop, "scrollHeight:", scrollHeight, "clientHeight:", clientHeight);
 
           if (programmaticScrollStartRef.current !== null) {
             if (scrollTop < programmaticScrollStartRef.current) {
