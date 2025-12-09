@@ -5,6 +5,7 @@ interface ScrollContextType {
   scrollToBottom: () => void;
   setScrollRef: (ref: OverlayScrollbarsComponent | null) => void;
   resetAutoScroll: () => void;
+  isAtBottom: () => boolean;
 }
 
 const ScrollContext = createContext<ScrollContextType | undefined>(undefined);
@@ -34,14 +35,16 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
         const handleScroll = () => {
           const { scrollTop, scrollHeight, clientHeight } = viewport;
+          const isCurrentlyAtBottom = scrollHeight - scrollTop <= clientHeight + 2;
 
           if (programmaticScrollStartRef.current !== null) {
             if (scrollTop < programmaticScrollStartRef.current) {
               userHasScrolledUp.current = true;
               programmaticScrollStartRef.current = null;
               lastScrollTopRef.current = scrollTop;
-            } else if (scrollHeight - scrollTop <= clientHeight + 2) {
+            } else if (isCurrentlyAtBottom) {
               userHasScrolledUp.current = false;
+              programmaticScrollStartRef.current = null;
             }
             return;
           }
@@ -50,7 +53,7 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             userHasScrolledUp.current = true;
           }
 
-          if (scrollHeight - scrollTop <= clientHeight + 2) {
+          if (isCurrentlyAtBottom) {
             userHasScrolledUp.current = false;
           }
 
@@ -66,9 +69,23 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, []);
 
-  const resetAutoScroll = useCallback(() => {
-    userHasScrolledUp.current = false;
+  const isAtBottom = useCallback(() => {
+    if (!scrollRef.current) return false;
+    
+    const instance = scrollRef.current.osInstance();
+    if (!instance) return false;
+    
+    const viewport = instance.getElements().viewport;
+    const { scrollTop, scrollHeight, clientHeight } = viewport;
+    
+    return scrollHeight - scrollTop <= clientHeight + 2;
   }, []);
+
+  const resetAutoScroll = useCallback(() => {
+    if (isAtBottom()) {
+      userHasScrolledUp.current = false;
+    }
+  }, [isAtBottom]);
 
   const scrollToBottom = useCallback(() => {
     if (!scrollRef.current) return;
@@ -96,7 +113,8 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     scrollToBottom,
     setScrollRef,
     resetAutoScroll,
-  }), [scrollToBottom, setScrollRef, resetAutoScroll]);
+    isAtBottom,
+  }), [scrollToBottom, setScrollRef, resetAutoScroll, isAtBottom]);
 
   useEffect(() => {
     return () => {

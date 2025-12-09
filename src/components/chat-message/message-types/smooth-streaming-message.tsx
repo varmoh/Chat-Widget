@@ -24,7 +24,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
   const previousMessage = useRef("");
   const isNewStream = useRef(true);
   const typingSpeed = window._env_.STREAM_TYPING_SPEED ?? 30;
-  const { scrollToBottom, resetAutoScroll } = useScroll();
+  const { scrollToBottom, resetAutoScroll, isAtBottom } = useScroll();
 
   useEffect(() => {
     if (isNewStream.current || !message.startsWith(previousMessage.current)) {
@@ -54,12 +54,14 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
       if (displayIndex.current > message.length) {
         displayIndex.current = message.length;
         setDisplayedText(message);
-        scrollToBottom();
+        if (isAtBottom()) {
+          scrollToBottom();
+        }
       }
     }
 
     previousMessage.current = message;
-  }, [message, resetAutoScroll]);
+  }, [message, resetAutoScroll, isAtBottom, scrollToBottom]);
 
   useEffect(() => {
     if (!isStreaming) {
