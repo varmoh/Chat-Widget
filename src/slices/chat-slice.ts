@@ -693,6 +693,7 @@ export const chatSlice = createSlice({
         return;
       }
 
+      state.showLoadingMessage = false;
       state.lastReadMessageTimestamp = new Date().toISOString();
       state.newMessagesAmount += receivedMessages.length;
       state.messages = filterDuplicatMessages([...newMessagesList, ...receivedMessages]);
