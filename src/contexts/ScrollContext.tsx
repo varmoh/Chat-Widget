@@ -13,6 +13,8 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const scrollRef = useRef<OverlayScrollbarsComponent | null>(null);
   const userHasScrolledUp = useRef(false);
   const cleanupRef = useRef<(() => void) | null>(null);
+  const programmaticScrollStartRef = useRef<number | null>(null);
+  const lastScrollTopRef = useRef<number>(0);
 
   const setScrollRef = useCallback((ref: OverlayScrollbarsComponent | null) => {
     if (cleanupRef.current) {
@@ -28,12 +30,23 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (instance) {
         const viewport = instance.getElements().viewport;
 
-        let lastScrollTop = 0;
+        lastScrollTopRef.current = viewport.scrollTop;
 
         const handleScroll = () => {
           const { scrollTop, scrollHeight, clientHeight } = viewport;
 
-          if (scrollTop < lastScrollTop) {
+          if (programmaticScrollStartRef.current !== null) {
+            if (scrollTop < programmaticScrollStartRef.current) {
+              userHasScrolledUp.current = true;
+              programmaticScrollStartRef.current = null;
+              lastScrollTopRef.current = scrollTop;
+            } else if (scrollHeight - scrollTop <= clientHeight + 2) {
+              userHasScrolledUp.current = false;
+            }
+            return;
+          }
+
+          if (scrollTop < lastScrollTopRef.current) {
             userHasScrolledUp.current = true;
           }
 
@@ -41,7 +54,7 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             userHasScrolledUp.current = false;
           }
 
-          lastScrollTop = scrollTop;
+          lastScrollTopRef.current = scrollTop;
         };
 
         viewport.addEventListener("scroll", handleScroll);
@@ -64,7 +77,18 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (!instance) return;
 
     if (!userHasScrolledUp.current) {
+      const viewport = instance.getElements().viewport;
+      programmaticScrollStartRef.current = viewport.scrollTop;
+      
       instance.scroll({ y: "100%" }, 200);
+      
+      setTimeout(() => {
+        programmaticScrollStartRef.current = null;
+        const finalViewport = instance.getElements().viewport;
+        if (finalViewport) {
+          lastScrollTopRef.current = finalViewport.scrollTop;
+        }
+      }, 250);
     }
   }, []);
 
