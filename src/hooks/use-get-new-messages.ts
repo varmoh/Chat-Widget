@@ -62,7 +62,6 @@ const useGetNewMessages = (): void => {
               dispatch(addMessagesToDisplay(messages.filter(isDisplayableMessages)));
               dispatch(handleStateChangingEventMessages(messages.filter(isStateChangingEventMessage)));
             }
-            setTimeout(() => { dispatch(setShowLoadingMessage(false)); }, 0);
           }
         } else if (type === "stream_start") {
           currentStreamContent.current = "";
