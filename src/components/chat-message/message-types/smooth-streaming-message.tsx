@@ -24,7 +24,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
   const previousMessage = useRef("");
   const isNewStream = useRef(true);
   const typingSpeed = window._env_.STREAM_TYPING_SPEED ?? 30;
-  const { scrollToBottom, resetAutoScroll, isAtBottom } = useScroll();
+  const { scrollToBottom, resetAutoScroll } = useScroll();
 
   useEffect(() => {
     if (isNewStream.current || !message.startsWith(previousMessage.current)) {
@@ -43,10 +43,7 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
     } else if (message.length > tokenBuffer.current.length) {
       tokenBuffer.current = message;
 
-      if (
-        !typewriterInterval.current &&
-        tokenBuffer.current.length > displayIndex.current
-      ) {
+      if (!typewriterInterval.current && tokenBuffer.current.length > displayIndex.current) {
         startTypewriting();
       }
     } else if (message.length < tokenBuffer.current.length) {
@@ -54,14 +51,12 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
       if (displayIndex.current > message.length) {
         displayIndex.current = message.length;
         setDisplayedText(message);
-        if (isAtBottom()) {
-          scrollToBottom();
-        }
+        scrollToBottom();
       }
     }
 
     previousMessage.current = message;
-  }, [message, resetAutoScroll, isAtBottom, scrollToBottom]);
+  }, [message, resetAutoScroll]);
 
   useEffect(() => {
     if (!isStreaming) {
@@ -94,17 +89,12 @@ const SmoothStreamingMessage: React.FC<SmoothStreamingMessageProps> = ({
       if (nextIndex >= buffer.length && !isStreaming) {
         clearInterval(typewriterInterval.current!);
         typewriterInterval.current = null;
-        
       }
     }, typingSpeed);
   }, [isStreaming, batchSize, typingSpeed, scrollToBottom]);
 
   useEffect(() => {
-    if (
-      !isStreaming &&
-      displayedText.length === message.length &&
-      typewriterInterval.current
-    ) {
+    if (!isStreaming && displayedText.length === message.length && typewriterInterval.current) {
       clearInterval(typewriterInterval.current);
       typewriterInterval.current = null;
       onComplete?.();
