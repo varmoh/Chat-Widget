@@ -69,10 +69,12 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
       }
-
+      
       rafRef.current = requestAnimationFrame(() => {
-        instance.scroll({ y: "100%" }, 50);
-        rafRef.current = null;
+        requestAnimationFrame(() => {
+          instance.scroll({ y: "100%" }, 0);
+          rafRef.current = null;
+        });
       });
     }
   }, []);
