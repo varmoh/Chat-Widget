@@ -74,9 +74,9 @@ const LinkPreview: React.FC<{
 const hasSpecialFormat = (m: string) => m.includes("\n\n") && m.indexOf(".") > 0 && m.indexOf(":") > m.indexOf(".");
 
 function escapeMaskedAsterisks(text: string): string {
-  return text.replace(/(\d)(\*{2,})/g, (_, digit: string, stars: string) => {
+  return text.replace(/([\p{L}\d])(\*{2,})/gu, (_, prefix: string, stars: string) => {
     const escapedStars = stars.replace(/\*/g, "\\*");
-    return `${digit}${escapedStars}`;
+    return `${prefix}${escapedStars}`;
   });
 }
 
