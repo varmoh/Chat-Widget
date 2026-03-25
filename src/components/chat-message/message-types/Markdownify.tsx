@@ -73,19 +73,17 @@ const LinkPreview: React.FC<{
 
 const hasSpecialFormat = (m: string) => m.includes("\n\n") && m.indexOf(".") > 0 && m.indexOf(":") > m.indexOf(".");
 
-function escapeAsterisks(text: string): string {
-  return text.replace(/\*/g, "\\*");
-}
-
 function formatMessage(message?: string, isClientMessage?: boolean): string {
   const sanitizedMessage = sanitizeHtml(message ?? "");
 
   if (!sanitizedMessage) return "";
 
-  const filteredMessage = isClientMessage ? sanitizedMessage : sanitizedMessage
-    .replaceAll(/\\?\$b\w*/g, "")
-    .replaceAll(/\\?\$v\w*/g, "")
-    .replaceAll(/\\?\$g\w*/g, "");
+  const filteredMessage = isClientMessage
+    ? sanitizedMessage
+    : sanitizedMessage
+        .replaceAll(/\\?\$b\w*/g, "")
+        .replaceAll(/\\?\$v\w*/g, "")
+        .replaceAll(/\\?\$g\w*/g, "");
 
   const dataImagePattern = /((?:^|\s))(data:image\/[a-z0-9+]+;[^)\s]+)/gi;
   const finalMessage = filteredMessage.replaceAll(
@@ -93,7 +91,7 @@ function formatMessage(message?: string, isClientMessage?: boolean): string {
     (_, prefix, dataUrl) => `${prefix}[image](${dataUrl})`,
   );
 
-  const formattedMessage = finalMessage
+  return finalMessage
     .replaceAll(/&#x([0-9A-F]+);/gi, (_, hex: string) => String.fromCharCode(parseInt(hex, 16)))
     .replaceAll("&amp;", "&")
     .replaceAll("&gt;", ">")
@@ -113,30 +111,44 @@ function formatMessage(message?: string, isClientMessage?: boolean): string {
       return `${prefix}${year}\\. `;
     })
     .replaceAll(/(?<=\n)\d+\.\s/g, hasSpecialFormat(finalMessage) ? "\n\n$&" : "$&")
-    .replaceAll(/^(\s+)/g, (match) => match.replaceAll(" ", "&nbsp;"));
-
-  return isClientMessage ? escapeAsterisks(formattedMessage) : formattedMessage;
+    .replaceAll(/^(\s+)/g, (match) => match.replaceAll(" ", "\u00A0"));
 }
 
-const Markdownify: React.FC<MarkdownifyProps> = ({ message, sanitizeLinks = false, isClientMessage = false }) => (
-  <div>
-    <Markdown
-      options={{
-        enforceAtxHeadings: true,
-        overrides: {
-          a: {
-            component: LinkPreview,
-            props: {
-              sanitizeLinks,
+const Markdownify: React.FC<MarkdownifyProps> = ({
+  message,
+  sanitizeLinks = false,
+  isClientMessage = false,
+}) => {
+  const formattedMessage = formatMessage(message, isClientMessage);
+
+  if (isClientMessage) {
+    return (
+      <div style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>
+        {formattedMessage}
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <Markdown
+        options={{
+          enforceAtxHeadings: true,
+          overrides: {
+            a: {
+              component: LinkPreview,
+              props: {
+                sanitizeLinks,
+              },
             },
           },
-        },
-        disableParsingRawHTML: true,
-      }}
-    >
-      {formatMessage(message, isClientMessage)}
-    </Markdown>
-  </div>
-);
+          disableParsingRawHTML: true,
+        }}
+      >
+        {formattedMessage}
+      </Markdown>
+    </div>
+  );
+};
 
 export default Markdownify;
