@@ -119,12 +119,12 @@ const Markdownify: React.FC<MarkdownifyProps> = ({
   sanitizeLinks = false,
   isClientMessage = false,
 }) => {
-  const formattedMessage = formatMessage(message, isClientMessage);
+  const formatted = formatMessage(message, isClientMessage);
 
   if (isClientMessage) {
     return (
       <div style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>
-        {formattedMessage}
+        {formatted}
       </div>
     );
   }
@@ -145,10 +145,9 @@ const Markdownify: React.FC<MarkdownifyProps> = ({
           disableParsingRawHTML: true,
         }}
       >
-        {formattedMessage}
+        {formatted}
       </Markdown>
     </div>
   );
 };
-
 export default Markdownify;
