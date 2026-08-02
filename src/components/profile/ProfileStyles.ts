@@ -15,6 +15,7 @@ const elements = {
 
 export const ProfileStyles = styled.div `
     .profile__wrapper {
+        z-index: 9999;
         position: fixed;
         bottom: 0;
         right: 0;
@@ -73,6 +74,7 @@ export const ProfileStyles = styled.div `
         box-sizing: border-box;
 
         .profile__wrapper {
+            z-index: 9999;
             position: fixed;
             bottom: 0;
             right: 0;
