@@ -134,6 +134,8 @@ export enum RUUTER_ENDPOINTS {
   SEND_FEEDBACK_MESSAGE = '/chats/feedbacks/text',
   GET_WAITING_TIME = '/chats/estimated-waiting-time',
   SEND_MESSAGE_WITH_NEW_EVENT = '/chats/messages/event',
+  NETWORK_CONSENT = '/network/consent',
+  NETWORK_HANDOVER = '/network/handover',
   REMOVE_CHAT_FORWARDING_VALUE = '/chats/forwards/remove',
   GENERATE_FORWARDING_REQUEST = '/chats/forwards/add',
   REDIRECT_TO_BACKOFFICE= '/chats/forwards/forward-to-backoffice',

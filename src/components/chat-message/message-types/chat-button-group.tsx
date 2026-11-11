@@ -7,6 +7,7 @@ import useChatSelector from "../../../hooks/use-chat-selector";
 import {parseButtons} from "../../../utils/chat-utils";
 import {ChatMessageStyled} from "../ChatMessageStyled";
 import { isMobileApp } from "../../../utils/browser-utils";
+import { isNetworkConsentPayload, sendNetworkConsent } from "../../../utils/network-consent-utils";
 
 const ChatButtonGroup = ({message}: { message: Message }): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -17,6 +18,10 @@ const ChatButtonGroup = ({message}: { message: Message }): JSX.Element => {
     }, [message.buttons]);
 
     const addNewMessageToState = (buttonPayload: string): void => {
+        if (isNetworkConsentPayload(buttonPayload)) {
+            sendNetworkConsent(chatId, buttonPayload).catch(() => undefined);
+            return;
+        }
         const message: Message = {
             chatId: chatId ?? "",
             content: buttonPayload,
@@ -37,7 +42,8 @@ const ChatButtonGroup = ({message}: { message: Message }): JSX.Element => {
         }
     };
 
-    const enabled = messages[messages.length - 1] === message && chatMode === CHAT_MODES.FLOW;
+    const isNetworkConsent = parsedButtons?.some(({payload}) => isNetworkConsentPayload(payload)) ?? false;
+    const enabled = messages[messages.length - 1] === message && (chatMode === CHAT_MODES.FLOW || isNetworkConsent);
 
     return (
         <ChatMessageStyled className={isMobileApp() ? "mobile-app" : ""}>

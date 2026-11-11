@@ -14,8 +14,10 @@ import {
   EXTEND_JWT_COOKIE_IN_MS,
   CHAT_SESSIONS,
   LOCAL_STORAGE_INSTANTLY_OPEN_CHAT_WIDGET_KEY,
+  CHAT_EVENTS,
 } from "./constants";
 import {
+  endChat,
   getChat,
   getChatMessages,
   getEmergencyNotice,
@@ -33,6 +35,7 @@ import useWidgetSelector from "./hooks/use-widget-selector";
 import useGetEmergencyNotice from "./hooks/use-get-emergency-notice";
 import { customJwtExtend } from "./slices/authentication-slice";
 import { getFromLocalStorage, setToLocalStorage } from "./utils/local-storage-utils";
+import { redeemNetworkHandover, watchNetworkHandoverLinks } from "./utils/network-handover-utils";
 import useNameAndTitleVisibility from "./hooks/use-name-title-visibility";
 import { generateUEID } from "./utils/generators";
 import { isMobile, isMobileApp, isMobileWidth } from "./utils/browser-utils";
@@ -98,6 +101,21 @@ const App: FC = () => {
         !!getFromLocalStorage(SESSION_STORAGE_CHAT_ID_KEY) || isOfficeHours()
       ),
     OFFICE_HOURS_INTERVAL_TIMEOUT
+  );
+
+  // Bürokrati võrgustik (demo): teise asutuse ühekordne link avab üle antud vestluse
+  useEffect(() => {
+    redeemNetworkHandover();
+  }, []);
+
+  // Bürokrati võrgustik (demo): vestlus anti teisele asutusele üle ja kasutaja avas lingi:
+  // lõpeta siinne vestlus (ilma tagasisidevaateta) ja sulge vidin
+  useEffect(
+    () =>
+      watchNetworkHandoverLinks(() => {
+        dispatch(endChat({ event: CHAT_EVENTS.CLIENT_LEFT_WITH_ACCEPTED, isUpperCase: true }));
+      }),
+    [dispatch]
   );
 
   useEffect(() => {

@@ -133,6 +133,16 @@ class ChatService {
     return http.post(RUUTER_ENDPOINTS.REMOVE_CHAT_FORWARDING_VALUE);
   }
 
+  // Bürokrati võrgustik (demo): nõusolek küsimuse edastamiseks teisele asutusele
+  networkConsent(chatId: string, requestId: string, accept: boolean): Promise<void> {
+    return http.post(RUUTER_ENDPOINTS.NETWORK_CONSENT, { chatId, requestId, accept });
+  }
+
+  // Bürokrati võrgustik (demo): ühekordne link teise asutuse vestlusesse -> vestluse ID (+ chatJwt küpsis)
+  networkHandover(token: string): Promise<string> {
+    return http.post(RUUTER_ENDPOINTS.NETWORK_HANDOVER, { token });
+  }
+
   generateForwardingRequest(): Promise<Chat[]> {
     return http.post(RUUTER_ENDPOINTS.GENERATE_FORWARDING_REQUEST);
   }

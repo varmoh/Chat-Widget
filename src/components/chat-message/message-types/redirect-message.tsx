@@ -10,11 +10,34 @@ import {
 } from '../../../slices/chat-slice';
 import {useAppDispatch} from '../../../store';
 import {ChatMessageStyled} from "../ChatMessageStyled";
+import useChatSelector from "../../../hooks/use-chat-selector";
+import {parseNetworkConsent} from "../../../utils/network-consent-utils";
+import ChatService from "../../../services/chat-service";
 
 const RedirectMessage = (props: { message: Message }): JSX.Element => {
     const dispatch = useAppDispatch();
     const {t} = useTranslation();
     const {message} = props;
+    const {chatId, messages} = useChatSelector();
+    const networkButtons = parseNetworkConsent(message);
+
+    // Bürokrati võrgustik (demo): sama vaade, aga nõusolek käib network/consent kaudu
+    if (networkButtons.length > 0) {
+        const enabled = messages[messages.length - 1]?.id === message.id || messages[messages.length - 1] === message;
+        return (
+            <ChatMessageStyled>
+                <div style={{color: '#575a5d'}}>{message.content}</div>
+                <div className="buttons">
+                    {networkButtons.map((b) => (
+                        <button key={String(b.accept)} type="button" className="redirect-event-button" disabled={!enabled}
+                                onClick={() => { ChatService.networkConsent(chatId ?? '', b.requestId, b.accept).catch(() => undefined); }}>
+                            {b.title}
+                        </button>
+                    ))}
+                </div>
+            </ChatMessageStyled>
+        );
+    }
 
     const redirectResponse = (accepted: boolean) => {
         const responseMessage: Message = {
